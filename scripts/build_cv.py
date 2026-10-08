@@ -59,7 +59,7 @@ def item(title,detail,period=''):
 story=[par(cv['name'],'name'),par(cv['headline']+'   |   '+cv['email'],'small'),Spacer(1,5),HRFlowable(width='100%',thickness=1.4,color=colors.HexColor('#15243a'))]
 story.extend(heading('Education'))
 for e in cv['education']:
-    story.append(item(e['school']+' — '+e['degree'], e['detail']+' · '+e['location'], e['period']))
+    story.append(item(e['school']+' — '+e['degree'], ' · '.join(filter(None,[e.get('detail'),e.get('location')])), e['period']))
 for type_ in ['Journal','Conference']:
     for scope in ['International','Domestic']:
         matched=[p for p in pubs if p['type']==type_ and p.get('scope')==scope]

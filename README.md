@@ -48,7 +48,7 @@ scripts/check_content.py 검사
 
 ## 글 수정
 
-- **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 주소 표시: ERICA · 제5공학관 224호)**.
+- **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
 - **프로젝트 추가:** 현재 `content/projects.json`은 `[]`입니다. 아래 객체를 배열에 추가하면 목록과 상세 페이지가 동시에 만들어집니다.
@@ -80,7 +80,7 @@ scripts/check_content.py 검사
 - Conference: International (0편) / **Domestic** (2편)
 - Projects: **실제 IDEA LAB 프로젝트가 등록되기 전까지 빈 상태 유지**
 - News: **수상만 표시**
-- About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `ERICA · 제5공학관 224호`를 표시
+- About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `Hanyang University ERICA`와 아래 영문 `Engineering Building 5, Room 224`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)
 - CV 공개본: **Research Interest, Project, Scholarship 포함하지 않음**
 
@@ -107,10 +107,10 @@ scripts/check_content.py 검사
 
 - 상단 메뉴의 글자 크기를 늘렸고, 왼쪽 상단의 이름 텍스트는 제거했습니다. IDEA LAB 로고는 유지합니다.
 - About 대제목의 마침표와 제목 위아래의 작은 문구를 제거했습니다. `Education & Training`은 `Education`으로 변경했습니다.
-- **About 주소 표시에는 `ERICA`만 남겼습니다.** 예전에 입력한 연구실 방 번호는 `content/site.json`의 `labLocation`에 유지되어 있으며, 현재 페이지에는 노출되지 않습니다. 다시 표시하려면 `aboutAddressDisplay` 값을 바꾸면 됩니다.
+- (V3 이력) 주소 문구를 단순화했던 과거 버전의 설정입니다. **현재 V5 화면은 `Hanyang University ERICA`와 영문 호실 안내를 표시합니다.**
 - 대제목 끝의 장식용 점(`.`)은 제거했습니다.
 - Publications 저자 목록과 웹 CV에서 본인 이름을 굵게 표시합니다. 본인 이름의 표기 변형은 `content/site.json` > `publicationAuthorNames` 배열에서 수정하세요.
-- News에 남아 있는 **2025 KSEE 우수발표논문상** 항목을 클릭하면 `award.html?id=ksee-2025-best-presentation` 페이지로 이동하고 상장이 표시됩니다. 원본 PDF도 열 수 있습니다.
+- News에 남아 있는 **2025 KSEE 우수발표논문상** 항목을 클릭하면 `award.html?id=ksee-2025-best-presentation` 페이지로 이동하고 상장이 표시됩니다. 상장 이미지가 표시됩니다.
 - 모든 페이지 하단을 사용자가 제공한 레퍼런스 이미지 형태의 밝은 푸터와 한양대 사자 심볼로 변경했습니다.
 
 ### 수상 항목 추가 및 변경 방법
@@ -125,8 +125,7 @@ scripts/check_content.py 검사
   "label": "Award",
   "title": "Award title",
   "summary": "Short explanation",
-  "certificateImage": "assets/awards/example.webp",
-  "certificatePdf": "assets/awards/example.pdf"
+  "certificateImage": "assets/awards/example.webp"
 }
 ```
 
@@ -148,3 +147,21 @@ GitHub 저장소의 최상위에 **압축을 푼 폴더의 내부 파일과 하�
 - News에서 수상 글을 선택하면 이미지가 있는 상세 페이지로 이동하며, PDF 다운로드 링크는 나타나지 않습니다.
 - 홈 히어로 하단의 파란색 배경 내 작은 IDEA LAB 소속 문구를 제거했습니다. 공식 로고와 푸터는 유지합니다.
 - 모든 페이지의 하단 푸터에 한양대학교 사자 심볼과 2줄 소개를 통일했습니다.
+
+
+## V5 수정사항 (2026-10-08)
+
+- Home 사진 라벨 `IDEA LAB / HANYANG`, 홈 소속 문구 `HANYANG UNIVERSITY · IDEA LAB`로 표시합니다.
+- About AFFILIATION: `IDEA LAB · Hanyang University` (ERICA 제거).
+- About LAB LOCATION 첫째 줄: `Hanyang University ERICA`. 둘째 줄: `Engineering Building 5, Room 224` (유지).
+- About Education의 `Planned admission · Hanyang University ERICA` 세부 설명은 제거하지만, 2027년 입학 **예정** 상태 자체는 유지합니다.
+- 푸터 및 기타 소속 표기에서도 ERICA를 제거하고, 장소를 명시하는 Lab Location에만 ERICA를 남겼습니다.
+- `content/site.json`과 `content/cv.json` 파일을 수정하면 문구를 추후 손쉽게 변경할 수 있습니다.
+
+
+## V6 변경 사항 (푸터 중앙 정렬)
+
+- 푸터 저작권 문구: `© IDEA LAB, Hanyang University ERICA. All rights reserved.`로 ERICA 표기를 복원했습니다.
+- 푸터의 **왼쪽 사자 이미지 + 오른쪽 두 줄 문구를 하나의 수평 묶음**으로 보고 화면 중앙에 정렬합니다. 글자만 따로 중앙 정렬하거나 이미지와 글자를 양 끝으로 벌리지 않습니다.
+- 모바일에서도 좌우 배치와 전체 묶음 중앙 정렬이 유지되도록 반응형 CSS를 적용했습니다.
+- 이외 페이지 내용과 About의 LAB LOCATION 정보는 V5와 동일하게 유지합니다.
