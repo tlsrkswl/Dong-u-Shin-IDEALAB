@@ -1,0 +1,69 @@
+[
+  {
+    "id": "knowledge-grounded-design",
+    "number": "01",
+    "category": "RESEARCH IN PROGRESS",
+    "date": "2026 — Ongoing",
+    "title": "Knowledge-Grounded Engineering Design Agent",
+    "summary": "Investigating RAG and Knowledge Graph retrieval to help LLM agents use drone engineering data, requirements, and design evidence more accurately.",
+    "tags": ["RAG", "GraphRAG", "LLM", "UAV"],
+    "symbol": "graph",
+    "overview": "This is an exploratory research direction, not a completed validated engineering design system. It focuses on retrieving and organizing design-domain information from technical documents so an LLM agent can support evidence-based decisions.",
+    "sections": [
+      {"heading": "Research Questions", "body": "How should technical documents, tables, and relations be organized so that an agent can retrieve the right design evidence? How do vector retrieval and graph-based retrieval differ in accuracy and latency?"},
+      {"heading": "Approach", "body": "Compare chunking, embeddings, table processing, entity/relation extraction, community detection, and retrieval strategies under repeatable benchmark questions."},
+      {"heading": "Current Status", "body": "Prototype research and benchmarking are ongoing. Performance results and verified figures can be added once validated."}
+    ],
+    "links": []
+  },
+  {
+    "id": "ai-cae-subprocessor",
+    "number": "02",
+    "category": "LLM + COMPUTATIONAL MECHANICS",
+    "date": "Mar — Nov 2025",
+    "title": "LLM-Assisted CAE Decision Subprocessor",
+    "summary": "A proof-of-concept framework linking image-based modeling commands, simulation databases, and LLM reasoning for structural analysis workflows.",
+    "tags": ["Abaqus", "Python", "LLM", "CAE"],
+    "symbol": "mesh",
+    "overview": "Developed and integrated a workflow that maps image/modeling commands to Abaqus scripts and modifies selected analysis parameters with explicit structural safeguards.",
+    "sections": [
+      {"heading": "Implementation", "body": "Integrated an LLM editing engine, image-to-script mapping, JSON guardrails, AST-based script changes, SI-unit normalization, and noGUI analysis linkage."},
+      {"heading": "Technical Emphasis", "body": "Focused on robust parameter changes, analysis reuse, and reliable engineering command interpretation rather than unrestricted code generation."},
+      {"heading": "Research Output", "body": "Related first-author journal article accepted by Journal of Mechanical Science and Technology in 2026."}
+    ],
+    "links": []
+  },
+  {
+    "id": "web-dynamics-platform",
+    "number": "03",
+    "category": "WEB + MECHANICAL DYNAMICS",
+    "date": "Jun — Sep 2025",
+    "title": "Web-Based Dynamics Modeling & Simulation",
+    "summary": "Image recognition, Lagrangian dynamics, numerical integration, and web visualization connected in one simulation platform.",
+    "tags": ["Dynamics", "Python", "GNU Octave", "SolidWorks"],
+    "symbol": "orbit",
+    "overview": "Created an end-to-end workflow from image recognition and Lagrangian DAE modeling to Runge–Kutta simulation and real-time web visualization.",
+    "sections": [
+      {"heading": "Engineering Workflow", "body": "Built a 50-sample dataset and implemented a robust Python–GNU Octave communication protocol with length-prefix framing and polling."},
+      {"heading": "Validation", "body": "Compared dynamic behavior with SolidWorks Motion under matched model conditions."},
+      {"heading": "Recognition", "body": "Associated poster presentation received an Excellence in Presentation Award at the 2025 KSEE Annual Conference."}
+    ],
+    "links": []
+  },
+  {
+    "id": "bicycle-wheel-design",
+    "number": "04",
+    "category": "STRUCTURAL DESIGN",
+    "date": "Sep — Dec 2024",
+    "title": "20-Inch Bicycle Wheel Design Optimization",
+    "summary": "Comparative finite element analysis of wheel geometry alternatives under mechanical loads and practical manufacturing constraints.",
+    "tags": ["SolidWorks", "FEA", "Design Comparison"],
+    "symbol": "wheel",
+    "overview": "Compared a reference wheel with alternative geometries that varied spoke count, spoke arrangement, and rib thickness.",
+    "sections": [
+      {"heading": "Method", "body": "Applied matched ground-contact, hub, axial load, and tire pressure conditions while controlling meshing and convergence criteria."},
+      {"heading": "Design Criteria", "body": "Evaluated von Mises stress, factor of safety, mass, manufacturability, and cost trade-offs."}
+    ],
+    "links": []
+  }
+]
