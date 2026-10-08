@@ -1,0 +1,32 @@
+[
+  {
+    "type": "Journal",
+    "year": "2026",
+    "authors": "Dong-u Shin, Jungho Seo, Yonghui Park",
+    "title": "A Proof of Concept Framework for an Integrated Decision-Making Subprocessor Linking Image-Based Modeling, Simulation Databases, and LLM Reasoning",
+    "venue": "Journal of Mechanical Science and Technology",
+    "status": "Accepted, 2026",
+    "url": "",
+    "scope": "International"
+  },
+  {
+    "type": "Conference",
+    "year": "2026",
+    "authors": "Jungho Seo, Jun Yeok Park, Dong-u Shin, Yonghui Park",
+    "title": "Development of a Digital Twin Platform for Automated Structural Analysis Using Image Analysis and Large Language Models for Predicting Plant System Status",
+    "venue": "2026 KSME Plant Engineering Division Spring Conference, Jeju, Korea",
+    "status": "May 27–28, 2026",
+    "url": "",
+    "scope": "Domestic"
+  },
+  {
+    "type": "Conference",
+    "year": "2025",
+    "authors": "Jungho Seo, Dong-u Shin, Yonghui Park",
+    "title": "기계 시스템 동적 응답 해석의 효율성 향상을 위한 웹 기반 모델링 및 해석 플랫폼 개발",
+    "venue": "2025 KSEE Annual Conference, Daegu, Korea",
+    "status": "September 22–23, 2025",
+    "url": "",
+    "scope": "Domestic"
+  }
+]
