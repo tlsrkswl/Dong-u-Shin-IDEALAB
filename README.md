@@ -20,7 +20,7 @@ research.html             Research
 publications.html         Publications > Journal & Conference > International & Domestic
 projects.html             Projects (현재 비어 있음)
 news.html                 News (수상 기록만 표시)
-award.html                수상 상세 페이지 (상장 이미지와 PDF)
+award.html                수상 상세 페이지 (상장 이미지만 표시, PDF 링크 없음)
 cv.html                   Curriculum Vitae (금지 항목 제외)
 project.html              추후 프로젝트 상세 화면 자동 템플릿
 post.html                 추후 연구 기록 템플릿
@@ -32,7 +32,7 @@ content/
   projects.json           프로젝트 (지금은 [])
   news.json               수상 소식만
   achievements.json       향후 활용할 수 있는 성과 데이터 (현재 화면 미사용)
-assets/awards/            수상 이미지 및 원본 PDF
+assets/awards/            수상 이미지 (PDF 링크 없음)
 assets/images/
   hanyang-lion.png        푸터의 사자 심볼 (사용자 제공 스크린샷에서 추출)
   profile-dongu-shin.png  사용자 제공 증명사진
@@ -48,7 +48,7 @@ scripts/check_content.py 검사
 
 ## 글 수정
 
-- **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 주소 표시: ERICA)**.
+- **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 주소 표시: ERICA · 제5공학관 224호)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
 - **프로젝트 추가:** 현재 `content/projects.json`은 `[]`입니다. 아래 객체를 배열에 추가하면 목록과 상세 페이지가 동시에 만들어집니다.
@@ -80,7 +80,7 @@ scripts/check_content.py 검사
 - Conference: International (0편) / **Domestic** (2편)
 - Projects: **실제 IDEA LAB 프로젝트가 등록되기 전까지 빈 상태 유지**
 - News: **수상만 표시**
-- About: 공식 로고, 증명사진, 사용자 모토, 주소 표시는 `ERICA`만 노출 (연구실 방 번호는 site.json 내부에 보관)
+- About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `ERICA · 제5공학관 224호`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)
 - CV 공개본: **Research Interest, Project, Scholarship 포함하지 않음**
 
@@ -137,3 +137,14 @@ scripts/check_content.py 검사
 GitHub 저장소의 최상위에 **압축을 푼 폴더의 내부 파일과 하위 폴더를 그대로** 복사해야 합니다. 반드시 `index.html`, `about.html`, `award.html`, `assets/`, `content/`, `scripts/`가 같은 수준에 있어야 합니다. GitHub 웹의 파일 개별 업로드로 하위 폴더를 풀어버리면 이전처럼 CSS/이미지/JSON 경로가 깨집니다. GitHub Desktop에서 기존 저장소로 클론한 후 복사 및 Push하는 방법을 권장합니다.
 
 수정 확인: `python scripts/check_content.py`를 실행하고, 웹사이트는 `python -m http.server 8000`으로 띄워 확인하세요. 배포 시 페이지가 캐시된 경우 `Ctrl+Shift+R`을 사용하세요.
+
+## V4 변경 사항
+
+- 모든 페이지의 브라우저 탭 제목: `Dong-u Shin · IDEA LAB`로 고정됩니다.
+- 상단 메뉴: **Home / About / Research / Projects / Publications / News / CV**.
+- About 소개 제목 위의 작은 코드 문구는 제외하고, 제목 아래 설명은 복원합니다.
+- Research / Publications / Projects / News 상단 타이틀 위 코드 문구를 제거했습니다.
+- 비어 있는 학술 실적 분류는 표시하지 않습니다. 국제저널 1편, 국내 학술대회 2편만 표시합니다. 새 항목이 추가되면 분류가 자동으로 나타납니다.
+- News에서 수상 글을 선택하면 이미지가 있는 상세 페이지로 이동하며, PDF 다운로드 링크는 나타나지 않습니다.
+- 홈 히어로 하단의 파란색 배경 내 작은 IDEA LAB 소속 문구를 제거했습니다. 공식 로고와 푸터는 유지합니다.
+- 모든 페이지의 하단 푸터에 한양대학교 사자 심볼과 2줄 소개를 통일했습니다.

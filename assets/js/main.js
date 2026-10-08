@@ -28,15 +28,16 @@
       return `<section class="publication-section" id="${id}"><div class="publication-section-heading"><div><div class="section-index">${type==='Journal'?'PEER-REVIEWED RESEARCH':'ACADEMIC PRESENTATIONS'}</div><h2 class="section-heading">${type}</h2></div><span class="publication-count">${pubs.filter(p=>p.type===type).length} ITEMS</span></div>`+
        ['International','Domestic'].map(scope=>{
           const entries=pubs.filter(p=>p.type===type && p.scope===scope);
-          return `<div class="publication-category"><h3>${scope} <span>${entries.length}</span></h3>${entries.length?`<div class="publication-list">${entries.map(p=>pubCard(p,ownNames)).join('')}</div>`:`<div class="empty-subgroup">No ${scope.toLowerCase()} ${type.toLowerCase()} publications yet.</div>`}</div>`;
+          if (!entries.length) return ''; // Leave unpopulated categories hidden until work is added.
+          return `<div class="publication-category"><h3>${scope} <span>${entries.length}</span></h3><div class="publication-list">${entries.map(p=>pubCard(p,ownNames)).join('')}</div></div>`;
        }).join('')+'</section>';
     }).join('');
   }
   const educationCard=e=>`<article class="education-card"><div class="education-year">${esc(e.period)}</div><div><h3>${esc(e.school)}</h3><p>${esc(e.degree)} ${e.planned?'<span class="planned-chip">PLANNED</span>':''}</p><span>${esc(e.detail)}</span><small>${esc(e.location)}</small></div></article>`;
   const cvRow=(a,b,c,date,extra='',trustedB=false)=>`<div class="cv-row"><div><h4>${esc(a)}</h4>${b?`<p>${trustedB?b:esc(b)}</p>`:''}${c?`<p>${esc(c)}</p>`:''}${extra}</div><span class="cv-date">${esc(date)}</span></div>`;
   const cvSection=(heading,inside)=>`<section class="cv-section"><h3>${esc(heading)}</h3>${inside}</section>`;
-  const cvPubs=(pubs,type,scope,ownNames)=>cvSection(`${type} — ${scope}`,pubs.filter(p=>p.type===type && p.scope===scope).map(p=>cvRow(p.title,authorMarkup(p.authors,ownNames),`${p.venue} · ${p.status}`,p.year,'',true)).join('')||'<p class="cv-empty">No entries yet.</p>');
-  async function home(){const s=await get('content/site.json');text('hero-eyebrow',s.eyebrow);text('hero-lead',s.motto);text('hero-affiliation',s.heroAffiliation);}
+  const cvPubs=(pubs,type,scope,ownNames)=>{const rows=pubs.filter(p=>p.type===type && p.scope===scope);return rows.length?cvSection(`${type} — ${scope}`,rows.map(p=>cvRow(p.title,authorMarkup(p.authors,ownNames),`${p.venue} · ${p.status}`,p.year,'',true)).join('')):'';};
+  async function home(){const s=await get('content/site.json');text('hero-eyebrow',s.eyebrow);text('hero-lead',s.motto);}
   async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);
     text('motto',s.motto);text('about-text',s.about);text('about-detail',s.aboutDetail);text('about-lab',s.lab);text('about-location',s.aboutAddressDisplay||'ERICA');text('about-email',`${s.email} ↗`);$('#about-email').href='mailto:'+s.email;
     $('#education-list').innerHTML=cv.education.map(educationCard).join('');
@@ -61,10 +62,8 @@
     text('award-title',n.title);
     text('award-date',n.dateDisplay||n.date);
     text('award-summary',n.summary);
-    document.title=n.title+' | Dong-u Shin';
     const img=safeUrl(n.certificateImage)?n.certificateImage:'';
-    const pdf=safeUrl(n.certificatePdf)?n.certificatePdf:'';
-    el.innerHTML=`<figure class="award-certificate">${img?`<img src="${esc(img)}" alt="Award certificate for ${esc(n.title)}" loading="eager"/>`:''}<figcaption>Certificate · ${esc(n.dateDisplay||n.date)}</figcaption></figure>${pdf?`<a class="award-pdf-link" href="${esc(pdf)}" target="_blank" rel="noopener noreferrer">View original certificate (PDF) ↗</a>`:''}`;
+    el.innerHTML=`<figure class="award-certificate">${img?`<img src="${esc(img)}" alt="Award certificate for ${esc(n.title)}" loading="eager"/>`:''}<figcaption>Certificate · ${esc(n.dateDisplay||n.date)}</figcaption></figure>`;
   }
   async function cv(){const [data,pubs,site]=await Promise.all([get('content/cv.json'),get('content/publications.json'),get('content/site.json')]);
     const edu=data.education.map(e=>cvRow(e.school,`${e.degree}${e.planned?' (Planned)':''}`,e.detail+' · '+e.location,e.period)).join('');
@@ -74,7 +73,7 @@
     $('#cv-content').innerHTML=`<div class="cv-profile"><div><h2>${esc(data.name)}</h2><p>${esc(data.headline)}</p></div><a class="cv-email" href="mailto:${esc(data.email)}">${esc(data.email)}</a></div>`+cvSection('Education',edu)+cvPubs(pubs,'Journal','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Journal','Domestic',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','Domestic',site.publicationAuthorNames||[])+cvSection('Research Experience',exp)+cvSection('Awards',awards)+cvSection('Certification',certs);
   }
   async function project(){const data=await get('content/projects.json');const id=new URLSearchParams(location.search).get('id');const p=data.find(x=>x.id===id);if(!p){$('#project-head').innerHTML='<h2>Project not found.</h2><p>Please visit the Projects page for current entries.</p>';return;}
-    document.title=p.title+' | Dong-u Shin';$('#project-head').innerHTML=`<h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p>${keywordHtml(p.tags)}`;
+    $('#project-head').innerHTML=`<h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p>${keywordHtml(p.tags)}`;
     $('#project-body').innerHTML=`<h2>Overview</h2><p>${esc(p.overview)}</p>${(p.sections||[]).map(s=>`<h2>${esc(s.heading)}</h2><p>${esc(s.body)}</p>`).join('')}`;
     $('#project-aside').innerHTML=`<dl class="meta-block"><dt>DATE</dt><dd>${esc(p.date)}</dd></dl><dl class="meta-block"><dt>CATEGORY</dt><dd>${esc(p.category)}</dd></dl>`;
   }

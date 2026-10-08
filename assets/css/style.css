@@ -113,8 +113,6 @@
 .award-certificate{max-width:700px;margin:30px auto 18px;background:white;border:1px solid #dce3e8;padding:16px;border-radius:10px;box-shadow:0 17px 42px #142d4420}
 .award-certificate img{width:100%;height:auto;object-fit:contain}
 .award-certificate figcaption{text-align:center;margin-top:15px;color:#718396;font-size:12px}
-.award-pdf-link{display:block;text-align:center;font-weight:700;color:#295d7d;margin:18px auto 10px}
-.award-pdf-link:hover{text-decoration:underline}
 @media(max-width:740px){
   .site-v2 .footer-v3{flex-direction:row;gap:16px;align-items:center}
   .site-v2 .footer-university-mark{width:67px;height:80px}
@@ -123,3 +121,6 @@
   .site-v2 .footer-copy p+p{font-size:12px}
   .award-certificate{padding:8px}
 }
+
+/* V4: keep banner headings clean after removing small pre-title labels. */
+.site-v2 .page-banner h1{margin-top:0}
