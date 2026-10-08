@@ -165,3 +165,10 @@ GitHub 저장소의 최상위에 **압축을 푼 폴더의 내부 파일과 하�
 - 푸터의 **왼쪽 사자 이미지 + 오른쪽 두 줄 문구를 하나의 수평 묶음**으로 보고 화면 중앙에 정렬합니다. 글자만 따로 중앙 정렬하거나 이미지와 글자를 양 끝으로 벌리지 않습니다.
 - 모바일에서도 좌우 배치와 전체 묶음 중앙 정렬이 유지되도록 반응형 CSS를 적용했습니다.
 - 이외 페이지 내용과 About의 LAB LOCATION 정보는 V5와 동일하게 유지합니다.
+
+## Update: DOI link / favicon / simpler pages
+
+- The 2026 JMST journal title opens its DOI in a new tab. Edit `content/publications.json` → `url` for future links.
+- Browser favicon: Hanyang University seal (source: `assets/images/hanyang-university-seal-original.png`, generated `favicon-hanyang.png`, `favicon.ico`, and `apple-touch-icon.png`).
+- Publication jump buttons and the extra News placeholder sentence have been removed.
+- GitHub Pages: push the unpacked project files and folders to the repository root; retain `assets/` and `content/`. A hard refresh (Ctrl+Shift+R) or closing and reopening the tab may be needed to clear the old favicon.

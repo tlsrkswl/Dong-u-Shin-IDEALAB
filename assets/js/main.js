@@ -21,7 +21,7 @@
     const rx=new RegExp('('+escapedNames.join('|')+')','gi');
     return String(authors||'').split(rx).map(piece=>variants.some(v=>v.toLowerCase()===piece.toLowerCase())?`<strong class="author-self">${esc(piece)}</strong>`:esc(piece)).join('');
   };
-  const pubCard = (p,ownNames) => `<article class="pub-item"><div class="pub-year">${esc(p.year)}</div><div><div class="pub-category">${esc(p.scope||'')} · ${esc(p.status)}</div><h3 class="pub-title">${esc(p.title)}</h3><p class="pub-authors">${authorMarkup(p.authors,ownNames)}</p><p class="pub-venue">${esc(p.venue)}</p></div><div class="pub-link">${p.url?link(p.url,'DOI'):''}</div></article>`;
+  const pubCard = (p,ownNames) => `<article class="pub-item"><div class="pub-year">${esc(p.year)}</div><div><div class="pub-category">${esc(p.scope||'')} · ${esc(p.status)}</div><h3 class="pub-title">${safeUrl(p.url)?`<a class="pub-title-link" href="${esc(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a>`:esc(p.title)}</h3><p class="pub-authors">${authorMarkup(p.authors,ownNames)}</p><p class="pub-venue">${esc(p.venue)}</p></div><div class="pub-link">${p.url?link(p.url,'DOI'):''}</div></article>`;
   function groupedPublications(pubs,container,ownNames){
     container.innerHTML=['Journal','Conference'].map(type=>{
       const id=type.toLowerCase();

@@ -44,7 +44,7 @@
 .education-year{font:700 13px 'Manrope';color:#6b8692;padding-top:4px}.education-card h3{font:800 23px 'Manrope';letter-spacing:-.6px;margin:0 0 5px}.education-card p{font-size:16px;font-weight:600;margin:0 0 7px}.education-card span:not(.planned-chip){display:block;color:#647484;font-size:13px}.education-card small{display:block;color:#8b99a3;font-size:12px;margin-top:4px}
 .planned-chip{display:inline-block;font:800 9px 'Manrope';letter-spacing:1px;color:#fff;background:#607d94;border-radius:3px;padding:4px 7px;vertical-align:middle;margin-left:6px}
 .research-footnote{display:flex;align-items:center;gap:32px;margin-top:60px;padding:25px 30px;background:#fff;border:1px solid #e0e5e5}.research-footnote img{max-width:210px;flex-shrink:0}.research-footnote p{font-size:13px;line-height:1.8;color:var(--muted);margin:0}
-.publication-navigation{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:56px}.publication-navigation a{background:#f1f5f4;padding:11px 18px;border:1px solid #dce5e5;font:800 11px 'Manrope';letter-spacing:1px}
+
 .publication-section{margin-bottom:75px;scroll-margin-top:100px}.publication-section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:2px solid #1f3649}
 .publication-count{font:800 11px 'Manrope';letter-spacing:1px;color:#5f7f8b}
 .publication-category{margin-top:30px;margin-bottom:44px}.publication-category>h3{display:flex;align-items:center;gap:12px;font:800 20px 'Manrope';letter-spacing:-.4px;margin-bottom:8px}
@@ -151,3 +151,8 @@
     gap: 16px;
   }
 }
+
+/* Article titles open their DOI pages when a URL is provided in content/publications.json. */
+.pub-title-link{color:inherit;text-decoration:none;text-underline-offset:4px;transition:color .15s ease}
+.pub-title-link:hover,.pub-title-link:focus-visible{color:#286b92;text-decoration:underline}
+.pub-title-link:focus-visible{outline:2px solid #286b92;outline-offset:3px}
