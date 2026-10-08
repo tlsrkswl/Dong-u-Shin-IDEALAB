@@ -200,3 +200,44 @@
   .page-banner h1{font-size:clamp(36px,11vw,48px)}
   .page-banner p{font-size:14px}
 }
+
+
+/* === V9 banner and hero refinement === */
+.inner-page{background:var(--bg)}
+.page-banner{background:transparent;border-bottom:none;padding:44px 0 14px;text-align:center}
+.page-banner .container{max-width:920px}
+.page-banner h1{margin:0 auto 8px}
+.page-banner p{margin:0 auto}
+.inner-page .section:first-of-type{padding-top:46px}
+.inner-page .section.section-alt:first-of-type{padding-top:46px}
+.inner-page .page-banner + .section{background:transparent}
+.section-alt{background:#f4f6f7}
+
+.site-v2 .home-hero{min-height:540px}
+.site-v2 .home-hero .hero-grid{grid-template-columns:minmax(0,1.14fr) minmax(330px,.72fr);gap:62px;padding-top:6px;padding-bottom:14px;min-height:540px}
+.site-v2 .home-hero h1{font-size:clamp(60px,6.2vw,92px);letter-spacing:-3.6px;line-height:1.02;white-space:nowrap}
+.home-hero .hero-tech-bg::before{background:radial-gradient(circle at 18% 22%, rgba(197,226,246,.11), transparent 22%),radial-gradient(circle at 39% 52%, rgba(97,139,181,.10), transparent 20%),radial-gradient(circle at 48% 18%, rgba(200,236,115,.05), transparent 18%)}
+.home-hero .hero-float{opacity:.19;mix-blend-mode:screen;filter:drop-shadow(0 10px 18px rgba(0,0,0,.10))}
+.home-hero .hero-drone{width:430px;left:2%;top:16%;animation:floatDrone 18s ease-in-out infinite}
+.home-hero .hero-knowledge{width:370px;left:23%;top:53%;animation:floatKnowledge 20s ease-in-out infinite}
+.home-hero .hero-glow{position:absolute;border-radius:50%;filter:blur(34px);opacity:.15}
+.home-hero .hero-glow-1{width:180px;height:180px;left:11%;top:11%;background:#5f85ae}
+.home-hero .hero-glow-2{width:150px;height:150px;left:34%;top:58%;background:#adc8dc}
+@keyframes floatDrone{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(10px,-14px,0)}}
+@keyframes floatKnowledge{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-8px,-10px,0)}}
+
+/* neutralize previous generic icon layout */
+.home-hero .float-1,.home-hero .float-2,.home-hero .float-3,.home-hero .float-4{display:none!important}
+
+@media (max-width:1100px){
+  .site-v2 .home-hero .hero-grid{grid-template-columns:1fr;gap:20px;min-height:auto;padding-top:18px;padding-bottom:30px}
+  .home-hero .hero-drone{width:320px;left:6%;top:12%}
+  .home-hero .hero-knowledge{width:280px;left:18%;top:48%}
+}
+@media (max-width:740px){
+  .page-banner{padding:36px 0 10px}
+  .inner-page .section:first-of-type{padding-top:34px}
+  .site-v2 .home-hero h1{font-size:clamp(48px,13vw,68px);white-space:normal}
+  .home-hero .hero-drone{width:220px;left:8%;top:10%;opacity:.14}
+  .home-hero .hero-knowledge{width:210px;left:6%;top:52%;opacity:.14}
+}

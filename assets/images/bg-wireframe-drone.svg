@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" fill="none">
+<g stroke="#DDEAF4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.42">
+<ellipse cx="260" cy="154" rx="74" ry="44"/>
+<path d="M204 150c14-22 92-22 110 0M212 168c28 18 68 18 96 0"/>
+<path d="M244 110h34M232 124h56M220 138h80M222 182h76M234 196h52"/>
+<path d="M186 152H98m226 0h96M224 124 154 74m142 50 70-50M224 180 152 234m144-54 72 54"/>
+<path d="M98 152 72 124m26 28-26 28m252-28 26-28m-26 28 26 28" opacity="0.7"/>
+<path d="M154 74 128 46m26 28-28 8m170-8 26-28m-26 28 28 10M152 234l-24 26m24-26-30-10m174 10 26 26m-26-26 30-8" opacity="0.7"/>
+<circle cx="80" cy="152" r="26"/><circle cx="358" cy="152" r="26"/><circle cx="136" cy="60" r="22"/><circle cx="382" cy="60" r="22"/><circle cx="136" cy="244" r="22"/><circle cx="382" cy="244" r="22"/>
+<path d="M54 152h52M332 152h52M112 60h48M360 60h46M112 244h48M360 244h46" opacity="0.85"/>
+<path d="M244 196l-10 36h52l-10-36"/>
+<path d="M248 232l-18 18m40-18 18 18" opacity="0.6"/>
+<path d="M190 132l18 14m122-14-18 14M188 172l18-14m124 14-18-14" opacity="0.6"/>
+</g>
+</svg>
