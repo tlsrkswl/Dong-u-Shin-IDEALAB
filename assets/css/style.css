@@ -241,3 +241,54 @@
   .home-hero .hero-drone{width:220px;left:8%;top:10%;opacity:.14}
   .home-hero .hero-knowledge{width:210px;left:6%;top:52%;opacity:.14}
 }
+
+
+/* === V10: remove duplicate introduction sections and tighten the photo-free homepage === */
+/* About starts with the actual portrait, biography, and education instead of a duplicate banner. */
+.site-v2.inner-page .about-main{padding-top:52px}
+/* Research overview cards follow the centered title immediately. */
+.site-v2.inner-page[data-page="research"] .page-banner{padding-bottom:10px}
+.site-v2.inner-page[data-page="research"] .page-banner + .section{padding-top:32px}
+
+/* A restrained single-column hero leaves space for future research material. */
+.site-v2 .home-hero{min-height:405px}
+.site-v2 .home-hero .hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:center;
+  min-height:405px;
+  padding-top:12px;
+  padding-bottom:14px;
+}
+.site-v2 .home-hero .hero-copy{
+  max-width:850px;
+  padding:30px 0 22px;
+}
+.site-v2 .home-hero h1{font-size:clamp(58px,6.5vw,88px);margin:17px 0 18px;white-space:nowrap}
+.site-v2 .home-hero .hero-lead{max-width:700px}
+.site-v2 .home-hero .hero-actions{margin:24px 0 0}
+/* Only very faint mesh and knowledge graphics sit behind the unused right-hand space. */
+.home-hero .hero-drone{left:61%;top:8%;width:380px;opacity:.13}
+.home-hero .hero-knowledge{left:49%;top:47%;width:345px;opacity:.13}
+.home-hero .hero-glow-1{left:66%;top:6%}
+.home-hero .hero-glow-2{left:56%;top:55%}
+@media(max-width:1100px){
+  .site-v2 .home-hero{min-height:390px}
+  .site-v2 .home-hero .hero-grid{min-height:390px;grid-template-columns:1fr;gap:0;padding-top:8px;padding-bottom:12px}
+  .site-v2 .home-hero .hero-copy{max-width:800px;padding:30px 0 26px}
+  .home-hero .hero-drone{left:65%;top:14%;width:270px;opacity:.10}
+  .home-hero .hero-knowledge{left:51%;top:57%;width:240px;opacity:.10}
+}
+@media(max-width:740px){
+  .site-v2 .home-hero{min-height:0}
+  .site-v2 .home-hero .hero-grid{min-height:0;padding-top:2px;padding-bottom:2px}
+  .site-v2 .home-hero .hero-copy{padding:37px 0 43px}
+  .site-v2 .home-hero h1{font-size:clamp(45px,11vw,70px);white-space:normal;margin:14px 0 16px}
+  .site-v2 .home-hero .hero-actions{margin-top:20px}
+  .site-v2.inner-page .about-main{padding-top:36px}
+  .home-hero .hero-drone{left:59%;top:13%;width:200px;opacity:.08}
+  .home-hero .hero-knowledge{left:42%;top:52%;width:180px;opacity:.08}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-hero .hero-float{animation:none!important}
+}

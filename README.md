@@ -172,3 +172,12 @@ GitHub 저장소의 최상위에 **압축을 푼 폴더의 내부 파일과 하�
 - Browser favicon: Hanyang University seal (source: `assets/images/hanyang-university-seal-original.png`, generated `favicon-hanyang.png`, `favicon.ico`, and `apple-touch-icon.png`).
 - Publication jump buttons and the extra News placeholder sentence have been removed.
 - GitHub Pages: push the unpacked project files and folders to the repository root; retain `assets/` and `content/`. A hard refresh (Ctrl+Shift+R) or closing and reopening the tab may be needed to clear the old favicon.
+
+
+## Homepage layout revision (2026-10-10)
+
+- Removed the duplicate large About heading and subtitle; the About page starts with the profile and biography.
+- Removed the "RESEARCH DIRECTIONS / From Ideas to Design Solutions" heading block above Research cards.
+- Removed the profile photo from the Home hero only (the About photo remains).
+- Shortened the Home hero to approximately 405px on desktop. You can adjust this using the final "V10" CSS block in `assets/css/style.css`.
+- All existing research data, DOI URLs, favicon, CV, footer, and navigation are unchanged.
