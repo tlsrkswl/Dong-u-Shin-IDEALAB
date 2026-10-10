@@ -292,3 +292,118 @@
 @media(prefers-reduced-motion:reduce){
   .home-hero .hero-float{animation:none!important}
 }
+
+
+/* === V11: more cohesive About page ===
+   The changes below are scoped to About only, so other pages stay untouched.
+   Increase the breathing room above the portrait, then create a continuous
+   visual transition into the academic timeline. */
+.site-v2.inner-page[data-page="about"] .about-main {
+  padding-top: 84px;
+  padding-bottom: 44px;
+}
+.site-v2.inner-page[data-page="about"] .about-education {
+  background: var(--bg);
+  padding-top: 0;
+  padding-bottom: 82px;
+}
+.site-v2.inner-page[data-page="about"] .about-education > .container {
+  border-top: 1px solid #dce4e4;
+  padding-top: 41px;
+}
+.site-v2.inner-page[data-page="about"] .about-education .section-index {
+  margin-bottom: 11px;
+}
+.site-v2.inner-page[data-page="about"] .about-education .education-list {
+  margin-top: 22px;
+}
+.site-v2.inner-page[data-page="about"] .about-education .education-card {
+  padding-top: 21px;
+  padding-bottom: 21px;
+}
+@media (max-width: 740px) {
+  .site-v2.inner-page[data-page="about"] .about-main {
+    padding-top: 53px;
+    padding-bottom: 34px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-education {
+    padding-bottom: 58px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-education > .container {
+    padding-top: 33px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-education .education-list {
+    margin-top: 18px;
+  }
+}
+
+
+/* === V12: compact About profile, English-only introduction, Education higher === */
+.site-v2.inner-page[data-page="about"] .about-main {
+  padding-top: 67px;
+  padding-bottom: 23px;
+}
+.site-v2.inner-page[data-page="about"] .about-profile-grid {
+  grid-template-columns: minmax(230px, 0.68fr) minmax(0, 1.48fr);
+  gap: clamp(36px, 5vw, 72px);
+  align-items: start;
+}
+.site-v2.inner-page[data-page="about"] .about-portrait {
+  width: 100%;
+  max-width: 270px;
+}
+.site-v2.inner-page[data-page="about"] .about-portrait img {
+  max-height: 400px;
+  object-fit: cover;
+}
+.site-v2.inner-page[data-page="about"] .about-portrait p {
+  padding: 12px 17px;
+}
+.site-v2.inner-page[data-page="about"] .about-profile-text .section-heading {
+  margin-bottom: 16px;
+}
+.site-v2.inner-page[data-page="about"] .about-profile-text .large-copy {
+  font-size: 19px;
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+.site-v2.inner-page[data-page="about"] .about-profile-text .muted-copy {
+  margin: 0 0 14px;
+}
+.site-v2.inner-page[data-page="about"] .about-facts {
+  margin-top: 16px;
+}
+.site-v2.inner-page[data-page="about"] .about-facts > div {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+.site-v2.inner-page[data-page="about"] .about-education > .container {
+  padding-top: 26px;
+}
+.site-v2.inner-page[data-page="about"] .about-education .education-list {
+  margin-top: 14px;
+}
+.site-v2.inner-page[data-page="about"] .about-education .education-card {
+  padding-top: 17px;
+  padding-bottom: 17px;
+}
+@media(max-width:740px) {
+  .site-v2.inner-page[data-page="about"] .about-main {
+    padding-top: 38px;
+    padding-bottom: 25px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-profile-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-portrait {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+  .site-v2.inner-page[data-page="about"] .about-portrait img {
+    max-height: 352px;
+  }
+  .site-v2.inner-page[data-page="about"] .about-education > .container {
+    padding-top: 24px;
+  }
+}
