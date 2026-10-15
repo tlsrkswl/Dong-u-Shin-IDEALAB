@@ -338,6 +338,37 @@
 }
 
 
+.research-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  margin-top: 48px;
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid var(--rule);
+  background: var(--pale);
+}
+.research-demo-preview {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--white);
+}
+.research-demo-preview img { width: 100%; height: auto; }
+.research-demo-copy .section-index { margin-bottom: 12px; }
+.research-demo-copy h2 {
+  font: 800 clamp(26px, 3vw, 36px)/1.2 'Manrope', sans-serif;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.research-demo-copy > p:not(.section-index) { color: var(--muted); }
+.research-demo-copy .btn { gap: 12px; flex-wrap: wrap; }
+.demo-tab-note { font-size: 10px; font-weight: 500; }
+.research-demo a:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; }
+@media (max-width: 740px) {
+  .research-demo { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* === V12: compact About profile, English-only introduction, Education higher === */
 .site-v2.inner-page[data-page="about"] .about-main {
   padding-top: 67px;
