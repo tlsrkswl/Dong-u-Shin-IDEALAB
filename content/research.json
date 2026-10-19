@@ -3,7 +3,6 @@
     "number": "01",
     "category": "KNOWLEDGE SYSTEMS",
     "title": "Knowledge-Grounded Engineering AI",
-    "homeSummary": "Connect engineering evidence through RAG, knowledge graphs, and LLM agents.",
     "description": "Connect design manuals, technical data, and past engineering knowledge through RAG and Knowledge Graphs so LLM agents can retrieve evidence and interpret design constraints.",
     "keywords": ["GraphRAG", "Knowledge Graph", "LLM Agents"]
   },
@@ -11,7 +10,6 @@
     "number": "02",
     "category": "PHYSICS + MACHINE LEARNING",
     "title": "Physics-Guided Surrogate Modeling",
-    "homeSummary": "Combine physics and machine learning for reliable, efficient simulation predictions.",
     "description": "Explore efficient and physically credible AI-based prediction methods for expensive simulations, with an emphasis on generalization and reliability.",
     "keywords": ["Surrogate Models", "Scientific ML", "Physics Guidance"]
   },
@@ -19,7 +17,6 @@
     "number": "03",
     "category": "ENGINEERING DECISIONS",
     "title": "Intelligent Design Optimization",
-    "homeSummary": "Turn engineering requirements and simulation insights into better design decisions.",
     "description": "Combine engineering requirements, simulation-informed predictions, and optimization to support better choices of design variables and candidate configurations.",
     "keywords": ["Design Optimization", "Decision Support", "CAE"]
   }

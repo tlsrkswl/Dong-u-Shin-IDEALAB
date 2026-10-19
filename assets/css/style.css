@@ -399,7 +399,7 @@
 .home-focus-card { padding: 14px 20px; border: 1px solid var(--rule); background: var(--white); }
 .home-focus-number { font-size: 10px; font-weight: 800; color: #64828e; }
 .home-focus-card h3 { font-size: 16px; line-height: 1.35; margin: 6px 0; }
-.home-focus-card p { color: var(--muted); font-size: 12px; line-height: 1.55; margin: 0; }
+.home-focus-card .tags { margin-top: 10px; padding-top: 0; }
 .home-demo.section { padding-top: 36px; }
 .home-demo > .container { max-width: 1320px; }
 .home-demo .research-demo { margin-top: 0; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 28px; padding: 24px; }

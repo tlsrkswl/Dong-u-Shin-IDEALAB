@@ -38,7 +38,7 @@
   const cvSection=(heading,inside)=>`<section class="cv-section"><h3>${esc(heading)}</h3>${inside}</section>`;
   const cvPubs=(pubs,type,scope,ownNames)=>{const rows=pubs.filter(p=>p.type===type && p.scope===scope);return rows.length?cvSection(`${type} — ${scope}`,rows.map(p=>cvRow(p.title,authorMarkup(p.authors,ownNames),`${p.venue} · ${p.status}`,p.year,'',true)).join('')):'';};
   async function home(){const [s,focus]=await Promise.all([get('content/site.json'),get('content/research.json')]);text('hero-eyebrow',s.eyebrow);text('hero-lead',s.motto);
-    $('#home-research-grid').innerHTML=focus.map((r,i)=>`<article class="home-focus-card"><span class="home-focus-number">${esc(r.number||String(i+1).padStart(2,'0'))}</span><h3>${esc(r.title)}</h3><p>${esc(r.homeSummary||r.description)}</p></article>`).join('');
+    $('#home-research-grid').innerHTML=focus.map((r,i)=>`<article class="home-focus-card"><span class="home-focus-number">${esc(r.number||String(i+1).padStart(2,'0'))}</span><h3>${esc(r.title)}</h3>${keywordHtml(r.keywords)}</article>`).join('');
   }
   async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);
     text('motto',s.motto);text('about-text',s.about);text('about-detail',s.aboutDetail);text('about-lab',s.lab);text('about-location',s.aboutAddressDisplay||'Hanyang University ERICA');text('about-email',`${s.email} ↗`);$('#about-email').href='mailto:'+s.email;
