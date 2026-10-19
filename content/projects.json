@@ -1,1 +1,57 @@
-[]
+[
+  {
+    "id": "drone-graphrag",
+    "number": "01",
+    "date": "2026",
+    "category": "Knowledge-Grounded Engineering AI",
+    "title": "GraphRAG for Drone Design",
+    "summary": "Exploring graph-based retrieval to connect drone design knowledge across technical documents. Follow the research through five presentation PDFs, from RAG fundamentals to comparative experiments and ontology-guided improvements.",
+    "overview": "This ongoing research explores how GraphRAG can support drone design by organizing technical evidence into knowledge graphs and hierarchical communities. The materials document RAG and KG-RAG foundations, document chunking and table-aware retrieval, experiments comparing Vector RAG with GraphRAG, and proposed improvements for entity disambiguation and table preservation.",
+    "tags": [
+      "GraphRAG",
+      "Drone Design",
+      "Knowledge Graph",
+      "RAG"
+    ],
+    "documents": [
+      {
+        "id": "visualization-ontology-tables",
+        "title": "GraphRAG Visualization, Ontology & Table Preservation",
+        "description": "Knowledge graph construction and community visualization, ontology-guided entity disambiguation, and preserving table evidence.",
+        "url": "assets/projects/drone-graphrag/visualization-ontology-tables.pdf",
+        "pages": 13,
+        "date": "2026-10-13"
+      },
+      {
+        "id": "drone-comparative-experiments",
+        "title": "Drone GraphRAG vs. Vector RAG: Comparative Experiments",
+        "description": "GraphRAG foundations, hierarchical communities, and comparative question-answering experiments using drone documents.",
+        "url": "assets/projects/drone-graphrag/drone-comparative-experiments.pdf",
+        "pages": 48
+      },
+      {
+        "id": "contextual-chunking",
+        "title": "GraphRAG & KG-RAG with Contextual Chunking",
+        "description": "Graph-based retrieval frameworks and a structure-aware, contextual chunking pipeline for technical documents.",
+        "url": "assets/projects/drone-graphrag/contextual-chunking.pdf",
+        "pages": 22,
+        "date": "2026-09-22"
+      },
+      {
+        "id": "table-aware-kg-rag",
+        "title": "Adaptive Table-Aware KG-RAG & LLM Wiki",
+        "description": "Adaptive chunking, table-aware retrieval, contextual embeddings, BM25, and an LLM Wiki workflow.",
+        "url": "assets/projects/drone-graphrag/table-aware-kg-rag.pdf",
+        "pages": 20
+      },
+      {
+        "id": "rag-foundations",
+        "title": "RAG Fundamentals & Knowledge Graph Integration",
+        "description": "Embeddings, FAISS retrieval, RAG implementation, and initial knowledge graph integration experiments.",
+        "url": "assets/projects/drone-graphrag/rag-foundations.pdf",
+        "pages": 26
+      }
+    ],
+    "demoUrl": "demos/graphrag/index.html"
+  }
+]

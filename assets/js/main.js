@@ -72,10 +72,37 @@
     const certs=data.certifications.map(c=>cvRow(c.title,'','',c.date)).join('');
     $('#cv-content').innerHTML=`<div class="cv-profile"><div><h2>${esc(data.name)}</h2><p>${esc(data.headline)}</p></div><a class="cv-email" href="mailto:${esc(data.email)}">${esc(data.email)}</a></div>`+cvSection('Education',edu)+cvPubs(pubs,'Journal','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Journal','Domestic',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','Domestic',site.publicationAuthorNames||[])+cvSection('Research Experience',exp)+cvSection('Awards',awards)+cvSection('Certification',certs);
   }
+  function projectDocuments(documents) {
+    const docs=(documents||[]).filter(d=>/^assets\/projects\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/.test(d.url));
+    if(!docs.length)return;
+    const section=document.createElement('section');
+    section.className='project-documents';
+    section.setAttribute('aria-labelledby','project-documents-heading');
+    section.innerHTML=`<div class="project-documents-heading"><div><p class="section-index">RESEARCH MATERIALS · ${docs.length} PDFS</p><h2 id="project-documents-heading">Explore the research</h2></div><p>Select a presentation to read below.</p></div><div class="project-reader-grid"><div class="project-document-list" role="group" aria-label="Research presentations">${docs.map((d,i)=>`<button type="button" class="project-document-button" data-document="${i}" aria-pressed="${i===0}" aria-controls="project-pdf"><span class="project-document-number">${String(i+1).padStart(2,'0')}</span><span><strong>${esc(d.title)}</strong><span class="project-document-description">${esc(d.description)}</span><span class="project-document-meta">PDF · ${esc(d.pages)} pages${d.date?` · ${esc(d.date)}`:''}</span></span></button>`).join('')}</div><div class="project-pdf-panel"><div class="project-pdf-toolbar"><h3 id="project-pdf-title"></h3><a id="project-pdf-open" target="_blank" rel="noopener noreferrer">Open PDF in new tab ↗</a></div><p class="project-pdf-hint">If the embedded preview is unavailable on your device, open the PDF in a new tab.</p><iframe id="project-pdf" class="project-pdf" title="Research presentation"></iframe><p id="project-document-status" class="project-document-status" role="status"></p></div></div>`;
+    $('.project-detail-grid').append(section);
+    const buttons=section.querySelectorAll('[data-document]');
+    const show=index=>{
+      const d=docs[index];
+      buttons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===index)));
+      $('#project-pdf-title').textContent=d.title;
+      $('#project-pdf-open').href=d.url;
+      $('#project-pdf').title=d.title;
+      $('#project-pdf').src=d.url+'#view=FitH';
+      $('#project-document-status').textContent=`Selected presentation ${index+1} of ${docs.length}: ${d.title}`;
+    };
+    buttons.forEach((button,i)=>button.addEventListener('click',()=>{
+      show(i);
+      if(window.matchMedia('(max-width: 900px)').matches)section.querySelector('.project-pdf-panel').scrollIntoView({block:'start'});
+    }));
+    show(0);
+  }
   async function project(){const data=await get('content/projects.json');const id=new URLSearchParams(location.search).get('id');const p=data.find(x=>x.id===id);if(!p){$('#project-head').innerHTML='<h2>Project not found.</h2><p>Please visit the Projects page for current entries.</p>';return;}
-    $('#project-head').innerHTML=`<h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p>${keywordHtml(p.tags)}`;
+    $('.page-banner h1').textContent=p.title;
+    $('#project-head').innerHTML=`<p>${esc(p.summary)}</p>${keywordHtml(p.tags)}`;
     $('#project-body').innerHTML=`<h2>Overview</h2><p>${esc(p.overview)}</p>${(p.sections||[]).map(s=>`<h2>${esc(s.heading)}</h2><p>${esc(s.body)}</p>`).join('')}`;
     $('#project-aside').innerHTML=`<dl class="meta-block"><dt>DATE</dt><dd>${esc(p.date)}</dd></dl><dl class="meta-block"><dt>CATEGORY</dt><dd>${esc(p.category)}</dd></dl>`;
+    if(/^demos\/[a-z0-9-]+\/index\.html$/.test(p.demoUrl||''))$('#project-aside').innerHTML+=`<a class="text-link" href="${esc(p.demoUrl)}" target="_blank" rel="noopener noreferrer">Explore interactive demo ↗</a>`;
+    projectDocuments(p.documents);
   }
   async function post(){const el=$('#post-head');if(el)el.innerHTML='<h2>Research notes are not published yet.</h2>';}
   document.addEventListener('DOMContentLoaded',async()=>{nav();const page=document.body.dataset.page;try {if({home,about,research,publications,projects,news,award,cv,project,post}[page])await {home,about,research,publications,projects,news,award,cv,project,post}[page]();}catch(e){console.error(e);const status=$('#status-toast');if(status){status.textContent='Data failed to load. Start a local web server (see README.md).';status.classList.add('visible');}}});

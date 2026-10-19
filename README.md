@@ -18,7 +18,7 @@ index.html                홈 (사진과 모토)
 about.html                About / 증명사진 / 연구실 위치 / Education
 research.html             Research
 publications.html         Publications > Journal & Conference > International & Domestic
-projects.html             Projects (현재 비어 있음)
+projects.html             Projects (GraphRAG for Drone Design)
 news.html                 News (수상 기록만 표시)
 award.html                수상 상세 페이지 (상장 이미지만 표시, PDF 링크 없음)
 cv.html                   Curriculum Vitae (금지 항목 제외)
@@ -29,7 +29,7 @@ content/
   cv.json                 Education, 연구 경력, 수상, 자격
   research.json           연구 분야 카드
   publications.json       학술지·학술대회 + International/Domestic
-  projects.json           프로젝트 (지금은 [])
+  projects.json           프로젝트 소개와 PDF 자료 목록
   news.json               수상 소식만
   achievements.json       향후 활용할 수 있는 성과 데이터 (현재 화면 미사용)
 assets/awards/            수상 이미지 (PDF 링크 없음)
@@ -57,7 +57,9 @@ Research 페이지의 **Inside GraphRAG** 카드에서 **Open Interactive Demo**
 - **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
-- **프로젝트 추가:** 현재 `content/projects.json`은 `[]`입니다. 아래 객체를 배열에 추가하면 목록과 상세 페이지가 동시에 만들어집니다.
+- **프로젝트 관리:** `content/projects.json`에 **GraphRAG for Drone Design** 프로젝트 1개와 발표 자료 PDF 5개가 등록되어 있습니다. Projects 카드에서 상세 페이지로 이동하면 자료를 선택하여 PDF를 읽거나 새 탭에서 열 수 있습니다. PDF 원본은 `assets/projects/drone-graphrag/`에 있으며, 화면 제목만 내용을 바탕으로 정리했습니다. PDF 내용은 수정하지 않았습니다. 기존 GraphRAG 인터랙티브 데모도 상세 페이지에서 연결됩니다.
+- **자료 추가·수정:** 프로젝트의 `documents` 배열에 `id`, `title`, `description`, `url`, `pages`를 입력하세요. 날짜가 확인되는 자료만 `date`를 추가합니다. `url`은 `assets/projects/<프로젝트 ID>/<파일명>.pdf` 형식이며, 첫 번째 자료가 기본으로 표시됩니다. 자료 제목과 설명은 HTML이 아닌 일반 텍스트입니다.
+- **프로젝트 추가:** 아래 객체를 배열에 추가하면 목록과 상세 페이지가 동시에 만들어집니다.
 
 ```json
 [
@@ -84,7 +86,7 @@ Research 페이지의 **Inside GraphRAG** 카드에서 **Open Interactive Demo**
 
 - Journal: **International** (1편, *Accepted 2026*) / Domestic (0편)
 - Conference: International (0편) / **Domestic** (2편)
-- Projects: **실제 IDEA LAB 프로젝트가 등록되기 전까지 빈 상태 유지**
+- Projects: **GraphRAG for Drone Design** 프로젝트 1개에 연구 발표 PDF 5개를 모아 표시
 - News: **수상만 표시**
 - About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `Hanyang University ERICA`와 아래 영문 `Engineering Building 5, Room 224`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)

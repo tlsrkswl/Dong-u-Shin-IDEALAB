@@ -32,7 +32,24 @@ if len(data)==len(names):
     if len(ids)!=len(set(ids)):errors.append('Duplicate project IDs')
     for i in ids:
         if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',str(i)):errors.append('Invalid project id: '+str(i))
-    if data['projects']:errors.append('Projects must remain empty until IDEA LAB work is supplied')
+    for project in data['projects']:
+        for field in ('title','summary','overview','date','category'):
+            if not project.get(field):errors.append(f'Project {project.get("id")}: missing {field}')
+        docs=project.get('documents',[])
+        doc_ids=[doc.get('id') for doc in docs]
+        if len(doc_ids)!=len(set(doc_ids)):errors.append('Duplicate document IDs in '+str(project.get('id')))
+        for doc in docs:
+            url=doc.get('url','')
+            if not re.fullmatch(r'assets/projects/[a-z0-9-]+/[a-z0-9-]+\.pdf',url):
+                errors.append('Invalid project PDF path: '+url)
+                continue
+            file=BASE/url
+            if not file.is_file():errors.append('Missing project PDF: '+url)
+            elif not file.read_bytes().startswith(b'%PDF-'):errors.append('Invalid PDF file: '+url)
+            if not doc.get('id') or not doc.get('title') or not doc.get('description'):errors.append('Incomplete project PDF metadata: '+url)
+            if not isinstance(doc.get('pages'),int) or doc['pages']<1:errors.append('Invalid project PDF page count: '+url)
+        demo=project.get('demoUrl')
+        if demo and (not re.fullmatch(r'demos/[a-z0-9-]+/index\.html',demo) or not (BASE/demo).is_file()):errors.append('Invalid project demo: '+str(demo))
     for pub in data['publications']:
         if pub.get('type') not in ('Journal','Conference'):errors.append('Invalid publication type: '+str(pub.get('type')))
         if pub.get('scope') not in ('International','Domestic'):errors.append('Invalid publication scope: '+str(pub.get('scope')))
@@ -50,4 +67,4 @@ for p in [BASE/'assets/js/main.js',BASE/'assets/css/style.css',BASE/'assets/imag
 if errors:
     for error in errors:print('ERROR:',error)
     sys.exit(1)
-print('PASS: 10 pages, 7 JSON files, linked resources, publication categories, projects empty, awards only, lab room, CV exclusions')
+print('PASS: 10 pages, 7 JSON files, linked resources, publication categories, project metadata and PDFs, awards only, lab room, CV exclusions')
