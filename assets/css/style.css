@@ -339,6 +339,7 @@
 
 
 .site-v2 .project-card { grid-template-columns: minmax(0, 1fr); }
+.site-v2 .project-card:only-child { grid-column: 1 / -1; }
 .site-v2 .project-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
 .project-detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 32px; margin-bottom: 40px; }
 .project-subhead { padding: 0 0 32px; }
