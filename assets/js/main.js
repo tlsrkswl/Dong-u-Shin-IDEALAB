@@ -38,7 +38,12 @@
   const cvSection=(heading,inside)=>`<section class="cv-section"><h3>${esc(heading)}</h3>${inside}</section>`;
   const cvPubs=(pubs,type,scope,ownNames)=>{const rows=pubs.filter(p=>p.type===type && p.scope===scope);return rows.length?cvSection(`${type} — ${scope}`,rows.map(p=>cvRow(p.title,authorMarkup(p.authors,ownNames),`${p.venue} · ${p.status}`,p.year,'',true)).join('')):'';};
   async function home(){const [s,focus]=await Promise.all([get('content/site.json'),get('content/research.json')]);text('hero-eyebrow',s.eyebrow);text('hero-lead',s.motto);
-    $('#home-research-grid').innerHTML=focus.map((r,i)=>`<article class="home-focus-card"><span class="home-focus-number">${esc(r.number||String(i+1).padStart(2,'0'))}</span><h3>${esc(r.title)}</h3>${keywordHtml(r.keywords)}</article>`).join('');
+    const icons={
+      graph:'<path d="M6 6l12 1M6 6l5 13M18 7l-7 12M18 7l1 11M11 19l8-1"/><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="11" cy="19" r="2.5"/><circle cx="19" cy="18" r="2"/>',
+      curve:'<path d="M4 4v16h17M7 16c3 0 3-8 6-8s3 5 7-3"/><circle cx="7" cy="16" r="1"/><circle cx="13" cy="8" r="1"/><circle cx="20" cy="5" r="1"/>',
+      sliders:'<path d="M5 3v4m0 5v9M12 3v10m0 5v3M19 3v3m0 5v10"/><rect x="2.5" y="7" width="5" height="5" rx="1.5"/><rect x="9.5" y="13" width="5" height="5" rx="1.5"/><rect x="16.5" y="6" width="5" height="5" rx="1.5"/>'
+    };
+    $('#home-research-grid').innerHTML=focus.map(r=>`<article class="home-focus-card"><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[r.icon]||icons.graph}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}</article>`).join('');
   }
   async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);
     text('motto',s.motto);text('about-text',s.about);text('about-detail',s.aboutDetail);text('about-lab',s.lab);text('about-location',s.aboutAddressDisplay||'Hanyang University ERICA');text('about-email',`${s.email} ↗`);$('#about-email').href='mailto:'+s.email;

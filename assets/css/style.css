@@ -397,8 +397,10 @@
 .home-focus-heading h2 { margin: 0; font-size: 19px; }
 .home-focus-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .home-focus-card { padding: 14px 20px; border: 1px solid var(--rule); background: var(--white); }
-.home-focus-number { font-size: 10px; font-weight: 800; color: #64828e; }
-.home-focus-card h3 { font-size: 16px; line-height: 1.35; margin: 6px 0; }
+.home-focus-title { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.home-focus-icon { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 10px; color: #285b8a; background: #edf4fb; }
+.home-focus-icon svg { display: block; width: 23px; height: 23px; }
+.home-focus-card h3 { min-width: 0; font-size: 16px; line-height: 1.35; margin: 0; }
 .home-focus-card .tags { margin-top: 10px; padding-top: 0; }
 .home-demo.section { padding-top: 36px; }
 .home-demo > .container { max-width: 1320px; }
