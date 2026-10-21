@@ -251,18 +251,18 @@
 .site-v2.inner-page[data-page="research"] .page-banner + .section{padding-top:32px}
 
 /* A restrained single-column hero leaves space for future research material. */
-.site-v2 .home-hero{min-height:405px}
+.site-v2 .home-hero{min-height:335px}
 .site-v2 .home-hero .hero-grid{
   display:grid;
   grid-template-columns:minmax(0,1fr);
   align-items:center;
-  min-height:405px;
-  padding-top:12px;
-  padding-bottom:14px;
+  min-height:335px;
+  padding-top:8px;
+  padding-bottom:10px;
 }
 .site-v2 .home-hero .hero-copy{
   max-width:850px;
-  padding:30px 0 22px;
+  padding:20px 0 14px;
 }
 .site-v2 .home-hero h1{font-size:clamp(58px,6.5vw,88px);margin:17px 0 18px;white-space:nowrap}
 .site-v2 .home-hero .hero-lead{max-width:700px}
@@ -273,16 +273,16 @@
 .home-hero .hero-glow-1{left:66%;top:6%}
 .home-hero .hero-glow-2{left:56%;top:55%}
 @media(max-width:1100px){
-  .site-v2 .home-hero{min-height:390px}
-  .site-v2 .home-hero .hero-grid{min-height:390px;grid-template-columns:1fr;gap:0;padding-top:8px;padding-bottom:12px}
-  .site-v2 .home-hero .hero-copy{max-width:800px;padding:30px 0 26px}
+  .site-v2 .home-hero{min-height:330px}
+  .site-v2 .home-hero .hero-grid{min-height:330px;grid-template-columns:1fr;gap:0;padding-top:6px;padding-bottom:8px}
+  .site-v2 .home-hero .hero-copy{max-width:800px;padding:20px 0 18px}
   .home-hero .hero-drone{left:65%;top:14%;width:270px;opacity:.10}
   .home-hero .hero-knowledge{left:51%;top:57%;width:240px;opacity:.10}
 }
 @media(max-width:740px){
   .site-v2 .home-hero{min-height:0}
   .site-v2 .home-hero .hero-grid{min-height:0;padding-top:2px;padding-bottom:2px}
-  .site-v2 .home-hero .hero-copy{padding:37px 0 43px}
+  .site-v2 .home-hero .hero-copy{padding:26px 0 30px}
   .site-v2 .home-hero h1{font-size:clamp(45px,11vw,70px);white-space:normal;margin:14px 0 16px}
   .site-v2 .home-hero .hero-actions{margin-top:20px}
   .site-v2.inner-page .about-main{padding-top:36px}
