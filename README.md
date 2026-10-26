@@ -58,7 +58,8 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 
 데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. Home 데모 소개 문구와 링크는 `index.html`에 있습니다.
 
-- **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
+- **Home 영어 모토:** `content/site.json`의 `homeMotto` 배열을 편집하세요. 각 항목의 `text`를 순서대로 연결하며, `tone`은 `knowledge`, `prediction`, `optimization` 중 하나로 강조 색상을 정합니다. `breakBefore: true`는 데스크톱에서 문장 앞에 줄바꿈을 넣습니다. 앞 글자부터 한 번 나타나는 모션은 사용자 모션 감소 설정에서는 생략되며, JavaScript 없이도 기본 영문 문구는 표시됩니다.
+- **모토/연구실 위치:** About의 모토는 `content/site.json`의 `motto`이며, 위치는 `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
 - **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Home의 첫 Research Focus 카드와 Research 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 Projects 주소는 새 Research 화면으로 연결됩니다.

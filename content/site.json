@@ -32,5 +32,36 @@
   "publicationAuthorNames": [
     "Dong-u Shin",
     "신동우"
+  ],
+  "homeMotto": [
+    {
+      "text": "Turning "
+    },
+    {
+      "text": "engineering knowledge",
+      "tone": "knowledge"
+    },
+    {
+      "text": " into "
+    },
+    {
+      "text": "design intelligence,",
+      "tone": "knowledge"
+    },
+    {
+      "text": " and ",
+      "breakBefore": true
+    },
+    {
+      "text": "AI predictions",
+      "tone": "prediction"
+    },
+    {
+      "text": " into "
+    },
+    {
+      "text": "optimal design solutions.",
+      "tone": "optimization"
+    }
   ]
 }
