@@ -57,8 +57,6 @@ if len(data)==len(names):
         if demo and (not re.fullmatch(r'demos/[a-z0-9-]+/index\.html',demo) or not (BASE/demo).is_file()):errors.append('Invalid project demo: '+str(demo))
     for file in (BASE/'assets/projects').rglob('*.pdf'):
         if file.relative_to(BASE).as_posix() not in published_pdfs:errors.append('Unlisted PDF would still be public: '+file.relative_to(BASE).as_posix())
-    for focus in data['research']:
-        if focus.get('studyId') and focus['studyId'] not in ids:errors.append('Research focus links to a missing study: '+focus['studyId'])
     for pub in data['publications']:
         if pub.get('type') not in ('Journal','Conference'):errors.append('Invalid publication type: '+str(pub.get('type')))
         if pub.get('scope') not in ('International','Domestic'):errors.append('Invalid publication scope: '+str(pub.get('scope')))

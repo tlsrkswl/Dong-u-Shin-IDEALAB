@@ -63,7 +63,7 @@
     $('#home-research-grid').innerHTML=focus.map((r,i)=>{
       const tone=['graph','curve','sliders'].includes(r.icon)?r.icon:'graph';
       const connector=i<focus.length-1?'<span class="home-focus-connector" aria-hidden="true"><svg viewBox="0 0 20 16" width="18" height="16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h14m-4-4 4 4-4 4"/></svg></span>':'';
-      return `<${r.studyId?'a':'article'} class="home-focus-card" data-tone="${tone}"${r.studyId?` href="study.html?id=${encodeURIComponent(r.studyId)}"`:''}><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[tone]}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}${connector}</${r.studyId?'a':'article'}>`;
+      return `<article class="home-focus-card" data-tone="${tone}"><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[tone]}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}${connector}</article>`;
     }).join('');
   }
   async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);

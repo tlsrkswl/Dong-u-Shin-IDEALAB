@@ -400,9 +400,6 @@
 .home-focus-card[data-tone="graph"]{--focus-bg:#f2edfa;--focus-border:#e8e0f3;--focus-color:#644697;--focus-tag:#675584}
 .home-focus-card[data-tone="curve"]{--focus-bg:#eaf4fb;--focus-border:#dcecf7;--focus-color:#17638d;--focus-tag:#356c8b}
 .home-focus-card[data-tone="sliders"]{--focus-bg:#e8f6f1;--focus-border:#d8eee5;--focus-color:#006e64;--focus-tag:#33786e}
-.home-focus-card[href]{display:block}
-.home-focus-card[href]:hover{border-color:var(--focus-color,#618bb5)}
-.home-focus-card[href]:focus-visible{outline:3px solid #618bb5;outline-offset:4px}
 .home-focus-title { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .home-focus-icon { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 10px; color: var(--focus-color,#285b8a); background: #ffffffa8; }
 .home-focus-icon svg { display: block; width: 23px; height: 23px; }
