@@ -50,7 +50,7 @@ scripts/check_content.py 검사
 
 ### GraphRAG 인터랙티브 데모
 
-Home에서는 `assets/videos/graphrag-demo.mp4` 데모 영상이 음소거 상태로 자동·반복 재생됩니다. 기본 영상 컨트롤로 일시 정지하거나 소리를 켤 수 있습니다. Home의 영상 소개에서 인터랙티브 데모와 연구 프로젝트로 이동할 수 있으며, Research의 데모 소개는 Home으로 통합했습니다. 파란 Hero 영역과 데모 사이에는 `content/research.json`의 제목과 `keywords` 태그로 세 연구 분야를 간단히 표시합니다. 영상을 바꿀 때는 같은 경로에 MP4를 업로드하세요.
+Home에서는 `assets/videos/graphrag-demo.mp4` 데모 영상이 음소거 상태로 자동·반복 재생됩니다. 기본 영상 컨트롤로 일시 정지하거나 소리를 켤 수 있습니다. Home의 `Open Demo` 버튼에서 인터랙티브 데모를 열 수 있으며, Research의 데모 소개는 Home으로 통합했습니다. 파란 Hero 영역과 데모 사이에는 `content/research.json`의 제목과 `keywords` 태그로 세 연구 분야를 간단히 표시합니다. 영상을 바꿀 때는 같은 경로에 MP4를 업로드하세요.
 
 Home 페이지의 **Inside GraphRAG** 카드에서 **Open Interactive Demo**를 누르면 새 탭에서 데모가 열립니다. 데모 파일은 `demos/graphrag/index.html`이며, 데이터와 스타일, JavaScript가 포함되어 별도 설치나 API 키 없이 실행됩니다. GitHub Pages에는 이 폴더도 함께 올리세요.
 
