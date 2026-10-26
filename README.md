@@ -18,18 +18,19 @@ index.html                홈 (사진과 모토)
 about.html                About / 증명사진 / 연구실 위치 / Education
 research.html             Research
 publications.html         Publications > Journal & Conference > International & Domestic
-projects.html             Projects (GraphRAG for Drone Design)
+projects.html             기존 Projects 주소 → Research로 연결
 news.html                 News (수상 기록만 표시)
 award.html                수상 상세 페이지 (상장 이미지만 표시, PDF 링크 없음)
 cv.html                   Curriculum Vitae (금지 항목 제외)
-project.html              추후 프로젝트 상세 화면 자동 템플릿
+project.html              기존 상세 주소 → study.html로 연결
+study.html                연구 개요, 기간, 승인된 공개 PDF
 post.html                 추후 연구 기록 템플릿
 content/
   site.json               이름, 모토, 자기소개, 이메일, 소속, 연구실 위치
   cv.json                 Education, 연구 경력, 수상, 자격
   research.json           연구 분야 카드
   publications.json       학술지·학술대회 + International/Domestic
-  projects.json           프로젝트 소개와 PDF 자료 목록
+  projects.json           Research에 표시할 연구 개요와 승인된 공개 PDF 목록
   news.json               수상 소식만
   achievements.json       향후 활용할 수 있는 성과 데이터 (현재 화면 미사용)
 assets/awards/            수상 이미지 (PDF 링크 없음)
@@ -52,32 +53,18 @@ scripts/check_content.py 검사
 
 Home에서는 `assets/videos/graphrag-demo.mp4` 데모 영상이 음소거 상태로 자동·반복 재생됩니다. 기본 영상 컨트롤로 일시 정지하거나 소리를 켤 수 있습니다. Home의 `Open Demo` 버튼에서 인터랙티브 데모를 열 수 있으며, Research의 데모 소개는 Home으로 통합했습니다. 파란 Hero 영역과 데모 사이에는 `content/research.json`의 제목과 `keywords` 태그로 세 연구 분야를 간단히 표시합니다. 영상을 바꿀 때는 같은 경로에 MP4를 업로드하세요.
 
-Home 페이지의 **Inside GraphRAG** 카드에서 **Open Interactive Demo**를 누르면 새 탭에서 데모가 열립니다. 데모 파일은 `demos/graphrag/index.html`이며, 데이터와 스타일, JavaScript가 포함되어 별도 설치나 API 키 없이 실행됩니다. GitHub Pages에는 이 폴더도 함께 올리세요.
+Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 새 탭에서 데모가 열립니다. 데모 파일은 `demos/graphrag/index.html`이며, 데이터와 스타일, JavaScript가 포함되어 별도 설치나 API 키 없이 실행됩니다. GitHub Pages에는 이 폴더도 함께 올리세요.
 
-데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. 소개 문구와 링크는 `research.html`에 있습니다.
+데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. Home 데모 소개 문구와 링크는 `index.html`에 있습니다.
 
 - **모토/연구실 위치:** `content/site.json`의 `motto`, `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
-- **프로젝트 관리:** `content/projects.json`에 **GraphRAG for Drone Design** 프로젝트 1개와 발표 자료 PDF 5개가 등록되어 있습니다. Projects 카드에서 상세 페이지로 이동하면 자료를 선택하여 PDF를 읽거나 새 탭에서 열 수 있습니다. PDF 원본은 `assets/projects/drone-graphrag/`에 있으며, 화면 제목만 내용을 바탕으로 정리했습니다. PDF 내용은 수정하지 않았습니다. 기존 GraphRAG 인터랙티브 데모도 상세 페이지에서 연결됩니다.
-- **자료 추가·수정:** 프로젝트의 `documents` 배열에 `id`, `title`, `description`, `url`, `pages`를 입력하세요. 날짜가 확인되는 자료만 `date`를 추가합니다. `url`은 `assets/projects/<프로젝트 ID>/<파일명>.pdf` 형식이며, 첫 번째 자료가 기본으로 표시됩니다. 자료 제목과 설명은 HTML이 아닌 일반 텍스트입니다.
-- **프로젝트 추가:** 아래 객체를 배열에 추가하면 목록과 상세 페이지가 동시에 만들어집니다.
-
-```json
-[
-  {
-    "id": "new-idea-project",
-    "number": "01",
-    "date": "2027",
-    "category": "AI for Engineering Design",
-    "title": "Project Title",
-    "summary": "Short summary of the project.",
-    "overview": "Describe the background and goals.",
-    "tags": ["AI", "Design"],
-    "sections": [{"heading":"Method", "body":"Explain your approach."}]
-  }
-]
-```
+- **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Home의 첫 Research Focus 카드와 Research 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 Projects 주소는 새 Research 화면으로 연결됩니다.
+- **자료 공개 범위:** **RAG Fundamentals & Knowledge Graph Integration** 한 개만 공개합니다. 나머지 네 PDF는 공개 파일과 메타데이터에서 제거했습니다. 링크를 숨기거나 `private` 플래그만 추가하는 방식은 사용하지 않습니다. 비공개 원본은 이 공개 저장소나 배포 경로에 다시 넣지 마세요. 과거 공개된 GitHub 이력과 사본은 현재 파일 삭제만으로 지워지지 않습니다.
+- **자료 표시:** 상세 화면은 연구 개요와 제목·페이지 수·`View PDF` 버튼만 표시합니다. PDF는 버튼을 누를 때 모달 뷰어로 열립니다. `documents`에는 공개 승인된 자료만 넣으세요.
+- **새 연구 추가:** `content/projects.json` 배열에 `id`, `title`, `category`, `summary`, `overview`, `date`, `startDate`, `status`, `tags`, `documents`, `image`, `theme`, `themeLabel`을 가진 항목을 추가하면 빈 칸부터 카드가 채워집니다. `theme`은 `knowledge`, `physics`, `optimization` 중 하나입니다. `image`는 공개 도식의 `assets/` 경로입니다. Home의 연구 분야에 연결하려면 `content/research.json`의 해당 분야에 같은 `studyId`를 설정하세요.
+- **검사:** `python3 scripts/check_content.py`는 목록에 없는 PDF가 공개 폴더에 남아 있는지와 승인된 자료만 공개되는지도 검사합니다.
 
 - **뉴스 수정:** `content/news.json`에 `label: "Award"`인 수상 소식만 표시하도록 구성했습니다. 현재 2025 KSEE 학술대회 발표 우수상 1건만 있습니다.
 - **증명사진 교체:** `assets/images/profile-dongu-shin.png`를 새 이미지로 교체하면 됩니다. 파일명 유지가 편리합니다.
@@ -88,7 +75,7 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Interactive Demo**를 
 
 - Journal: **International** (1편, *Accepted 2026*) / Domestic (0편)
 - Conference: International (0편) / **Domestic** (2편)
-- Projects: **GraphRAG for Drone Design** 프로젝트 1개에 연구 발표 PDF 5개를 모아 표시
+- Research: **GraphRAG for Drone Design** 연구 한 개와 승인된 입문 발표 PDF 한 개만 공개
 - News: **수상만 표시**
 - About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `Hanyang University ERICA`와 아래 영문 `Engineering Building 5, Room 224`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)

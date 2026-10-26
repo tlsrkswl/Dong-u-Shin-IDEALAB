@@ -397,6 +397,9 @@
 .home-focus-heading h2 { margin: 0; font-size: 19px; }
 .home-focus-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .home-focus-card { padding: 14px 20px; border: 1px solid var(--rule); background: var(--white); }
+.home-focus-card[href]{display:block}
+.home-focus-card[href]:hover{border-color:#618bb5}
+.home-focus-card[href]:focus-visible{outline:3px solid #618bb5;outline-offset:4px}
 .home-focus-title { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .home-focus-icon { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 10px; color: #285b8a; background: #edf4fb; }
 .home-focus-icon svg { display: block; width: 23px; height: 23px; }

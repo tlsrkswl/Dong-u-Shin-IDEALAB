@@ -43,15 +43,20 @@
       curve:'<path d="M4 4v16h17M7 16c3 0 3-8 6-8s3 5 7-3"/><circle cx="7" cy="16" r="1"/><circle cx="13" cy="8" r="1"/><circle cx="20" cy="5" r="1"/>',
       sliders:'<path d="M5 3v4m0 5v9M12 3v10m0 5v3M19 3v3m0 5v10"/><rect x="2.5" y="7" width="5" height="5" rx="1.5"/><rect x="9.5" y="13" width="5" height="5" rx="1.5"/><rect x="16.5" y="6" width="5" height="5" rx="1.5"/>'
     };
-    $('#home-research-grid').innerHTML=focus.map(r=>`<article class="home-focus-card"><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[r.icon]||icons.graph}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}</article>`).join('');
+    $('#home-research-grid').innerHTML=focus.map(r=>`<${r.studyId?'a':'article'} class="home-focus-card"${r.studyId?` href="study.html?id=${encodeURIComponent(r.studyId)}"`:''}><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[r.icon]||icons.graph}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}</${r.studyId?'a':'article'}>`).join('');
   }
   async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);
     text('motto',s.motto);text('about-text',s.about);text('about-detail',s.aboutDetail);text('about-lab',s.lab);text('about-location',s.aboutAddressDisplay||'Hanyang University ERICA');text('about-email',`${s.email} ↗`);$('#about-email').href='mailto:'+s.email;
     $('#education-list').innerHTML=cv.education.map(educationCard).join('');
   }
-  async function research(){const data=await get('content/research.json');$('#research-grid').innerHTML=data.map((r,i)=>`<article class="research-card"><div class="card-top"><span class="card-number">${esc(r.number||String(i+1).padStart(2,'0'))}</span><span class="card-symbol">↗</span></div><div class="card-category">${esc(r.category)}</div><h3>${esc(r.title)}</h3><p>${esc(r.description)}</p>${keywordHtml(r.keywords)}</article>`).join('');}
+  async function research(){
+    const studies=await get('content/projects.json');
+    $('#research-work-grid').innerHTML=studies.map(p=>{
+      const theme=['knowledge','physics','optimization'].includes(p.theme)?p.theme:'knowledge';
+      return `<div class="theme-column ${theme}"><h3 class="column-heading"><span></span>${esc(p.themeLabel||p.category)}</h3><a class="work-card linked" href="study.html?id=${encodeURIComponent(p.id)}"><div class="figure"><img src="${esc(safeUrl(p.image)||'assets/images/research-knowledge-graph.svg')}" alt="Conceptual illustration of evidence connected through a knowledge graph" width="330" height="170"/></div><div class="work-copy"><div class="tile-meta">${esc(p.status)} · ${esc(p.date)}</div><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="tile-bottom"><span>${(p.documents||[]).length} public presentation${(p.documents||[]).length===1?'':'s'}</span><span>View research →</span></div></div></a></div>`;
+    }).join('');
+  }
   async function publications(){const [pubs,site]=await Promise.all([get('content/publications.json'),get('content/site.json')]);groupedPublications(pubs,$('#publication-groups'),site.publicationAuthorNames||[]);}
-  async function projects(){const data=await get('content/projects.json');$('#project-grid').innerHTML=data.length?data.map((p,i)=>`<a class="project-card" href="project.html?id=${encodeURIComponent(p.id)}"><div class="project-content"><span class="project-no">PROJECT ${esc(p.number||i+1)} · ${esc(p.date)}</span><span class="project-category">${esc(p.category)}</span><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><span class="project-arrow">VIEW PROJECT ↗</span></div></a>`).join(''):'<div class="empty-projects"><img src="assets/images/idea-symbol.png" alt="IDEA LAB emblem"/><h2>Projects coming soon.</h2><p>IDEA LAB 연구 프로젝트를 앞으로 이곳에 추가할 예정입니다.</p><span>UPDATE: content/projects.json</span></div>';}
   async function news(){
     const data=await get('content/news.json');
     const ordered=data.filter(n=>String(n.label||'').toLowerCase()==='award').sort((a,b)=>b.date.localeCompare(a.date));
@@ -79,38 +84,22 @@
     const certs=data.certifications.map(c=>cvRow(c.title,'','',c.date)).join('');
     $('#cv-content').innerHTML=`<div class="cv-profile"><div><h2>${esc(data.name)}</h2><p>${esc(data.headline)}</p></div><a class="cv-email" href="mailto:${esc(data.email)}">${esc(data.email)}</a></div>`+cvSection('Education',edu)+cvPubs(pubs,'Journal','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Journal','Domestic',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','International',site.publicationAuthorNames||[])+cvPubs(pubs,'Conference','Domestic',site.publicationAuthorNames||[])+cvSection('Research Experience',exp)+cvSection('Awards',awards)+cvSection('Certification',certs);
   }
-  function projectDocuments(documents) {
-    const docs=(documents||[]).filter(d=>/^assets\/projects\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/.test(d.url));
-    if(!docs.length)return;
-    const section=document.createElement('section');
-    section.className='project-documents';
-    section.setAttribute('aria-labelledby','project-documents-heading');
-    section.innerHTML=`<div class="project-documents-heading"><div><p class="section-index">RESEARCH MATERIALS · ${docs.length} PDFS</p><h2 id="project-documents-heading">Explore the research</h2></div><p>Select a presentation to read below.</p></div><div class="project-reader-grid"><div class="project-document-list" role="group" aria-label="Research presentations">${docs.map((d,i)=>`<button type="button" class="project-document-button" data-document="${i}" aria-pressed="${i===0}" aria-controls="project-pdf"><span class="project-document-number">${String(i+1).padStart(2,'0')}</span><span><strong>${esc(d.title)}</strong><span class="project-document-description">${esc(d.description)}</span><span class="project-document-meta">PDF · ${esc(d.pages)} pages${d.date?` · ${esc(d.date)}`:''}</span></span></button>`).join('')}</div><div class="project-pdf-panel"><div class="project-pdf-toolbar"><h3 id="project-pdf-title"></h3><a id="project-pdf-open" target="_blank" rel="noopener noreferrer">Open PDF in new tab ↗</a></div><p class="project-pdf-hint">If the embedded preview is unavailable on your device, open the PDF in a new tab.</p><iframe id="project-pdf" class="project-pdf" title="Research presentation"></iframe><p id="project-document-status" class="project-document-status" role="status"></p></div></div>`;
-    $('.project-detail-grid').append(section);
-    const buttons=section.querySelectorAll('[data-document]');
-    const show=index=>{
-      const d=docs[index];
-      buttons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===index)));
-      $('#project-pdf-title').textContent=d.title;
-      $('#project-pdf-open').href=d.url;
-      $('#project-pdf').title=d.title;
-      $('#project-pdf').src=d.url+'#view=FitH';
-      $('#project-document-status').textContent=`Selected presentation ${index+1} of ${docs.length}: ${d.title}`;
-    };
-    buttons.forEach((button,i)=>button.addEventListener('click',()=>{
-      show(i);
-      if(window.matchMedia('(max-width: 900px)').matches)section.querySelector('.project-pdf-panel').scrollIntoView({block:'start'});
+  async function study(){
+    const studies=await get('content/projects.json');
+    const id=new URLSearchParams(location.search).get('id')||'drone-graphrag';
+    const p=studies.find(item=>item.id===id);
+    if(!p){$('#study-content').innerHTML='<h1>Research not found</h1><p>Please return to the Research page.</p>';return;}
+    const docs=(p.documents||[]).filter(d=>/^assets\/projects\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/.test(d.url));
+    $('#study-content').innerHTML=`<div class="study-head"><div><div class="study-kicker">${esc(p.category)}</div><h1>${esc(p.title)}</h1>${keywordHtml(p.tags)}</div><dl class="study-metadata"><div><dt>PERIOD</dt><dd>${esc(p.date)}</dd></div><div><dt>STATUS</dt><dd><span class="study-status">${esc(p.status)}</span></dd></div></dl></div><section class="study-overview" aria-labelledby="study-overview-heading"><h2 id="study-overview-heading">Research Overview</h2><p>${esc(p.overview)}</p></section><section aria-labelledby="study-materials-title"><div class="study-materials-heading"><h2 id="study-materials-title">Public materials</h2><span class="study-material-count">${docs.length} PDF${docs.length===1?'':'s'}</span></div><div class="study-pdf-list">${docs.map((d,i)=>`<div class="study-pdf-row"><div class="study-pdf-info"><span class="study-pdf-mark" aria-hidden="true">PDF</span><div><strong>${esc(d.title)}</strong><small>${esc(d.pages)} pages</small></div></div><button class="study-pdf-open" type="button" data-document="${i}" aria-haspopup="dialog" aria-controls="study-pdf-dialog">View PDF →</button></div>`).join('')}</div><p class="study-materials-note">Only selected introductory material is shared while the research is ongoing.</p></section>`;
+    const dialog=$('#study-pdf-dialog'),frame=$('#study-pdf-frame');
+    document.querySelectorAll('[data-document]').forEach(button=>button.addEventListener('click',()=>{
+      const d=docs[Number(button.dataset.document)];
+      $('#study-pdf-title').textContent=d.title;$('#study-pdf-external').href=d.url;
+      frame.src=d.url+'#view=FitH';frame.title=d.title;dialog.showModal();
     }));
-    show(0);
-  }
-  async function project(){const data=await get('content/projects.json');const id=new URLSearchParams(location.search).get('id');const p=data.find(x=>x.id===id);if(!p){$('#project-head').innerHTML='<h2>Project not found.</h2><p>Please visit the Projects page for current entries.</p>';return;}
-    $('.page-banner h1').textContent=p.title;
-    $('#project-head').innerHTML=`<p>${esc(p.summary)}</p>${keywordHtml(p.tags)}`;
-    $('#project-body').innerHTML=`<h2>Overview</h2><p>${esc(p.overview)}</p>${(p.sections||[]).map(s=>`<h2>${esc(s.heading)}</h2><p>${esc(s.body)}</p>`).join('')}`;
-    $('#project-aside').innerHTML=`<dl class="meta-block"><dt>DATE</dt><dd>${esc(p.date)}</dd></dl><dl class="meta-block"><dt>CATEGORY</dt><dd>${esc(p.category)}</dd></dl>`;
-    if(/^demos\/[a-z0-9-]+\/index\.html$/.test(p.demoUrl||''))$('#project-aside').innerHTML+=`<a class="text-link" href="${esc(p.demoUrl)}" target="_blank" rel="noopener noreferrer">Explore interactive demo ↗</a>`;
-    projectDocuments(p.documents);
+    $('.study-pdf-close').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('close',()=>frame.removeAttribute('src'));
   }
   async function post(){const el=$('#post-head');if(el)el.innerHTML='<h2>Research notes are not published yet.</h2>';}
-  document.addEventListener('DOMContentLoaded',async()=>{nav();const page=document.body.dataset.page;try {if({home,about,research,publications,projects,news,award,cv,project,post}[page])await {home,about,research,publications,projects,news,award,cv,project,post}[page]();}catch(e){console.error(e);const status=$('#status-toast');if(status){status.textContent='Data failed to load. Start a local web server (see README.md).';status.classList.add('visible');}}});
+  document.addEventListener('DOMContentLoaded',async()=>{nav();const page=document.body.dataset.page;try {if({home,about,research,publications,news,award,cv,study,post}[page])await {home,about,research,publications,news,award,cv,study,post}[page]();}catch(e){console.error(e);const status=$('#status-toast');if(status){status.textContent='Data failed to load. Start a local web server (see README.md).';status.classList.add('visible');}}});
 })();
