@@ -38,7 +38,8 @@ if len(data)==len(names):
             if not project.get(field):errors.append(f'Project {project.get("id")}: missing {field}')
         docs=project.get('documents',[])
         if project.get('id')=='drone-graphrag':
-            if {d.get('id') for d in docs}!={'rag-foundations'}:errors.append('Drone GraphRAG: only the approved introductory PDF may be published')
+            approved={'contextual-chunking','table-aware-kg-rag','rag-foundations'}
+            if {d.get('id') for d in docs}!=approved:errors.append('Drone GraphRAG: only the three approved presentations may be published')
             if project.get('startDate')!='2026-09' or project.get('status')!='Ongoing':errors.append('Drone GraphRAG: research period/status is incorrect')
         doc_ids=[doc.get('id') for doc in docs]
         if len(doc_ids)!=len(set(doc_ids)):errors.append('Duplicate document IDs in '+str(project.get('id')))

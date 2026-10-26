@@ -6,6 +6,7 @@ Run from any directory with: python3 scripts/check_pdf_viewer.py
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import argparse
 import json
 import os
 import shutil
@@ -29,9 +30,11 @@ class QuietHandler(SimpleHTTPRequestHandler):
             pass
 
 
-def check():
+def check(document_id=None):
     study = json.loads((BASE / 'content/projects.json').read_text())[0]
-    document = study['documents'][0]
+    document = next((doc for doc in study['documents'] if doc['id'] == document_id), None) if document_id else study['documents'][0]
+    if document is None:
+        raise ValueError('The selected document is not in the public presentation list.')
     browser_path = os.environ.get('CHROMIUM_PATH') or shutil.which('chromium') or shutil.which('google-chrome')
     if not browser_path:
         raise RuntimeError('Chromium is required; set CHROMIUM_PATH if it is not on PATH.')
@@ -48,9 +51,10 @@ def check():
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.on('request', lambda request: requests.append(request.url))
             page.goto(base + 'study.html?id=' + study['id'])
-            page.locator('.study-pdf-open').wait_for()
+            trigger = page.locator('.study-pdf-row').filter(has_text=document['title']).locator('.study-pdf-open')
+            trigger.wait_for()
             assert not any('pdf.min.mjs' in url or document['url'] in url for url in requests)
-            page.locator('.study-pdf-open').click()
+            trigger.click()
             viewer = page.frame_locator('#study-pdf-frame')
             first = viewer.locator('.pdf-page[data-page="1"]')
             first.locator('canvas').wait_for(timeout=30000)
@@ -99,7 +103,7 @@ def check():
             page.wait_for_function('document.querySelector("#study-pdf-frame").getAttribute("src") === null')
             assert page.locator('#study-pdf-frame').get_attribute('src') is None
             assert page.locator('#study-pdf-dialog').evaluate('(dialog) => !dialog.open')
-            page.locator('.study-pdf-open').click()
+            trigger.click()
             viewer.locator('.pdf-page[data-page="1"][data-rendered="true"]').wait_for(timeout=30000)
             page.locator('.study-pdf-close').focus()
             page.keyboard.press('Escape')
@@ -121,4 +125,6 @@ def check():
 
 
 if __name__ == '__main__':
-    check()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--document-id', help='Select a published presentation by its metadata ID.')
+    check(parser.parse_args().document_id)

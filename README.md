@@ -63,7 +63,7 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
 - **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Research 하단의 진행 중인 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 Projects 주소는 새 Research 화면으로 연결됩니다.
-- **자료 공개 범위:** **RAG Fundamentals & Knowledge Graph Integration** 한 개만 공개합니다. 나머지 네 PDF는 공개 파일과 메타데이터에서 제거했습니다. 링크를 숨기거나 `private` 플래그만 추가하는 방식은 사용하지 않습니다. 비공개 원본은 이 공개 저장소나 배포 경로에 다시 넣지 마세요. 과거 공개된 GitHub 이력과 사본은 현재 파일 삭제만으로 지워지지 않습니다.
+- **자료 공개 범위:** 기존 번호 **3~5번**인 **GraphRAG & KG-RAG with Contextual Chunking**, **Adaptive Table-Aware KG-RAG & LLM Wiki**, **RAG Fundamentals & Knowledge Graph Integration** 세 개를 공개합니다. 1·2번 PDF는 공개 파일과 메타데이터에서 계속 제외합니다. 링크를 숨기거나 `private` 플래그만 추가하는 방식은 사용하지 않습니다. 비공개 원본은 이 공개 저장소나 배포 경로에 다시 넣지 마세요. 과거 공개된 GitHub 이력과 사본은 현재 파일 삭제만으로 지워지지 않습니다.
 - **자료 표시:** 상세 화면은 연구 개요와 제목·페이지 수·`View PDF` 버튼만 표시합니다. PDF는 버튼을 누를 때 모달 뷰어로 열립니다. 내부 미리보기는 PDF.js로 문서만 표시하고 페이지를 스크롤해 읽습니다. 텍스트 선택도 지원하며, 인쇄·다운로드는 상단의 새 탭 링크로 원본 PDF를 열어 사용합니다. `documents`에는 공개 승인된 자료만 넣으세요. 뷰어 배포 파일과 라이선스는 `assets/vendor/pdfjs/`에 있으며, 별도 서버나 CDN은 사용하지 않습니다.
 - **새 연구 추가:** `content/projects.json` 배열에 `id`, `title`, `category`, `summary`, `overview`, `date`, `startDate`, `status`, `tags`, `documents`, `image`, `theme`, `themeLabel`을 가진 항목을 추가하면 빈 칸부터 카드가 채워집니다. `theme`은 `knowledge`, `physics`, `optimization` 중 하나입니다. `image`는 공개 도식의 `assets/` 경로입니다. Home과 Research 상단의 세 연구 분야 소개는 링크 없는 설명용 요소입니다.
 - **검사:** `python3 scripts/check_content.py`는 목록에 없는 PDF가 공개 폴더에 남아 있는지와 승인된 자료만 공개되는지도 검사합니다.
@@ -78,7 +78,7 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 
 - Journal: **International** (1편, *Accepted 2026*) / Domestic (0편)
 - Conference: International (0편) / **Domestic** (2편)
-- Research: **GraphRAG for Drone Design** 연구 한 개와 승인된 입문 발표 PDF 한 개만 공개
+- Research: **GraphRAG for Drone Design** 연구 한 개와 승인된 발표 PDF 세 개만 공개
 - News: **수상만 표시**
 - About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `Hanyang University ERICA`와 아래 영문 `Engineering Building 5, Room 224`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)

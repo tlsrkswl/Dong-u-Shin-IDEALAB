@@ -14,6 +14,21 @@
     ],
     "documents": [
       {
+        "id": "contextual-chunking",
+        "title": "GraphRAG & KG-RAG with Contextual Chunking",
+        "description": "Graph-based retrieval frameworks and a structure-aware, contextual chunking pipeline for technical documents.",
+        "url": "assets/projects/drone-graphrag/contextual-chunking.pdf",
+        "pages": 22,
+        "date": "2026-09-22"
+      },
+      {
+        "id": "table-aware-kg-rag",
+        "title": "Adaptive Table-Aware KG-RAG & LLM Wiki",
+        "description": "Adaptive chunking, table-aware retrieval, contextual embeddings, BM25, and an LLM Wiki workflow.",
+        "url": "assets/projects/drone-graphrag/table-aware-kg-rag.pdf",
+        "pages": 20
+      },
+      {
         "id": "rag-foundations",
         "title": "RAG Fundamentals & Knowledge Graph Integration",
         "description": "Embeddings, FAISS retrieval, RAG implementation, and initial knowledge graph integration experiments.",
