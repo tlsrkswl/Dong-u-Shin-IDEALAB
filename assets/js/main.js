@@ -95,7 +95,7 @@
     document.querySelectorAll('[data-document]').forEach(button=>button.addEventListener('click',()=>{
       const d=docs[Number(button.dataset.document)];
       $('#study-pdf-title').textContent=d.title;$('#study-pdf-external').href=d.url;
-      frame.src=d.url+'#view=FitH';frame.title=d.title;dialog.showModal();
+      frame.src='pdf-viewer.html?file='+encodeURIComponent(d.url);frame.title=d.title;dialog.showModal();
     }));
     $('.study-pdf-close').addEventListener('click',()=>dialog.close());
     dialog.addEventListener('close',()=>frame.removeAttribute('src'));

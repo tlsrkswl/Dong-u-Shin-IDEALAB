@@ -19,7 +19,7 @@ class StaticLinks(HTMLParser):
             u=d.get('href') or d.get('src')
             if u and not (u.startswith(('http:','https:','mailto:','data:','#'))):self.urls.append(u.split('?')[0].split('#')[0])
 
-pages=['index.html','about.html','research.html','study.html','publications.html','projects.html','news.html','cv.html','project.html','post.html','award.html']
+pages=['index.html','about.html','research.html','study.html','pdf-viewer.html','publications.html','projects.html','news.html','cv.html','project.html','post.html','award.html']
 for name in pages:
     p=BASE/name
     if not p.is_file():errors.append(f'Missing page {name}');continue
@@ -71,9 +71,9 @@ if len(data)==len(names):
     if forbidden & set(data['cv']):errors.append('CV contains a forbidden section')
     if not data['cv'].get('education'):errors.append('CV education missing')
     if data['site'].get('labLocation')!='제5공학관 224호':errors.append('Lab location missing/incorrect')
-for p in [BASE/'assets/js/main.js',BASE/'assets/css/style.css',BASE/'assets/images/idea-logo-white.png',BASE/'assets/images/idea-logo-original.png',BASE/'assets/images/profile-dongu-shin.png',BASE/'assets/images/hanyang-lion.png',BASE/'assets/Dong-u_Shin_CV.pdf']:
+for p in [BASE/'assets/js/main.js',BASE/'assets/js/pdf-viewer.mjs',BASE/'assets/css/style.css',BASE/'assets/vendor/pdfjs/pdf.min.mjs',BASE/'assets/vendor/pdfjs/pdf.worker.min.mjs',BASE/'assets/vendor/pdfjs/LICENSE',BASE/'assets/images/idea-logo-white.png',BASE/'assets/images/idea-logo-original.png',BASE/'assets/images/profile-dongu-shin.png',BASE/'assets/images/hanyang-lion.png',BASE/'assets/Dong-u_Shin_CV.pdf']:
     if not p.is_file():errors.append('Missing resource '+str(p.relative_to(BASE)))
 if errors:
     for error in errors:print('ERROR:',error)
     sys.exit(1)
-print('PASS: 11 pages, 7 JSON files, linked resources, research links, approved public PDFs only, publication categories, awards only, lab room, CV exclusions')
+print('PASS: 12 pages, 7 JSON files, linked resources, PDF viewer assets, research links, approved public PDFs only, publication categories, awards only, lab room, CV exclusions')

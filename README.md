@@ -24,6 +24,7 @@ award.html                수상 상세 페이지 (상장 이미지만 표시, P
 cv.html                   Curriculum Vitae (금지 항목 제외)
 project.html              기존 상세 주소 → study.html로 연결
 study.html                연구 개요, 기간, 승인된 공개 PDF
+pdf-viewer.html           도구 모음 없는 문서 미리보기
 post.html                 추후 연구 기록 템플릿
 content/
   site.json               이름, 모토, 자기소개, 이메일, 소속, 연구실 위치
@@ -62,9 +63,10 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
 - **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Home의 첫 Research Focus 카드와 Research 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 Projects 주소는 새 Research 화면으로 연결됩니다.
 - **자료 공개 범위:** **RAG Fundamentals & Knowledge Graph Integration** 한 개만 공개합니다. 나머지 네 PDF는 공개 파일과 메타데이터에서 제거했습니다. 링크를 숨기거나 `private` 플래그만 추가하는 방식은 사용하지 않습니다. 비공개 원본은 이 공개 저장소나 배포 경로에 다시 넣지 마세요. 과거 공개된 GitHub 이력과 사본은 현재 파일 삭제만으로 지워지지 않습니다.
-- **자료 표시:** 상세 화면은 연구 개요와 제목·페이지 수·`View PDF` 버튼만 표시합니다. PDF는 버튼을 누를 때 모달 뷰어로 열립니다. `documents`에는 공개 승인된 자료만 넣으세요.
+- **자료 표시:** 상세 화면은 연구 개요와 제목·페이지 수·`View PDF` 버튼만 표시합니다. PDF는 버튼을 누를 때 모달 뷰어로 열립니다. 내부 미리보기는 PDF.js로 문서만 표시하고 페이지를 스크롤해 읽습니다. 텍스트 선택도 지원하며, 인쇄·다운로드는 상단의 새 탭 링크로 원본 PDF를 열어 사용합니다. `documents`에는 공개 승인된 자료만 넣으세요. 뷰어 배포 파일과 라이선스는 `assets/vendor/pdfjs/`에 있으며, 별도 서버나 CDN은 사용하지 않습니다.
 - **새 연구 추가:** `content/projects.json` 배열에 `id`, `title`, `category`, `summary`, `overview`, `date`, `startDate`, `status`, `tags`, `documents`, `image`, `theme`, `themeLabel`을 가진 항목을 추가하면 빈 칸부터 카드가 채워집니다. `theme`은 `knowledge`, `physics`, `optimization` 중 하나입니다. `image`는 공개 도식의 `assets/` 경로입니다. Home의 연구 분야에 연결하려면 `content/research.json`의 해당 분야에 같은 `studyId`를 설정하세요.
 - **검사:** `python3 scripts/check_content.py`는 목록에 없는 PDF가 공개 폴더에 남아 있는지와 승인된 자료만 공개되는지도 검사합니다.
+- **PDF 뷰어 검증:** Playwright Python과 Chromium이 있는 개발 환경에서는 `python3 scripts/check_pdf_viewer.py`로 전체 페이지 렌더링, 한글 텍스트 선택, 스크롤, 새 탭 열기와 모바일 표시를 확인할 수 있습니다. 배포 사이트를 실행하는 데 이 도구들은 필요하지 않습니다.
 
 - **뉴스 수정:** `content/news.json`에 `label: "Award"`인 수상 소식만 표시하도록 구성했습니다. 현재 2025 KSEE 학술대회 발표 우수상 1건만 있습니다.
 - **증명사진 교체:** `assets/images/profile-dongu-shin.png`를 새 이미지로 교체하면 됩니다. 파일명 유지가 편리합니다.
