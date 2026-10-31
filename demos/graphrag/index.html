@@ -1451,6 +1451,8 @@ function fitDetailToGraph(){
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(fitDetailToGraph).observe(document.querySelector('.graphbox'));
 window.addEventListener('resize',fitDetailToGraph);
 window.__v5test={localMoves:()=>localMoves.map(({node,to,delta})=>({node,to,delta})),state:()=>({mode:state.mode,step:state.step,max:maxStep(),nodes:document.querySelectorAll('.g-node').length,edges:document.querySelectorAll('.g-edge').length,scene:sceneInfo()?.title}),setMode,advance,bridgeStats:(lev=3)=>({nodes:[...bridgeCache[lev].values()].filter(x=>x.external>0).length,externalWeight:[...bridgeCache[lev].values()].reduce((acc,x)=>acc+x.external,0)}),sceneTrace:()=>scenes.map((s,i)=>({step:i+1,type:s.type,level:s.level??-1,parent:s.parent??null,child:s.child??null,groupCount:s.revealed.map(x=>x.length)})),dataStats:()=>({nodes:N,edges:E,entityEvents:entityEvents.length,edgeEvents:edgeEvents.length,scenes:scenes.length})};render();fitDetailToGraph();
+// Start the complete walkthrough as soon as the demo is initialized.
+runAll();
 })();
 
 </script></body></html>
