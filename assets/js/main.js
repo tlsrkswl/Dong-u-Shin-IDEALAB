@@ -9,9 +9,6 @@
   const link = (url,label) => safeUrl(url)?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'';
   const keywordHtml = items => `<div class="tags">${(items||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div>`;
   function nav() {
-    const b=$('.menu-toggle'), n=$('#primary-nav');
-    if(b && n){b.addEventListener('click',()=>{const open=n.classList.toggle('is-open');b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'Close navigation':'Open navigation');});
-      n.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{n.classList.remove('is-open');b.setAttribute('aria-expanded','false');}));}
     const print=$('#print-cv');if(print)print.addEventListener('click',()=>window.print());
   }
   const authorMarkup=(authors,ownNames=[])=>{

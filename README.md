@@ -48,6 +48,14 @@ scripts/build_cv.py       JSON 기반 CV PDF 다시 생성
 scripts/check_content.py 검사
 ```
 
+## 공통 디자인과 메뉴
+
+홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 두 데모는 상단의 **Demos** 메뉴에서 열 수 있습니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
+
+Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--graph-evidence`, `--graph-relation`을 사용합니다. 노드 SVG와 설명 패널의 축소 그림은 같은 색상 값을 읽고, Community 단계의 범례는 현재 표시된 노드 색상에 맞춰집니다. Community 소속·계층·계산 데이터는 변경하지 않습니다.
+
+`python3 scripts/check_site_theme.py`는 모든 페이지의 반응형 배치, 공통 메뉴·키보드 동작, CV 인쇄, 그래프와 설명 색상 일치를 검사합니다. Playwright Python과 Chromium이 필요하며 배포 사이트에는 별도 설치가 필요 없습니다. PDF.js 문서 전용 뷰어와 기존 페이지 리디렉션은 그대로 유지합니다.
+
 ## 글 수정
 
 ### GraphRAG 인터랙티브 데모

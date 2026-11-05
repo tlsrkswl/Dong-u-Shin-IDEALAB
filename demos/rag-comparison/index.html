@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="stylesheet" href="../../assets/css/site-theme.css?v=20261105-unified"/><script src="../../assets/js/site-shell.js?v=20261105-unified" defer></script></head><body data-unified="compare"><header class="site-header unified-header"><div class="unified-header-inner"><a class="unified-brand" href="../../index.html" aria-label="Dong-u Shin home"><img src="../../assets/images/idea-logo-white.png" alt="IDEA LAB"/><span>Dong-u Shin<small>ENGINEERING INTELLIGENCE</small></span></a><button class="unified-menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><nav class="unified-nav" id="primary-nav" aria-label="Main navigation"><a href="../../index.html">Home</a><a href="../../about.html">About</a><a href="../../research.html">Research</a><a href="../../publications.html">Publications</a><a href="../../news.html">News</a><a href="../../cv.html">CV</a><details class="unified-demos" data-current="true"><summary>Demos<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></summary><div class="unified-demo-links"><a href="../../demos/graphrag/index.html?v=20261105-unified">Inside GraphRAG</a><a href="../../demos/rag-comparison/index.html?v=20261105-unified" aria-current="page">Vector RAG vs GraphRAG</a></div></details></nav></div></header><a class="unified-skip" href="#main">Skip to content</a>
 <title>RAG 비교 데모 3D</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,9 +129,9 @@ svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linej
 }
 @media (prefers-reduced-motion: reduce){ .badge,.reason,.abody .ln,.banner,.panel{transition:none} }
 </style>
-<div class="app">
+<div class="app" id="main"><div class="unified-crumb"><a href="../../index.html">Home</a><span aria-hidden="true">/</span><span>Interactive Demos</span><span aria-hidden="true">/</span><b>RAG Comparison</b></div>
   <header class="top">
-    <div class="brand"><span class="v">Vector RAG</span><span class="x">vs</span><span class="g">GraphRAG Global</span></div>
+    <div class="brand"><span class="v">Vector RAG</span><span class="x">vs</span><span class="g">GraphRAG</span></div>
     <nav class="tabs" role="tablist" aria-label="상황 선택">
       <button class="tab" id="tab0" role="tab" aria-selected="true"><b>상황 1</b>Local 질문</button>
       <button class="tab" id="tab1" role="tab" aria-selected="false"><b>상황 2</b>Global 질문</button>
@@ -1007,7 +1007,7 @@ $('btnRestart').addEventListener('click', () => { t = 0; setPlaying(true); });
 $('tab0').addEventListener('click', () => { sIdx = 0; t = 0; setPlaying(true); });
 $('tab1').addEventListener('click', () => { sIdx = 1; t = 0; setPlaying(true); });
 $('prog').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); t = clamp((e.clientX - r.left) / r.width) * T.end; });
-document.addEventListener('keydown', e => { if (e.code === 'Space' && !/^(BUTTON|INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) { e.preventDefault(); setPlaying(!playing); } });
+document.addEventListener('keydown', e => { if (e.code === 'Space' && !document.activeElement.closest('button,input,textarea,select,a,summary,[contenteditable]')) { e.preventDefault(); setPlaying(!playing); } });
 window.__demo = { seek(s, tt) { sIdx = s; t = tt; render(); }, pause() { setPlaying(false); }, T };
 if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { t = T.end - 0.5; setPlaying(false); }
 render();
