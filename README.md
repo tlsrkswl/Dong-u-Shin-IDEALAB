@@ -50,7 +50,7 @@ scripts/check_content.py 검사
 
 ## 공통 디자인과 메뉴
 
-홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 상단에는 Home·About·Research·Publications·News만 표시하며, 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
+홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·News만 표시하고, 두 데모의 상단에는 본문 폭에 맞춘 로고와 이름만 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
 
 Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--graph-evidence`, `--graph-relation`을 사용합니다. 노드 SVG와 설명 패널의 축소 그림은 같은 색상 값을 읽고, Community 단계의 범례는 현재 표시된 노드 색상에 맞춰집니다. Community 소속·계층·계산 데이터는 변경하지 않습니다.
 
@@ -66,7 +66,7 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 
 데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. Home 데모 소개 문구와 링크는 `index.html`에 있습니다.
 
-Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-comparison-demo.mp4`를 음소거·자동·반복 재생하며, **Open Comparison Demo** 버튼으로 `demos/rag-comparison/index.html`을 새 탭에서 엽니다. 영상을 교체할 때는 같은 경로를 사용하고 `assets/images/rag-comparison-demo.jpg` 포스터도 갱신하세요.
+Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-comparison-demo.mp4`를 음소거·자동·반복 재생하며, **Open Demo** 버튼으로 `demos/rag-comparison/index.html`을 새 탭에서 엽니다. 영상을 교체할 때는 같은 경로를 사용하고 `assets/images/rag-comparison-demo.jpg` 포스터도 갱신하세요.
 
 - **Home 영어 모토:** `content/site.json`의 `homeMotto` 배열을 편집하세요. 각 항목의 `text`를 순서대로 연결하며, `tone`은 `knowledge`, `prediction`, `optimization` 중 하나로 강조 색상을 정합니다. `breakBefore: true`는 데스크톱에서 문장 앞에 줄바꿈을 넣습니다. 앞 글자부터 한 번 나타나는 모션은 사용자 모션 감소 설정에서는 생략되며, JavaScript 없이도 기본 영문 문구는 표시됩니다.
 - **모토/연구실 위치:** About의 모토는 `content/site.json`의 `motto`이며, 위치는 `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.

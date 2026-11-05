@@ -236,3 +236,6 @@ body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.cur
 body[data-unified=compare] .app{height:calc(100dvh - var(--shell-height,77px))}
 @media(max-width:900px){body[data-unified=compare] .app{height:auto}}
 body.site-v2[data-page=about] .education-list,body.site-v2[data-page=news] .news-list{width:100%;max-width:none}
+/* Standalone demos keep only the brand, aligned to their own canvas inset. */
+body[data-unified=inside] .unified-header-inner{max-width:1620px;padding-inline:clamp(12px,2vw,33px)}
+body[data-unified=compare] .unified-header-inner{max-width:none;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}

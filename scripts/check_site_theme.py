@@ -55,22 +55,35 @@ def check():
                 page.goto(origin + path, wait_until='domcontentloaded')
                 page.wait_for_selector(ready)
                 assert page.locator('.unified-header').count() == 1, path
-                assert page.locator('.unified-nav>a').count() == 5, path
+                demo = path.startswith('demos/')
+                assert page.locator('.unified-nav>a').count() == (0 if demo else 5), path
                 assert page.locator('.unified-demos, .unified-nav a[href$="cv.html"]').count() == 0, path
-                assert page.locator('.unified-nav>a').first.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 15, path
-                assert page.locator('.unified-nav a[aria-current="page"]').count() == (0 if path == 'cv.html' or path.startswith('demos/') else 1), path
-                for width in (1440, 1024, 980, 740, 390, 320):
+                if not demo:
+                    assert page.locator('.unified-nav>a').first.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 15, path
+                    assert page.locator('.unified-nav a[aria-current="page"]').count() == (0 if path == 'cv.html' else 1), path
+                for width in (1920, 1440, 1024, 980, 740, 390, 320):
                     page.set_viewport_size({'width': width, 'height': 1000})
                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), (path, width)
-                page.set_viewport_size({'width': 390, 'height': 844})
-                toggle = page.locator('.unified-menu-toggle')
-                toggle.click()
-                assert toggle.get_attribute('aria-expanded') == 'true', path
-                page.keyboard.press('Escape')
-                assert toggle.get_attribute('aria-expanded') == 'false', path
-                toggle.click()
-                page.set_viewport_size({'width': 1440, 'height': 1000})
-                page.wait_for_function('document.querySelector(".unified-menu-toggle").getAttribute("aria-expanded")==="false"')
+                    if demo:
+                        selector = 'main' if 'graphrag/' in path else '.app'
+                        assert page.locator(selector).evaluate('''element => {
+                            const left = element.getBoundingClientRect().left + parseFloat(getComputedStyle(element).paddingLeft);
+                            return Math.abs(document.querySelector('.unified-brand').getBoundingClientRect().left - left) < 1;
+                        }'''), (path, width)
+                if demo:
+                    assert page.locator('.unified-menu-toggle, .unified-nav').count() == 0, path
+                else:
+                    page.set_viewport_size({'width': 390, 'height': 844})
+                    toggle = page.locator('.unified-menu-toggle')
+                    toggle.click()
+                    assert toggle.get_attribute('aria-expanded') == 'true', path
+                    page.keyboard.press('Escape')
+                    assert toggle.get_attribute('aria-expanded') == 'false', path
+                    toggle.click()
+                    page.set_viewport_size({'width': 1440, 'height': 1000})
+                    page.wait_for_function('document.querySelector(".unified-menu-toggle").getAttribute("aria-expanded")==="false"')
+                if path == 'index.html':
+                    assert page.locator('.home-demo-button').all_text_contents() == ['Open Demo', 'Open Demo']
                 if path in ('about.html', 'news.html'):
                     selector = '.education-list' if path == 'about.html' else '.news-list'
                     assert page.locator(selector).evaluate('''element => {
@@ -92,7 +105,7 @@ def check():
                 if path.startswith('study.html'):
                     assert page.locator('.study-pdf-row').count() == 3
                 page.close()
-            print('PASS: all portfolio and demo pages fit six screen widths; shared menus, Escape, resize and CV print work')
+            print('PASS: all portfolio and demo pages fit seven screen widths; shared menus, Escape, resize and CV print work')
 
             page = browser.new_page(viewport={'width': 1440, 'height': 1000})
             page.on('pageerror', lambda error: errors.append(('graph', str(error))))
@@ -137,7 +150,7 @@ def check():
             page.goto(origin + 'demos/rag-comparison/index.html', wait_until='domcontentloaded')
             page.wait_for_function('!!window.__demo')
             assert page.locator('.panel').first.evaluate('e=>getComputedStyle(e).backgroundColor') == 'rgb(255, 255, 255)'
-            page.locator('.unified-nav a').first.focus()
+            page.locator('.unified-brand').focus()
             page.keyboard.press('Space')
             assert page.locator('#btnPlay').get_attribute('aria-label') == '일시정지'
             page.locator('#tab1').click()
