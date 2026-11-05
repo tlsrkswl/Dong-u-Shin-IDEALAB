@@ -521,3 +521,15 @@
     padding-top: 24px;
   }
 }
+
+/* Home: Vector RAG and GraphRAG comparison demo. */
+
+.home-demo:not(.comparison-demo){padding-bottom:0}
+.comparison-demo.section{padding-top:28px}
+.home-demo.comparison-demo .research-demo{background:linear-gradient(120deg,#edf5fc,#f3f0fc 75%,#f7f2fc);border-color:#dfe4f1}
+.home-demo.comparison-demo .research-demo-copy h2{font-size:clamp(15px,2vw,28px);white-space:nowrap;color:#243e65;letter-spacing:-.7px}
+.comparison-title-vs{color:#8b9aad;font-size:.65em;font-weight:600}
+.comparison-process > span:not(.demo-process-arrow){background:#eaf1fc;border-color:#dae5f8;color:#2456a0}
+.comparison-process > strong{background:#f2edfa;border-color:#e8e0f3;color:#644697}
+.comparison-process .demo-process-arrow{font-size:13px;font-weight:700}
+.comparison-process small{color:#52637e;background:#ffffffa8;border-color:#e0e5ef}

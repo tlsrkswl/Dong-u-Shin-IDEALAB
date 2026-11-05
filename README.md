@@ -58,6 +58,8 @@ Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 �
 
 데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. Home 데모 소개 문구와 링크는 `index.html`에 있습니다.
 
+Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-comparison-demo.mp4`를 음소거·자동·반복 재생하며, **Open Comparison Demo** 버튼으로 `demos/rag-comparison/index.html`을 새 탭에서 엽니다. 영상을 교체할 때는 같은 경로를 사용하고 `assets/images/rag-comparison-demo.jpg` 포스터도 갱신하세요.
+
 - **Home 영어 모토:** `content/site.json`의 `homeMotto` 배열을 편집하세요. 각 항목의 `text`를 순서대로 연결하며, `tone`은 `knowledge`, `prediction`, `optimization` 중 하나로 강조 색상을 정합니다. `breakBefore: true`는 데스크톱에서 문장 앞에 줄바꿈을 넣습니다. 앞 글자부터 한 번 나타나는 모션은 사용자 모션 감소 설정에서는 생략되며, JavaScript 없이도 기본 영문 문구는 표시됩니다.
 - **모토/연구실 위치:** About의 모토는 `content/site.json`의 `motto`이며, 위치는 `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.

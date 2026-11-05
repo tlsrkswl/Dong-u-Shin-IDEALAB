@@ -1,0 +1,1019 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>RAG 비교 데모 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one screen. Shared question on top, Vector RAG | GraphRAG Global side by side, each with its stage and answer. */
+:root{
+  --bg:#f2f4f7; --surface:#ffffff; --surface-2:#e9edf3; --ink:#111723; --ink-2:#2b3547; --line:#d2d8e2;
+  --vec:#2456d3; --vec-soft:rgba(36,86,211,.13);
+  --graph:#8b2fd6; --graph-soft:rgba(139,47,214,.12);
+  --q:#d97706; --q-soft:rgba(217,119,6,.15);
+  --ok:#13803a; --ok-soft:rgba(19,128,58,.12); --bad:#c42727; --bad-soft:rgba(196,39,39,.11);
+  --wire:#a3adbd; --node:#5d6880;
+  --cA:#0284c7; --cB:#0d9488; --cC:#ea580c; --cD:#65a30d; --cE:#db2777; --cF:#4f46e5; --cG:#a0522d; --cH:#78716c; --cI:#64748b;
+  --font:"IBM Plex Sans KR","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,"D2Coding",monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0d1017; --surface:#151a24; --surface-2:#1d2431; --ink:#eef2f8; --ink-2:#c6cedb; --line:#2b3444;
+  --vec:#6f97ff; --vec-soft:rgba(111,151,255,.17); --graph:#c38cff; --graph-soft:rgba(195,140,255,.15);
+  --q:#f6a92b; --q-soft:rgba(246,169,43,.18); --ok:#3dd27c; --ok-soft:rgba(61,210,124,.15); --bad:#ff6b6b; --bad-soft:rgba(255,107,107,.15);
+  --wire:#4a5568; --node:#9aa6bb;
+  --cA:#38bdf8; --cB:#2dd4bf; --cC:#fb923c; --cD:#a3e635; --cE:#f472b6; --cF:#8b93ff; --cG:#d4925f; --cH:#b4ada8; --cI:#9fb0c6;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0d1017; --surface:#151a24; --surface-2:#1d2431; --ink:#eef2f8; --ink-2:#c6cedb; --line:#2b3444;
+  --vec:#6f97ff; --vec-soft:rgba(111,151,255,.17); --graph:#c38cff; --graph-soft:rgba(195,140,255,.15);
+  --q:#f6a92b; --q-soft:rgba(246,169,43,.18); --ok:#3dd27c; --ok-soft:rgba(61,210,124,.15); --bad:#ff6b6b; --bad-soft:rgba(255,107,107,.15);
+  --wire:#4a5568; --node:#9aa6bb;
+  --cA:#38bdf8; --cB:#2dd4bf; --cC:#fb923c; --cD:#a3e635; --cE:#f472b6; --cF:#8b93ff; --cG:#d4925f; --cH:#b4ada8; --cI:#9fb0c6;
+  color-scheme:dark; }
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;margin:0;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+.app{height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:clamp(18px,1.3vw,25px);letter-spacing:-.01em;white-space:nowrap}
+.brand .v{color:var(--vec)} .brand .g{color:var(--graph)} .brand .x{font-weight:500;margin:0 .35em}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tab{font:inherit;font-size:clamp(13px,.9vw,16px);font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 15px;cursor:pointer}
+.tab b{font-weight:700;margin-right:6px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab:focus-visible,.icon:focus-visible{outline:2px solid var(--q);outline-offset:2px}
+.ctrl{display:flex;gap:6px}
+.icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.icon svg{width:16px;height:16px;fill:currentColor}
+.progress{height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden;cursor:pointer;flex:none}
+.progress .fill{height:100%;width:0;background:var(--ink)}
+
+/* question bar */
+.query{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px;flex:none;min-height:30px}
+.qtag{flex:none;font-weight:700;font-size:13px;color:var(--q);background:var(--q-soft);border-radius:8px;padding:5px 10px;white-space:nowrap}
+.qtext{margin:0;font-size:clamp(17px,1.35vw,26px);font-weight:600;line-height:1.35;flex:1;min-width:0;text-wrap:balance}
+.qtext .caret{display:inline-block;width:2px;height:1.05em;background:var(--q);vertical-align:-3px;margin-left:2px}
+.banner{flex:none;font-weight:700;font-size:clamp(14px,1vw,18px);border-radius:10px;padding:8px 14px;opacity:0;transition:opacity .4s;white-space:nowrap}
+.banner.v{background:var(--vec-soft);color:var(--vec)} .banner.g{background:var(--graph-soft);color:var(--graph)}
+.banner.on{opacity:1}
+
+/* panels */
+.panels{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px 14px;gap:8px}
+.panel{transition:opacity .6s ease,filter .6s ease}
+.panel.dim{opacity:.32;filter:blur(1.6px) saturate(.6)}
+.query{transition:border-color .3s,box-shadow .3s}
+.query.send{border-color:var(--q);box-shadow:0 0 0 4px var(--q-soft)}
+.fly{position:fixed;z-index:50;pointer-events:none;display:none;max-width:min(560px,80vw);background:var(--q);color:#fff;font-weight:700;font-size:clamp(14px,1vw,17px);line-height:1.35;padding:7px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);transform-origin:left center;word-break:keep-all}
+.fo-slot{font-family:var(--font);color:var(--ink);word-break:keep-all;height:100%;display:flex;align-items:center}
+.fo-q{font-size:14.5px;font-weight:700;line-height:1.4}
+.fo-c{font-size:13px;font-weight:500;line-height:1.45;gap:8px}
+.fo-c .pb{flex:none;width:20px;height:20px;border-radius:50%;background:var(--vec);color:#fff;font:700 11px/20px var(--mono);text-align:center}
+.phead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.phead h2{margin:0;font-size:clamp(17px,1.2vw,22px);font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.phead h2 i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.vec .phead h2{color:var(--vec)} .vec .phead h2 i{background:var(--vec)}
+.graph .phead h2{color:var(--graph)} .graph .phead h2 i{background:var(--graph)}
+.steps{display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:0;list-style:none}
+.steps li{font-size:clamp(11.5px,.78vw,14px);font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink);white-space:nowrap;transition:background .3s,color .3s,border-color .3s}
+.vec .steps li.on{background:var(--vec);border-color:var(--vec);color:#fff}
+.graph .steps li.on{background:var(--graph);border-color:var(--graph);color:#fff}
+.vec .steps li.done{border-color:var(--vec);color:var(--vec)}
+.graph .steps li.done{border-color:var(--graph);color:var(--graph)}
+.caption{font-size:clamp(15px,1.05vw,20px);font-weight:700;min-height:24px;line-height:22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stat{font-size:clamp(12px,.8vw,14.5px);font-weight:700;background:var(--surface-2);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.stage{flex:1;min-height:0;position:relative}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+
+/* answer */
+.answer{flex:none;height:clamp(150px,20vh,230px);box-sizing:border-box;background:var(--surface-2);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.ahead{display:flex;align-items:center;gap:10px;min-height:26px;flex-wrap:wrap;font-size:clamp(13.5px,.95vw,17px)}
+.ahead .lbl{font-weight:700;flex:none}
+.badge{font-weight:700;flex:none;border-radius:8px;padding:3px 10px;opacity:0;transition:opacity .35s}
+.badge.ok{background:var(--ok);color:#fff} .badge.bad{background:var(--bad);color:#fff}
+.badge.on{opacity:1}
+.reason{font-weight:700;opacity:0;transition:opacity .35s}
+.reason.ok{color:var(--ok)} .reason.bad{color:var(--bad)} .reason.on{opacity:1}
+.abody{font-size:clamp(13.5px,.95vw,17px);line-height:1.55;min-height:0}
+.abody .ln{opacity:0;transition:opacity .35s;margin:0}
+.abody .ln.on{opacity:1}
+.abody .src{font-weight:600;color:var(--vec)}
+.abody .row{display:flex;gap:8px;align-items:baseline}
+.abody .row i{width:9px;height:9px;border-radius:50%;flex:none;transform:translateY(-1px)}
+.abody .fail{color:var(--bad);font-weight:600}
+
+/* svg text */
+svg{fill:var(--ink)}
+svg text{font-family:var(--font)}
+svg .mono{font-family:var(--mono)}
+svg .halo{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.fo{font-family:var(--font);color:var(--ink);font-size:17px;line-height:1.8;word-break:keep-all}
+.fo .e{border-radius:4px;padding:0 2px;transition:background .25s,color .25s;white-space:nowrap}
+.fo .lost{transition:color .3s}
+.fo .lost.x{text-decoration:line-through;text-decoration-color:var(--bad);text-decoration-thickness:2px;color:var(--bad)}
+
+@media (max-width:900px){
+  html,body{height:auto}
+  .app{height:auto}
+  .panels{grid-template-columns:1fr}
+  .stage{flex:none;aspect-ratio:720/440;max-width:100%}
+  .answer{height:auto;min-height:150px}
+  .tabs{margin-left:0}
+  .qtext{font-size:17px}
+  .query{flex-direction:column;align-items:flex-start;gap:8px}
+  .banner{white-space:normal}
+}
+@media (prefers-reduced-motion: reduce){ .badge,.reason,.abody .ln,.banner,.panel{transition:none} }
+</style>
+<div class="app">
+  <header class="top">
+    <div class="brand"><span class="v">Vector RAG</span><span class="x">vs</span><span class="g">GraphRAG Global</span></div>
+    <nav class="tabs" role="tablist" aria-label="상황 선택">
+      <button class="tab" id="tab0" role="tab" aria-selected="true"><b>상황 1</b>Local 질문</button>
+      <button class="tab" id="tab1" role="tab" aria-selected="false"><b>상황 2</b>Global 질문</button>
+    </nav>
+    <div class="ctrl">
+      <button class="icon" id="btnPlay" aria-label="일시정지"><svg viewBox="0 0 16 16" id="icoPlay"><rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/></svg></button>
+      <button class="icon" id="btnRestart" aria-label="처음부터"><svg viewBox="0 0 16 16"><path d="M8 2.2a5.8 5.8 0 1 1-5.5 7.6l1.7-.6A4 4 0 1 0 8 4v2.3L4.3 3.1 8 0z"/></svg></button>
+    </div>
+  </header>
+  <div class="progress" id="prog"><div class="fill" id="progFill"></div></div>
+  <section class="query" aria-live="polite">
+    <span class="qtag" id="qtag">상황 1 · Local 질문</span>
+    <p class="qtext" id="qtext"></p>
+    <div class="banner" id="banner"></div>
+  </section>
+  <main class="panels">
+    <article class="panel vec">
+      <div class="phead"><h2><i></i>Vector RAG</h2><ol class="steps" id="stepsV"></ol></div>
+      <div class="caption"><span id="capV"></span><span class="stat" id="statV" hidden></span></div>
+      <div class="stage"><svg id="svgV" viewBox="0 0 720 440" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Vector RAG 과정"></svg></div>
+      <div class="answer" id="ansV"><div class="ahead"><span class="lbl">답변</span><span class="badge"></span><span class="reason"></span></div><div class="abody"></div></div>
+    </article>
+    <article class="panel graph">
+      <div class="phead"><h2><i></i>GraphRAG · Global Search</h2><ol class="steps" id="stepsG"></ol></div>
+      <div class="caption"><span id="capG"></span><span class="stat" id="statG" hidden></span></div>
+      <div class="stage"><svg id="svgG" viewBox="0 0 720 440" preserveAspectRatio="xMidYMid meet" role="img" aria-label="GraphRAG Global Search 과정"></svg></div>
+      <div class="answer" id="ansG"><div class="ahead"><span class="lbl">답변</span><span class="badge"></span><span class="reason"></span></div><div class="abody"></div></div>
+    </article>
+  </main>
+</div>
+
+<script>
+(() => {
+'use strict';
+const MODE = '3d';
+const NS = 'http://www.w3.org/2000/svg';
+const clamp = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const lerp = (a, b, u) => a + (b - a) * u;
+const ease = u => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const E = (t, a, b) => ease(P(t, a, b));
+const DEG = Math.PI / 180;
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function tx(parent, x, y, s, attrs) { const t = el('text', Object.assign({ x, y }, attrs || {}), parent); t.textContent = s; return t; }
+function sa(e, attrs) { for (const k in attrs) e.setAttribute(k, attrs[k]); }
+const CIRC = ['', '①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑪', '⑫', '⑬', '⑭', '⑮', '⑯'];
+
+/* ───────────── demo data: 실제 드론 문서 6개의 사실을 쉬운 한국어로 다시 쓴 예시 자료 ───────────── */
+const DOCS = ['개념설계 논문', 'CSD Databook', 'Multirotor 논문', 'NASA Vol.1', 'NASA Vol.2', 'NASA Vol.3'];
+const CHUNKS = [ // no, doc index, card label (2 lines), list label
+  [1, 1, ['산불 진압', '7개국'], '산불 진압 7개국', '칠레·중국·크로아티아·그리스·러시아·스페인·미국 7개국은 군용 드론으로 산불 진압을 도왔다.'],
+  [2, 1, ['군용 드론', '작전 종류'], '군용 드론 작전 종류', '군용 드론은 대테러·평화유지·국경 경비·산불 진압 등 여러 작전에 쓰인다.'],
+  [3, 1, ['국경 감시', '드론'], '국경 감시 드론', '도미니카공화국은 아이티와의 국경 감시에 Matrice 210 드론을 썼다.'],
+  [4, 1, ['무게 등급', 'Class I~III'], '무게 등급 Class I~III', '드론 등급은 최대이륙중량으로 나눈다. Class I 150kg 미만, II 150~600kg, III 600kg 초과.'],
+  [5, 1, ['등급별', '드론 수'], '등급별 드론 수', '운용 중인 드론 171종 중 Class I이 107종, Class II 36종, Class III 28종이다.'],
+  [6, 1, ['Class III', '운용 거리'], 'Class III 운용 거리', 'Class III 드론은 수천 km 떨어진 곳까지 운용할 수 있다.'],
+  [7, 0, ['용도:', '군용·민수용'], '용도: 군용·민수용', '무인기는 먼저 용도에 따라 군용과 민수용으로 나눈다.'],
+  [8, 0, ['군용·민수용', '설계 차이'], '군용·민수용 설계 차이', '민수용은 안전을, 군용은 임무 성능을 가장 먼저 따진다.'],
+  [9, 2, ['형태:', '고정익·멀티로터'], '형태: 고정익·멀티로터', '드론은 날개 모양에 따라 고정익과 멀티로터로 나뉜다. 고정익은 활주로가 필요하다.'],
+  [10, 2, ['멀티로터', '크기 법칙'], '멀티로터 크기 법칙', '멀티로터는 무게가 늘수록 프로펠러도 함께 커진다.'],
+  [11, 3, ['고도:', 'HALE·MALE'], '고도: HALE·MALE', '높은 고도에서 오래 나는 드론은 HALE, 중간 고도에서 오래 나는 드론은 MALE이라 부른다.'],
+  [12, 3, ['민간 임무', '53개'], '민간 임무 53개', '53개 민간 임무 대부분은 지구 관측이다.'],
+  [13, 4, ['강 관측', '드론 2대'], '강 관측 드론 2대', '강을 관측할 때는 지형을 재는 드론과 물높이를 재는 드론을 함께 띄운다.'],
+  [14, 4, ['대기 관측', '편대 비행'], '대기 관측 편대 비행', '대기 관측은 드론 4대가 편대 비행하며 측정한다.'],
+  [15, 5, ['Li-S', '배터리'], 'Li-S 배터리', '차세대 Li-S 배터리는 1kg에 600Wh를 저장할 것으로 기대된다.'],
+  [16, 5, ['돌발 상황', '스스로 대응'], '돌발 상황 대응', '산불·화산 같은 돌발 상황에는 드론이 스스로 비행 계획을 바꿔야 한다.'],
+].map(([no, doc, card, short, text]) => ({ no, doc, card, short, text }));
+const EMB1 = '[0.0213, −0.0471, 0.1128, −0.0082, 0.0645, …]';
+
+const COMM = [ // grid order: row1 A B C / row2 D E F / row3 G H I
+  { k: 'A', col: '--cC', title: '산불 대응', lines: ['군용 드론을 산불 진압에 투입', '열화상 카메라로 불길 감시'],
+    nodes: ['산불 진압', '군용 드론', '열화상 카메라', '소방 당국', '화재 감시'], edges: [[0, 1], [0, 2], [0, 3], [0, 4], [1, 2]] },
+  { k: 'B', col: '--cA', title: '미주 국가', lines: ['미국·칠레의 드론 보유 현황', '도미니카공화국 국경 감시'],
+    nodes: ['미국', '칠레', '도미니카공화국', 'MQ-9', 'Matrice 210'], edges: [[0, 1], [0, 3], [2, 4], [1, 2]] },
+  { k: 'C', col: '--cG', title: '유럽 국가', lines: ['스페인·그리스 등 운용 부대', '러시아 정찰 드론'],
+    nodes: ['스페인', '그리스', '크로아티아', '러시아', '정찰 부대'], edges: [[0, 1], [0, 2], [1, 2], [3, 4], [0, 4]] },
+  { k: 'D', col: '--cI', title: '아시아 국가', lines: ['중국의 드론 생산·수출', '인도 국경 감시'],
+    nodes: ['중국', '인도', 'Wing Loong', 'Heron', '국경 감시'], edges: [[0, 2], [1, 3], [1, 4], [0, 4]] },
+  { k: 'E', col: '--cB', title: '무게 등급', lines: ['Class I 150kg 미만', 'II 150~600kg · III 600kg 초과'],
+    nodes: ['드론 등급', 'Class I', 'Class II', 'Class III', '최대이륙중량', 'NATO'], edges: [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5]] },
+  { k: 'F', col: '--cD', title: '용도 구분', lines: ['군용과 민수용으로 구분', '민수용은 안전을 가장 먼저'],
+    nodes: ['용도', '군용', '민수용', '안전 우선', '임무 성능'], edges: [[0, 1], [0, 2], [2, 3], [1, 4]] },
+  { k: 'G', col: '--cE', title: '날개 형태', lines: ['고정익과 멀티로터', '고정익은 활주로가 필요'],
+    nodes: ['날개 형태', '고정익', '멀티로터', '활주로', '수직 이착륙'], edges: [[0, 1], [0, 2], [1, 3], [2, 4]] },
+  { k: 'H', col: '--cF', title: '고도·체공', lines: ['HALE: 높은 고도에서 오래', 'MALE: 중간 고도에서 오래'],
+    nodes: ['체공 고도', 'HALE', 'MALE', '고고도', '24시간 체공'], edges: [[0, 1], [0, 2], [1, 3], [2, 4], [1, 4]] },
+  { k: 'I', col: '--cH', title: '강·대기 관측', lines: ['강 수위·지형 측정', '대기 관측 편대 비행'],
+    nodes: ['지구 관측', '강 수위', '지형 측정', '대기 편대', '레이더'], edges: [[0, 1], [0, 2], [0, 3], [1, 4]] },
+];
+const CROSS = [['A', 1, 'B', 0], ['E', 0, 'F', 0]]; // 군용 드론—미국, 드론 등급—용도
+const CIDX = Object.fromEntries(COMM.map((c, i) => [c.k, i]));
+
+const SCN = [
+  {
+    tag: '상황 1 · Local 질문',
+    q: '군용 드론으로 산불 진압을 도운 나라는 어디일까?',
+    sims: { 1: .82, 2: .66, 16: .55, 3: .47, 6: .40, 5: .37, 8: .34, 7: .31, 12: .28, 4: .25, 13: .22, 14: .19, 15: .16, 11: .13, 9: .11, 10: .08 },
+    place: {1:[-1,222],2:[1,222],3:[1,162],4:[-1,162],5:[-1,192],6:[1,192],7:[1,222],8:[-1,132],9:[-1,132],10:[1,222],11:[-1,222],12:[-1,222],13:[1,162],14:[-1,192],15:[1,132],16:[-1,222]},
+    need: [1], slow: [10, 1, 3],
+    map: { A: 70 }, lostCard: 'A', lostText: '요약에 나라 이름 없음',
+    reduceText: '나라 목록 없음', reduceOk: false,
+    kgMark: [['B', 0], ['B', 1], ['C', 0], ['C', 1], ['C', 2], ['C', 3], ['D', 0]], kgTag: '나라 7곳이 서로 다른 Community로 흩어짐', kgOk: false,
+    extract: {
+      chunk: 1, ents: 9, rels: 8,
+      html: '군용 드론은 군사 작전 말고도 여러 일에 쓰인다. <span class="e" data-n="1">칠레</span>·<span class="e" data-n="2">중국</span>·<span class="e" data-n="3">크로아티아</span>·<span class="e" data-n="4">그리스</span>·<span class="e" data-n="5">러시아</span>·<span class="e" data-n="6">스페인</span>·<span class="e" data-n="7">미국</span> 7개국은 <span class="e" data-n="8">군용 드론</span>으로 <span class="e" data-n="0">산불 진압</span>을 도왔다.',
+      nodes: [ // label, x, y, KG target [community, node]
+        ['산불 진압', 555, 215, ['A', 0]], ['칠레', 654, 116, ['B', 1]], ['중국', 695, 215, ['D', 0]], ['크로아티아', 654, 314, ['C', 2]], ['그리스', 555, 355, ['C', 1]],
+        ['러시아', 456, 314, ['C', 3]], ['스페인', 415, 215, ['C', 0]], ['미국', 456, 116, ['B', 0]], ['군용 드론', 555, 75, ['A', 1]]],
+      edges: [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0]],
+      lostTag: null,
+    },
+    v: { ok: true, reason: '답이 담긴 Chunk 하나를 그대로 찾음',
+      lines: ['<b>7개국</b>', '칠레 · 중국 · 크로아티아 · 그리스 · 러시아 · 스페인 · 미국', '<span class="src">근거: ① 산불 진압 7개국 · CSD Databook</span>'] },
+    g: { ok: false, reason: '요약 과정에서 나라 이름이 사라짐',
+      lines: ['<span class="fail">“군용 드론이 산불 진압에 쓰였다는 내용은 있지만, 어느 나라인지는 요약에서 찾을 수 없습니다.”</span>'] },
+    banner: '정답이 문서 한 곳에 있는 질문 → Vector RAG 유리', win: 'v',
+  },
+  {
+    tag: '상황 2 · Global 질문',
+    q: '드론은 어떤 기준으로 나눌 수 있을까?',
+    sims: { 4: .76, 5: .71, 6: .66, 7: .58, 9: .55, 11: .52, 8: .47, 10: .42, 2: .38, 12: .33, 3: .30, 1: .28, 15: .25, 14: .23, 13: .21, 16: .19 },
+    place: {1:[-1,222],2:[1,192],3:[-1,192],4:[-1,222],5:[1,222],6:[-1,222],7:[1,222],8:[-1,132],9:[1,132],10:[-1,222],11:[1,162],12:[1,222],13:[1,132],14:[1,192],15:[-1,162],16:[1,222]},
+    need: [4, 7, 9, 11], slow: [13, 4, 9],
+    map: { E: 90, F: 85, G: 85, H: 80 }, lostCard: null, lostText: '',
+    reduceText: '4개 Community 종합', reduceOk: true,
+    kgMark: [['E', 0], ['F', 0], ['G', 0], ['H', 0]], kgTag: '분류 기준마다 Community가 따로 생김', kgOk: true,
+    extract: {
+      chunk: 4, ents: 6, rels: 5,
+      html: '<span class="e" data-n="0">드론 등급</span>은 <span class="e" data-n="1">최대이륙중량</span>으로 나눈다. <span class="e" data-n="2">Class I</span>은 150kg 미만, <span class="e" data-n="3">Class II</span>는 150~600kg, <span class="e" data-n="4">Class III</span>는 600kg 초과다. 이 기준은 <span class="e" data-n="5">NATO</span> 표준을 따른다.',
+      nodes: [
+        ['드론 등급', 555, 215, ['E', 0]], ['최대이륙중량', 555, 80, ['E', 4]], ['Class I', 435, 300, ['E', 1]], ['Class II', 555, 345, ['E', 2]], ['Class III', 675, 300, ['E', 3]], ['NATO', 675, 115, ['E', 5]]],
+      edges: [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5]],
+      lostTag: null,
+    },
+    v: { ok: false, reason: '4가지 기준 중 무게 하나만 찾음',
+      lines: ['<span class="fail">“드론은 최대이륙중량에 따라 Class I(150kg 미만), Class II(150~600kg), Class III(600kg 초과)로 나눕니다.”</span>'] },
+    g: { ok: true, reason: '4개 Community 요약을 모아 종합',
+      rows: [['E', '무게', 'Class I 150kg 미만 · II 150~600kg · III 600kg 초과'], ['F', '용도', '군용 · 민수용'], ['G', '날개 형태', '고정익 · 멀티로터'], ['H', '고도·체공', 'HALE(높은 고도) · MALE(중간 고도)']] },
+    banner: '정답이 여러 문서에 흩어진 질문 → GraphRAG 유리', win: 'g',
+  },
+];
+
+const MODEL = 'BGE-M3';
+const CAP_V = [[0, '드론 설계 문서 6개'], [3.4, 'PDF 6개 → Chunk 10,709개'], [8.6, 'Chunk와 질문을 숫자 벡터로 (BGE-M3 · 1024차원)'], [13.6, '질문과 이루는 각이 작을수록 비슷한 Chunk'], [24.4, '각이 가장 작은 Top-3만 가져온다'], [27.2, '정답에 필요한 근거는 어디에 있었나?'], [29.8, '질문과 Top-3 Chunk를 묶어 프롬프트 작성'], [35.0, 'LLM은 이 프롬프트만 보고 답변']];
+const CAP_G = [[0, '드론 설계 문서 6개'], [3.4, 'PDF 6개 → Chunk 10,709개'], [8.6, 'LLM이 Chunk에서 Entity와 Relation을 뽑는다'], [15.2, 'Entity는 Node, Relation은 Edge → Knowledge Graph'], [19.2, 'Leiden 알고리즘으로 Community 묶기'], [23.2, 'Community마다 요약 리포트 작성'], [27.2, '질문을 각 Community 요약과 비교해 관련도 점수 매기기 (Map)'], [36.2, '점수 높은 요약만 모아 종합 (Reduce)'], [40.4, '최종 답변']];
+const STAT_V = [[0, ''], [8.6, '전체 Chunk 10,709개 중 16개 표시'], [24.4, '']];
+const STAT_G = [[0, ''], [15.7, '전체 KG: Node 11,433 · Edge 14,269'], [19.2, '전체 Community 2,995개 중 9개 표시'], [23.2, '']];
+
+
+/* ───────────── timeline (seconds within one scenario) ───────────── */
+const T = {
+  type: [0.4, 3.0], chunk: [3.4, 8.4],
+  v: { embed: [8.6, 13.6], cos: [13.6, 24.2], topk: [24.4, 27.0], reveal: [27.2, 29.6], prompt: [29.8, 35.0], ans: [35.2, 37.8], done: 38.0 },
+  g: { extract: [8.6, 15.2], kg: [15.2, 19.2], comm: [19.2, 23.2], summ: [23.2, 27.2], map: [27.2, 36.2], reduce: [36.2, 40.2], ans: [40.4, 43.6], done: 44.0 },
+  G0: 36.1, verdict: 81.0, end: 90.0, // GraphRAG local time = scenario time - G0 (starts after Vector RAG finishes)
+};
+const STEPS_V = [['Chunking', 3.4], ['Embedding', 8.6], ['Similarity', 13.6], ['Top-k 검색', 24.4], ['Prompt', 29.8], ['답변 생성', 35.0]];
+const STEPS_G = [['Chunking', 3.4], ['Entity·Relation', 8.6], ['Knowledge Graph', 15.2], ['Community', 19.2], ['요약', 23.2], ['Map', 27.2], ['Reduce', 36.2], ['답변', 40.4]];
+
+/* ───────────── shared: documents + chunk cards ───────────── */
+const CARD_W = 166, CARD_H = 60;
+const cardPos = i => ({ x: 18 + (i % 4) * 174, y: 112 + Math.floor(i / 4) * 80 });
+const docPos = i => ({ x: 66 + i * 117.6, y: 14 });
+function buildDocs(parent) {
+  const g = el('g', null, parent);
+  DOCS.forEach((name, i) => {
+    const p = docPos(i), d = el('g', { transform: `translate(${p.x - 22},${p.y})` }, g);
+    el('path', { d: 'M0 0 H32 L44 12 V56 H0 Z', fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1.4 }, d);
+    el('path', { d: 'M32 0 V12 H44', fill: 'none', stroke: 'var(--ink-2)', 'stroke-width': 1.4 }, d);
+    for (let k = 0; k < 3; k++) el('rect', { x: 8, y: 22 + k * 9, width: k === 2 ? 18 : 28, height: 3, rx: 1.5, fill: 'var(--wire)' }, d);
+    tx(d, 22, 74, name, { 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 600 });
+  });
+  return g;
+}
+function buildCards(parent) {
+  return CHUNKS.map(c => {
+    const g = el('g', { opacity: 0 }, parent);
+    el('rect', { x: 0, y: 0, width: CARD_W, height: CARD_H, rx: 10, fill: 'var(--surface)', stroke: 'var(--line)', 'stroke-width': 1.3 }, g);
+    el('circle', { cx: 21, cy: 30, r: 11.5, fill: 'var(--ink)' }, g);
+    tx(g, 21, 34, c.no, { 'text-anchor': 'middle', 'font-size': 11.5, 'font-weight': 700, fill: 'var(--surface)', class: 'mono' });
+    tx(g, 41, 26, c.card[0], { 'font-size': 12.5, 'font-weight': 600 });
+    tx(g, 41, 44, c.card[1], { 'font-size': 12.5, 'font-weight': 600 });
+    return { g, c };
+  });
+}
+function cardEnter(t, i) { // returns {x,y,s,o} during chunking
+  const t0 = T.chunk[0] + 0.25 + i * 0.2, u = E(t, t0, t0 + 0.75);
+  const d = docPos(CHUNKS[i].doc), p = cardPos(i);
+  const sx = d.x - CARD_W * 0.15, sy = d.y + 18;
+  return { x: lerp(sx, p.x, u), y: lerp(sy, p.y, u), s: lerp(0.3, 1, u), o: P(t, t0, t0 + 0.25) };
+}
+
+/* ═════════════ Vector RAG panel ═════════════ */
+function VectorPanel(svg) {
+  const O2 = { x: 232, y: 396 }, R1 = 222, R2 = 186;
+  const O3 = { x: 232, y: 290 }, RS = 138;
+  const gPlane = el('g', null, svg);
+  const gDocs = buildDocs(svg);
+  const gRead = el('g', null, svg);
+  const gList = el('g', null, svg);
+  const gLLM = el('g', null, svg);
+  const gCards = el('g', null, svg);
+  const cards = buildCards(gCards);
+
+  /* plane decorations */
+  const deco = el('g', null, gPlane);
+  let unit, base, wire, cone, coneRim;
+  if (MODE === '3d') {
+    wire = el('path', { fill: 'none', stroke: 'var(--wire)', 'stroke-width': 1, opacity: .7 }, deco);
+    cone = el('path', { fill: 'var(--vec-soft)', stroke: 'none' }, deco);
+    coneRim = el('path', { fill: 'none', stroke: 'var(--vec)', 'stroke-width': 1.6, 'stroke-dasharray': '5 4' }, deco);
+  } else {
+    cone = el('path', { fill: 'var(--vec-soft)', stroke: 'var(--vec)', 'stroke-width': 1.4, 'stroke-dasharray': '5 4' }, deco);
+    unit = el('path', { d: `M${O2.x - R1} ${O2.y} A${R1} ${R1} 0 0 1 ${O2.x + R1} ${O2.y}`, fill: 'none', stroke: 'var(--wire)', 'stroke-width': 1.2, 'stroke-dasharray': '3 5' }, deco);
+    base = el('line', { x1: O2.x - R1 - 12, y1: O2.y, x2: O2.x + R1 + 12, y2: O2.y, stroke: 'var(--wire)', 'stroke-width': 1.2 }, deco);
+  }
+  const arrowsG = el('g', null, gPlane);
+  const arc = el('path', { fill: 'none', stroke: 'var(--ink)', 'stroke-width': 2.2 }, gPlane);
+  const arcLbl = tx(gPlane, 0, 0, 'θ', { 'font-size': 16, 'font-weight': 700, 'text-anchor': 'middle' });
+  const qLine = el('line', { stroke: 'var(--q)', 'stroke-width': 3.6, 'stroke-linecap': 'round' }, gPlane);
+  const qHead = el('path', { fill: 'var(--q)' }, gPlane);
+  const qLbl = tx(gPlane, 0, 0, '질문 q', { 'font-size': 14, 'font-weight': 700, fill: 'var(--q)' });
+  const origin = el('circle', { r: 4, fill: 'var(--ink)' }, gPlane);
+  const badgesG = el('g', null, gPlane);
+  const items = CHUNKS.map(c => {
+    const line = el('line', { stroke: 'var(--wire)', 'stroke-width': 1.4, 'stroke-linecap': 'round' }, arrowsG);
+    const tipDot = el('circle', { r: 2.6, fill: 'var(--wire)' }, arrowsG);
+    const g = el('g', null, badgesG);
+    const need = el('circle', { r: 15, fill: 'none', stroke: 'var(--ok)', 'stroke-width': 2.4, 'stroke-dasharray': '4 3', opacity: 0 }, g);
+    const dot = el('circle', { r: 10, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1.4 }, g);
+    const num = tx(g, 0, 3.8, c.no, { 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 700, class: 'mono' });
+    return { c, line, tipDot, g, need, dot, num };
+  });
+
+  /* readout */
+  const r1 = tx(gRead, 16, 32, '', { 'font-size': 15, 'font-weight': 600 });
+  const r2 = tx(gRead, 16, 60, '', { 'font-size': 17, 'font-weight': 700 });
+  const r3 = tx(gRead, 16, 88, '', { 'font-size': 16, 'font-weight': 700, class: 'mono' });
+  const legendG = el('g', { opacity: 0 }, gRead);
+  el('circle', { cx: 27, cy: 27, r: 10, fill: 'none', stroke: 'var(--ok)', 'stroke-width': 2.4, 'stroke-dasharray': '4 3' }, legendG);
+  tx(legendG, 46, 32, '정답에 필요한 근거', { 'font-size': 15, 'font-weight': 700, fill: 'var(--ok)' });
+
+  /* list */
+  const LX = 478, LW = 232, LY = 46, RH = 27;
+  const listHead = tx(gList, LX, 28, 'Similarity 순위', { 'font-size': 14, 'font-weight': 700 });
+  const topBox = el('rect', { x: LX - 5, y: LY - 4, width: LW + 10, height: RH * 3 + 2, rx: 9, fill: 'none', stroke: 'var(--vec)', 'stroke-width': 2, opacity: 0 }, gList);
+  const topPill = el('g', { opacity: 0 }, gList);
+  el('rect', { x: LX + LW - 54, y: 14, width: 56, height: 20, rx: 10, fill: 'var(--vec)' }, topPill);
+  tx(topPill, LX + LW - 26, 28.5, 'Top-3', { 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 700, fill: '#fff' });
+  const rows = CHUNKS.map(c => {
+    const g = el('g', { opacity: 0 }, gList);
+    const bar = el('rect', { x: 0, y: 0, height: RH - 4, rx: 5, fill: 'var(--vec-soft)' }, g);
+    const need = el('circle', { cx: 14, cy: (RH - 4) / 2, r: 12, fill: 'none', stroke: 'var(--ok)', 'stroke-width': 2.2, 'stroke-dasharray': '4 3', opacity: 0 }, g);
+    const dot = el('circle', { cx: 14, cy: (RH - 4) / 2, r: 9.5, fill: 'var(--ink)' }, g);
+    const num = tx(g, 14, (RH - 4) / 2 + 3.8, c.no, { 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700, fill: 'var(--surface)', class: 'mono' });
+    const lbl = tx(g, 30, 16, c.short, { 'font-size': 12, 'font-weight': 600 });
+    const val = tx(g, LW - 4, 16, '', { 'text-anchor': 'end', 'font-size': 12.5, 'font-weight': 700, class: 'mono' });
+    return { g, bar, need, dot, num, lbl, val };
+  });
+  /* LLM */
+  const llm = el('g', { opacity: 0 }, gLLM);
+  const llmBox = el('rect', { x: LX - 5, y: 346, width: LW + 10, height: 78, rx: 12, fill: 'var(--surface-2)', stroke: 'var(--vec)', 'stroke-width': 2 }, llm);
+  tx(llm, LX + LW / 2, 378, 'LLM', { 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 700, fill: 'var(--vec)' });
+  tx(llm, LX + LW / 2, 403, '프롬프트 입력', { 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600 });
+  /* prompt card: 질문 + Top-3 Chunk */
+  const PR = { x: 16, y: 18, w: 446, h: 404 };
+  const gPrompt = el('g', { opacity: 0 }, svg);
+  el('rect', { x: PR.x, y: PR.y, width: PR.w, height: PR.h, rx: 14, fill: 'var(--surface)', stroke: 'var(--vec)', 'stroke-width': 2 }, gPrompt);
+  tx(gPrompt, 36, 50, '프롬프트', { 'font-size': 17, 'font-weight': 700, fill: 'var(--vec)' });
+  tx(gPrompt, 36, 78, '아래 자료만 보고 질문에 답하세요.', { 'font-size': 14, 'font-weight': 600 });
+  tx(gPrompt, 36, 110, '질문', { 'font-size': 13.5, 'font-weight': 700, fill: 'var(--q)' });
+  const qSlot = el('rect', { x: 36, y: 118, width: 406, height: 48, rx: 9, fill: 'var(--q-soft)', stroke: 'var(--q)', 'stroke-width': 1.6, 'stroke-dasharray': '5 4' }, gPrompt);
+  const qFo = el('foreignObject', { x: 46, y: 120, width: 390, height: 44 }, gPrompt);
+  const qDiv = document.createElement('div'); qDiv.className = 'fo-slot fo-q'; qFo.appendChild(qDiv);
+  tx(gPrompt, 36, 196, '자료 (Top-3 Chunk)', { 'font-size': 13.5, 'font-weight': 700, fill: 'var(--vec)' });
+  const cSlots = [0, 1, 2].map(j => {
+    const y = 204 + j * 72;
+    const r = el('rect', { x: 36, y, width: 406, height: 64, rx: 9, fill: 'var(--surface-2)', stroke: 'var(--vec)', 'stroke-width': 1.4, 'stroke-dasharray': '5 4' }, gPrompt);
+    const fo = el('foreignObject', { x: 44, y: y + 3, width: 392, height: 58 }, gPrompt);
+    const d = document.createElement('div'); d.className = 'fo-slot fo-c'; fo.appendChild(d);
+    return { r, d, y };
+  });
+  const packets = [0, 1, 2].map(() => { const g = el('g', { opacity: 0 }, svg); el('rect', { x: 0, y: 0, width: 168, height: 22, rx: 6, fill: 'var(--vec)' }, g); const t = tx(g, 8, 15.5, '', { 'font-size': 12, 'font-weight': 700, fill: '#fff' }); return { g, t }; });
+
+  let cache = null;
+  function prep(sc) {
+    const order = CHUNKS.map(c => c.no).sort((a, b) => sc.sims[b] - sc.sims[a]);
+    const rank = {}; order.forEach((n, i) => rank[n] = i);
+    const side = {}, rad = {};
+    order.forEach(n => { side[n] = sc.place[n][0]; rad[n] = sc.place[n][1]; });
+    const theta = {}; for (const n of order) theta[n] = Math.acos(sc.sims[n]) / DEG;
+    // azimuths for 3D (spread around the query axis)
+    const az = {}; order.forEach((n, i) => az[n] = (i * 137.5 + 20) % 360);
+    // comparison schedule
+    const rest = CHUNKS.map(c => c.no).filter(n => !sc.slow.includes(n));
+    const seq = sc.slow.concat(rest);
+    const ev = []; let tt = T.v.cos[0] + 0.3;
+    seq.forEach((n, i) => { const d = i < 3 ? 1.75 : 0.42; ev.push({ n, t0: tt, t1: tt + d }); tt += d; });
+    // rank order after each event
+    const after = []; const seen = [];
+    ev.forEach(e => { seen.push(e.n); after.push(seen.slice().sort((a, b) => sc.sims[b] - sc.sims[a])); });
+    cache = { sc, order, rank, side, rad, theta, az, ev, after, top3: order.slice(0, 3), th3: Math.acos(sc.sims[order[2]]) / DEG };
+  }
+
+  /* projection */
+  function proj3(v, t) {
+    const yaw = 0.42 + t * 0.22, pitch = 0.36;
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const x1 = v[0] * cy - v[2] * sy, z1 = v[0] * sy + v[2] * cy;
+    const y2 = v[1] * cp - z1 * sp, z2 = v[1] * sp + z1 * cp;
+    const f = 4.2 / (4.2 - z2);
+    return { x: O3.x + RS * x1 * f, y: O3.y - RS * y2 * f, z: z2, f };
+  }
+  function dir3(n) { const th = cache.theta[n] * DEG, a = cache.az[n] * DEG; return [Math.sin(th) * Math.cos(a), Math.cos(th), Math.sin(th) * Math.sin(a)]; }
+  function chunkPos(n, t) {
+    if (MODE === '3d') { const p = proj3(dir3(n), t); return { x: p.x, y: p.y, z: p.z, f: p.f, ux: p.x, uy: p.y }; }
+    const phi = (-90 + cache.side[n] * cache.theta[n]) * DEG, R = cache.rad[n];
+    return { x: O2.x + R * Math.cos(phi), y: O2.y + R * Math.sin(phi), z: 0, f: 1, ux: O2.x + R1 * Math.cos(phi), uy: O2.y + R1 * Math.sin(phi) };
+  }
+  function originPos(t) { return MODE === '3d' ? proj3([0, 0, 0], t) : O2; }
+  function qTip(t, len) { return MODE === '3d' ? proj3([0, len, 0], t) : { x: O2.x, y: O2.y - (R1 + 14) * len }; }
+
+  function update(t, sc) {
+    if (!cache || cache.sc !== sc) prep(sc);
+    const C = cache, V = T.v;
+    gDocs.setAttribute('opacity', 1 - P(t, 8.3, 8.9));
+    const org = originPos(t);
+
+    /* decorations */
+    const planeIn = P(t, V.embed[0], V.embed[0] + 0.6);
+    deco.setAttribute('opacity', planeIn);
+    origin.setAttribute('opacity', planeIn); sa(origin, { cx: org.x, cy: org.y });
+    if (MODE === '3d') {
+      let d = '';
+      const ring = (fn) => { let s = ''; for (let k = 0; k <= 48; k++) { const p = proj3(fn(k / 48 * 2 * Math.PI), t); s += (k ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); } return s; };
+      for (const lat of [-0.5, 0, 0.5]) { const r = Math.sqrt(1 - lat * lat); d += ring(a => [r * Math.cos(a), lat, r * Math.sin(a)]); }
+      for (let m = 0; m < 6; m++) { const a0 = m * Math.PI / 6; d += ring(b => [Math.sin(b) * Math.cos(a0), Math.cos(b), Math.sin(b) * Math.sin(a0)]); }
+      wire.setAttribute('d', d);
+    }
+    // cone / wedge for top-3
+    const coneU = E(t, V.topk[0], V.topk[0] + 0.9);
+    if (coneU > 0) {
+      const th = C.th3 * coneU;
+      if (MODE === '3d') {
+        let fill = '', rim = ''; const pts = [];
+        for (let k = 0; k <= 40; k++) { const a = k / 40 * 2 * Math.PI; pts.push(proj3([Math.sin(th * DEG) * Math.cos(a), Math.cos(th * DEG), Math.sin(th * DEG) * Math.sin(a)], t)); }
+        pts.forEach((p, k) => { rim += (k ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); if (k) fill += `M${org.x.toFixed(1)} ${org.y.toFixed(1)}L${pts[k - 1].x.toFixed(1)} ${pts[k - 1].y.toFixed(1)}L${p.x.toFixed(1)} ${p.y.toFixed(1)}Z`; });
+        sa(cone, { d: fill, opacity: 1 }); sa(coneRim, { d: rim, opacity: 1 });
+      } else {
+        const R = R1 + 18, a0 = (-90 - th) * DEG, a1 = (-90 + th) * DEG;
+        sa(cone, { d: `M${O2.x} ${O2.y}L${O2.x + R * Math.cos(a0)} ${O2.y + R * Math.sin(a0)}A${R} ${R} 0 0 1 ${O2.x + R * Math.cos(a1)} ${O2.y + R * Math.sin(a1)}Z`, opacity: 1 });
+      }
+    } else { cone.setAttribute('opacity', 0); if (coneRim) coneRim.setAttribute('opacity', 0); }
+
+    /* chunk cards: enter, then fly into the plane */
+    const order3d = [];
+    cards.forEach((cd, i) => {
+      const n = cd.c.no, it = items[i];
+      const fly0 = V.embed[0] + 0.35 + i * 0.13, fly1 = fly0 + 0.8;
+      const pos = chunkPos(n, t);
+      if (t < V.embed[0]) {
+        const e = t < T.chunk[0] ? { o: 0 } : cardEnter(t, i);
+        if (t >= T.chunk[0]) cd.g.setAttribute('transform', `translate(${e.x},${e.y}) scale(${e.s})`);
+        cd.g.setAttribute('opacity', e.o);
+      } else {
+        const u = E(t, V.embed[0], V.embed[0] + 0.5), p0 = cardPos(i);
+        cd.g.setAttribute('transform', `translate(${p0.x + 21 * 0.25 * u},${p0.y + 30 * 0.25 * u}) scale(${lerp(1, 0.75, u)})`);
+        cd.g.setAttribute('opacity', 1 - u);
+      }
+      const fu = E(t, fly0, fly1), b0 = cardPos(i);
+      const bx = lerp(b0.x + 21, pos.x, fu), by = lerp(b0.y + 30, pos.y, fu);
+      // arrow + badge
+      const grow = E(t, fly1 - 0.2, fly1 + 0.35);
+      const vis = t >= fly1 - 0.2 ? 1 : 0;
+      sa(it.line, { x1: org.x, y1: org.y, x2: lerp(org.x, pos.ux, grow), y2: lerp(org.y, pos.uy, grow), opacity: vis });
+      sa(it.tipDot, { cx: pos.ux, cy: pos.uy, opacity: grow > 0.95 ? 1 : 0 });
+      it.g.setAttribute('opacity', P(t, V.embed[0] + 0.1, V.embed[0] + 0.4));
+      order3d.push({ it, z: pos.z });
+      // styles by phase
+      const evd = C.ev.find(e => e.n === n);
+      const cur = t >= evd.t0 && t < evd.t1;
+      const isTop = C.top3.includes(n);
+      const topU = P(t, V.topk[0] + 0.4, V.topk[0] + 1.1);
+      let r = 10 * (MODE === '3d' ? pos.f : 1), fill = 'var(--surface)', stroke = 'var(--ink-2)', numFill = 'var(--ink)', lineStroke = 'var(--wire)', lw = 1.4, op = 1;
+      if (cur) { r *= 1.3; stroke = 'var(--ink)'; lineStroke = 'var(--ink)'; lw = 2.6; }
+      const needU = sc.need.includes(n) ? P(t, V.reveal[0] + 0.2, V.reveal[0] + 0.7) : 0;
+      if (topU > 0) {
+        if (isTop) { fill = 'var(--vec)'; stroke = 'var(--vec)'; numFill = '#fff'; lineStroke = 'var(--vec)'; lw = 2.4; }
+        else op = lerp(lerp(1, 0.4, topU), 1, needU);
+      }
+      if (needU > 0 && !isTop) { stroke = 'var(--ok)'; numFill = 'var(--ok)'; lineStroke = 'var(--ok)'; lw = 1.8; }
+      if (MODE === '3d') op *= lerp(0.55, 1, clamp((pos.z + 1) / 2));
+      sa(it.dot, { r, fill, stroke });
+      it.num.setAttribute('fill', numFill);
+      it.num.setAttribute('font-size', (10.5 * (MODE === '3d' ? pos.f : 1)).toFixed(1));
+      sa(it.line, { stroke: lineStroke, 'stroke-width': lw }); it.tipDot.setAttribute('fill', lineStroke);
+      it.g.setAttribute('transform', `translate(${bx},${by})`);
+      if (t >= fly1) { it.g.setAttribute('opacity', op); it.line.setAttribute('opacity', op); it.tipDot.setAttribute('opacity', op); }
+      const needOn = sc.need.includes(n) ? P(t, V.reveal[0] + 0.2, V.reveal[0] + 0.7) : 0;
+      sa(it.need, { opacity: needOn, r: r + 5 + 2 * Math.sin(Math.max(0, t - V.reveal[0]) * 5) * (t < V.reveal[1] ? 1 : 0) });
+    });
+    if (MODE === '3d') { order3d.sort((a, b) => a.z - b.z); order3d.forEach(o => badgesG.appendChild(o.it.g)); }
+
+    /* query arrow */
+    const qU = E(t, V.embed[1] - 1.6, V.embed[1] - 0.6);
+    const tip = qTip(t, qU * (MODE === '3d' ? 1.12 : 1));
+    sa(qLine, { x1: org.x, y1: org.y, x2: tip.x, y2: tip.y, opacity: qU > 0 ? 1 : 0 });
+    { const dx = tip.x - org.x, dy = tip.y - org.y, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, s = 11;
+      qHead.setAttribute('d', `M${tip.x + ux * 4} ${tip.y + uy * 4}L${tip.x - ux * s - uy * s * .6} ${tip.y - uy * s + ux * s * .6}L${tip.x - ux * s + uy * s * .6} ${tip.y - uy * s - ux * s * .6}Z`);
+      qHead.setAttribute('opacity', qU > 0.15 ? 1 : 0); }
+    sa(qLbl, { x: tip.x, y: tip.y - (MODE === '3d' ? 14 : 30), 'text-anchor': 'middle', opacity: P(t, V.embed[1] - 0.8, V.embed[1] - 0.4) });
+
+    /* angle arc for current comparison */
+    const cur = C.ev.find(e => t >= e.t0 && t < e.t1);
+    if (cur) {
+      const u = E(t, cur.t0, cur.t0 + (cur.t1 - cur.t0) * 0.45);
+      if (MODE === '3d') {
+        const a = [0, 1, 0], b = dir3(cur.n), th = Math.acos(a[0] * b[0] + a[1] * b[1] + a[2] * b[2]);
+        let d = ''; const rr = 0.42; let mid;
+        for (let k = 0; k <= 24; k++) { const s = k / 24 * u, w1 = Math.sin((1 - s) * th) / Math.sin(th), w2 = Math.sin(s * th) / Math.sin(th);
+          const v = [rr * (w1 * a[0] + w2 * b[0]), rr * (w1 * a[1] + w2 * b[1]), rr * (w1 * a[2] + w2 * b[2])]; const p = proj3(v, t); d += (k ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1);
+          if (k === 12) { const v2 = v.map(x => x * 1.45); mid = proj3(v2, t); } }
+        sa(arc, { d, opacity: 1 }); sa(arcLbl, { x: mid.x, y: mid.y + 5, opacity: u });
+      } else {
+        const th = C.theta[cur.n] * u, s = C.side[cur.n], rr = 62;
+        const a0 = -90 * DEG, a1 = (-90 + s * th) * DEG;
+        sa(arc, { d: `M${O2.x + rr * Math.cos(a0)} ${O2.y + rr * Math.sin(a0)}A${rr} ${rr} 0 0 ${s > 0 ? 1 : 0} ${O2.x + rr * Math.cos(a1)} ${O2.y + rr * Math.sin(a1)}`, opacity: 1 });
+        const am = (-90 + s * th / 2) * DEG; sa(arcLbl, { x: O2.x + 84 * Math.cos(am), y: O2.y + 84 * Math.sin(am) + 5, opacity: u });
+      }
+    } else { arc.setAttribute('opacity', 0); arcLbl.setAttribute('opacity', 0); }
+
+    /* readout */
+    let s1 = '', s2 = '', s3 = '', c1 = 'var(--ink)', c2 = 'var(--ink)', c3 = 'var(--ink)', leg = 0;
+    if (t >= V.embed[0] && t < V.embed[1] - 1.7) { s1 = `${CIRC[1]} ${CHUNKS[0].short}`; s2 = ''; s3 = EMB1; const k = Math.floor(EMB1.length * P(t, V.embed[0] + 0.5, V.embed[0] + 2.2)); s3 = EMB1.slice(0, k); s2 = '→ 1024개의 숫자'; c3 = 'var(--ink)'; }
+    else if (t >= V.embed[1] - 1.7 && t < V.cos[0]) { s1 = '질문도 같은 모델로'; s2 = `${MODEL}(질문) → 1024차원 벡터 q`; c2 = 'var(--q)'; }
+    else if (t >= V.cos[0] && t < V.topk[0]) {
+      s1 = 'cos θ = (q · c) / (‖q‖ ‖c‖)';
+      const e = cur || C.ev.filter(e => t >= e.t1).slice(-1)[0];
+      if (e) { const ch = CHUNKS[e.n - 1]; s2 = `${CIRC[e.n]} ${ch.short}`; const th = C.theta[e.n]; s3 = `θ = ${th.toFixed(1)}°  →  cos θ = ${sc.sims[e.n].toFixed(2)}`; }
+    } else if (t >= V.topk[0] && t < V.reveal[0]) { s1 = '각이 가장 작은 3개 = Top-3'; s2 = `cos θ ≥ ${sc.sims[C.top3[2]].toFixed(2)}`; c2 = 'var(--vec)'; }
+    else if (t >= V.reveal[0]) {
+      leg = P(t, V.reveal[0], V.reveal[0] + 0.4);
+      const inTop = sc.need.filter(n => C.top3.includes(n)).length;
+      s2 = `Top-3 안에 ${inTop} / ${sc.need.length}`; c2 = inTop === sc.need.length ? 'var(--ok)' : 'var(--bad)';
+    }
+    r1.textContent = s1; r2.textContent = s2; r3.textContent = s3;
+    r1.setAttribute('fill', c1); r2.setAttribute('fill', c2); r3.setAttribute('fill', c3);
+    legendG.setAttribute('opacity', leg);
+    if (MODE === '3d') { r3.setAttribute('font-size', 14); }
+
+    /* ranking list */
+    const listOn = P(t, V.cos[0], V.cos[0] + 0.4);
+    listHead.setAttribute('opacity', listOn);
+    let k = -1; for (let i = 0; i < C.ev.length; i++) if (t >= C.ev[i].t0 + (C.ev[i].t1 - C.ev[i].t0) * 0.5) k = i;
+    const nowOrd = k >= 0 ? C.after[k] : [];
+    const prevOrd = k >= 1 ? C.after[k - 1] : [];
+    const tk = k >= 0 ? C.ev[k].t0 + (C.ev[k].t1 - C.ev[k].t0) * 0.5 : 0;
+    const mv = E(t, tk, tk + 0.3);
+    const topU = P(t, V.topk[0] + 0.4, V.topk[0] + 1.1);
+    CHUNKS.forEach((c, i) => {
+      const rw = rows[i], n = c.no; const ri = nowOrd.indexOf(n);
+      if (ri < 0 || ri > 9) { rw.g.setAttribute('opacity', 0); return; }
+      const pi = prevOrd.indexOf(n);
+      const yNow = LY + ri * RH, yPrev = pi >= 0 && pi <= 9 ? LY + pi * RH : yNow;
+      const y = n === C.ev[k].n ? yNow : lerp(yPrev, yNow, mv);
+      const fade = n === C.ev[k].n ? mv : 1;
+      const isTop = C.top3.includes(n);
+      let op = fade;
+      const needR = sc.need.includes(n) ? P(t, V.reveal[0] + 0.2, V.reveal[0] + 0.7) : 0;
+      if (topU > 0 && !isTop) op *= lerp(lerp(1, 0.5, topU), 1, needR);
+      rw.g.setAttribute('opacity', op);
+      rw.g.setAttribute('transform', `translate(${LX},${y})`);
+      rw.bar.setAttribute('width', (LW * sc.sims[n]).toFixed(1));
+      rw.val.textContent = sc.sims[n].toFixed(2);
+      const blue = topU > 0 && isTop;
+      rw.lbl.setAttribute('fill', blue ? 'var(--vec)' : 'var(--ink)'); rw.val.setAttribute('fill', blue ? 'var(--vec)' : 'var(--ink)');
+      rw.dot.setAttribute('fill', blue ? 'var(--vec)' : 'var(--ink)');
+      rw.need.setAttribute('opacity', sc.need.includes(n) ? P(t, V.reveal[0] + 0.2, V.reveal[0] + 0.7) : 0);
+    });
+    topBox.setAttribute('opacity', topU); topPill.setAttribute('opacity', topU);
+
+    /* prompt: 질문 + Top-3 → LLM */
+    const Pp = V.prompt;
+    const planeVis = 1 - 0.88 * E(t, Pp[0], Pp[0] + 0.5) + 0.88 * E(t, Pp[1], Pp[1] + 0.6);
+    gPlane.setAttribute('opacity', planeVis); gRead.setAttribute('opacity', planeVis);
+    llm.setAttribute('opacity', P(t, Pp[0], Pp[0] + 0.4));
+    if (qDiv.dataset.k !== sc.q) { qDiv.dataset.k = sc.q; qDiv.textContent = sc.q; }
+    qDiv.style.opacity = P(t, Pp[0] + 1.6, Pp[0] + 1.9);
+    qSlot.setAttribute('stroke-dasharray', t >= Pp[0] + 1.7 ? 'none' : '5 4');
+    cSlots.forEach((cs, j) => {
+      const n = C.top3[j], key = sc.q + n;
+      if (cs.d.dataset.k !== key) { cs.d.dataset.k = key; cs.d.innerHTML = `<span class="pb">${n}</span>${CHUNKS[n - 1].text}`; }
+      const t0 = Pp[0] + 2.1 + j * 0.45;
+      cs.d.style.opacity = P(t, t0 + 0.65, t0 + 0.9);
+      cs.r.setAttribute('stroke-dasharray', t >= t0 + 0.7 ? 'none' : '5 4');
+      const pk = packets[j];
+      pk.t.textContent = `${CIRC[n]} ${CHUNKS[n - 1].short}`;
+      const u = E(t, t0, t0 + 0.75);
+      pk.g.setAttribute('transform', `translate(${lerp(LX + 26, 50, u)},${lerp(LY + j * RH, cs.y + 20, u)})`);
+      pk.g.setAttribute('opacity', t < t0 ? 0 : 1 - P(t, t0 + 0.6, t0 + 0.85));
+    });
+    // prompt card shrinks into the LLM box
+    const sh = E(t, Pp[1] - 1.0, Pp[1] - 0.1);
+    const c0x = PR.x + PR.w / 2, c0y = PR.y + PR.h / 2, c1x = LX + LW / 2, c1y = 385;
+    const sx = lerp(1, 0.1, sh);
+    gPrompt.setAttribute('transform', `translate(${lerp(c0x, c1x, sh)},${lerp(c0y, c1y, sh)}) scale(${sx}) translate(${-c0x},${-c0y})`);
+    gPrompt.setAttribute('opacity', P(t, Pp[0], Pp[0] + 0.5) * (1 - P(t, Pp[1] - 0.3, Pp[1])));
+    llmBox.setAttribute('stroke-width', 2 + 2.5 * Math.max(0, Math.sin(P(t, Pp[1] - 0.4, V.ans[0] + 0.4) * Math.PI)));
+  }
+  function qTarget() { return { svg, x: 50, y: 142 }; }
+  return { update, qTarget };
+}
+
+/* ═════════════ GraphRAG Global panel ═════════════ */
+function GraphPanel(svg) {
+  const COLX = [125, 360, 595], ROWY = [80, 214, 348];
+  const CW = 226, CH = 92, CX0 = [12, 247, 482], CY0 = [10, 108, 206];
+  const REDUCE = { x: 196, y: 318, w: 328, h: 108 };
+  const gDocs = buildDocs(svg);
+  const gKG = el('g', null, svg);
+  const gEdges = el('g', null, gKG), gHulls = el('g', null, gKG), gMarks = el('g', null, gKG), gNodes = el('g', null, gKG), gTitles = el('g', null, gKG);
+  const gCardsS = el('g', null, svg);
+  const gRed = el('g', null, svg);
+  const gQ = el('g', null, svg);
+  const gEx = el('g', null, svg);
+  const gChunks = el('g', null, svg);
+  const cards = buildCards(gChunks);
+
+  /* KG nodes */
+  const KN = []; // {ci, ni, x, y, hub, el, lbl}
+  COMM.forEach((cm, ci) => {
+    const cx = COLX[ci % 3], cy = ROWY[Math.floor(ci / 3)];
+    const m = cm.nodes.length - 1;
+    cm.pos = cm.nodes.map((_, ni) => {
+      if (ni === 0) return { x: cx, y: cy };
+      const a = (-90 + (ni - 1) * 360 / m + (ci % 2) * 18) * DEG, rr = 33 + (ni % 2) * 5;
+      return { x: cx + rr * Math.cos(a), y: cy + rr * Math.sin(a) };
+    });
+    cm.center = { x: cx, y: cy };
+    cm.hull = el('circle', { cx, cy, r: 0, fill: `var(${cm.col})`, 'fill-opacity': .13, stroke: `var(${cm.col})`, 'stroke-width': 1.6, opacity: 0 }, gHulls);
+    cm.titleEl = tx(gTitles, cx, cy - 59, cm.title, { 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 700, fill: `var(${cm.col})`, opacity: 0 });
+    cm.nodeEls = cm.nodes.map((name, ni) => {
+      const p = cm.pos[ni];
+      const c = el('circle', { cx: p.x, cy: p.y, r: ni === 0 ? 8 : 5, fill: 'var(--node)', opacity: 0 }, gNodes);
+      let lx = p.x, ly = p.y + 22, anchor = 'middle';
+      if (ni > 0) { const dx = p.x - cx, dy = p.y - cy, L = Math.hypot(dx, dy) || 1; if (Math.abs(dx / L) < 0.45) { lx = p.x + 12; ly = p.y + 4; anchor = 'start'; } else { lx = p.x + 12 * dx / L; ly = p.y + 12 * dy / L + 4; anchor = dx > 0 ? 'start' : 'end'; } }
+      const l = tx(gNodes, lx, ly, name, { 'text-anchor': anchor, 'font-size': ni === 0 ? 11.5 : 11, 'font-weight': 700, opacity: 0, class: 'halo' });
+      const ring = el('circle', { cx: p.x, cy: p.y, r: ni === 0 ? 13 : 10, fill: 'none', 'stroke-width': 2.4, 'stroke-dasharray': '4 3', opacity: 0 }, gMarks);
+      KN.push({ ci, ni, c, l });
+      return { c, l, ring, lx, ly };
+    });
+    cm.edgeEls = cm.edges.map(([a, b]) => el('line', { x1: cm.pos[a].x, y1: cm.pos[a].y, x2: cm.pos[b].x, y2: cm.pos[b].y, stroke: 'var(--wire)', 'stroke-width': 1.3, opacity: 0 }, gEdges));
+  });
+  const crossEls = CROSS.map(([ka, na, kb, nb]) => { const A = COMM[CIDX[ka]].pos[na], B = COMM[CIDX[kb]].pos[nb]; return el('line', { x1: A.x, y1: A.y, x2: B.x, y2: B.y, stroke: 'var(--wire)', 'stroke-width': 2.2, opacity: 0 }, gEdges); });
+
+  /* summary cards */
+  COMM.forEach((cm, ci) => {
+    const x = CX0[ci % 3], y = CY0[Math.floor(ci / 3)];
+    cm.card = { x, y };
+    const g = el('g', { opacity: 0 }, gCardsS);
+    const rect = el('rect', { x, y, width: CW, height: CH, rx: 10, fill: 'var(--surface)', stroke: `var(${cm.col})`, 'stroke-width': 1.8 }, g);
+    const body = el('g', { opacity: 0 }, g);
+    el('circle', { cx: x + 16, cy: y + 18, r: 5.5, fill: `var(${cm.col})` }, body);
+    tx(body, x + 28, y + 23, cm.title, { 'font-size': 13.5, 'font-weight': 700 });
+    cm.lines.forEach((ln, j) => tx(body, x + 14, y + 42 + j * 16, ln, { 'font-size': 12, 'font-weight': 500 }));
+    const barBg = el('rect', { x: x + 14, y: y + CH - 14, width: CW - 64, height: 6, rx: 3, fill: 'var(--surface-2)', opacity: 0 }, g);
+    const bar = el('rect', { x: x + 14, y: y + CH - 14, width: 0, height: 6, rx: 3, fill: 'var(--graph)' }, g);
+    const score = tx(g, x + CW - 12, y + CH - 7, '', { 'text-anchor': 'end', 'font-size': 13, 'font-weight': 700, class: 'mono', fill: 'var(--graph)' });
+    const lost = el('g', { opacity: 0 }, g);
+    el('rect', { x: x + 8, y: y + CH - 25, width: CW - 16, height: 21, rx: 6, fill: 'var(--bad)' }, lost);
+    const lostTx = tx(lost, x + CW / 2, y + CH - 10, '', { 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 700, fill: '#fff' });
+    cm.cardEl = { g, rect, body, barBg, bar, score, lost, lostTx };
+  });
+  /* reduce box */
+  const red = el('g', { opacity: 0 }, gRed);
+  const redBox = el('rect', { x: REDUCE.x, y: REDUCE.y, width: REDUCE.w, height: REDUCE.h, rx: 14, fill: 'var(--surface-2)', stroke: 'var(--graph)', 'stroke-width': 2 }, red);
+  tx(red, REDUCE.x + REDUCE.w / 2, REDUCE.y + 27, 'Reduce · LLM', { 'text-anchor': 'middle', 'font-size': 16, 'font-weight': 700, fill: 'var(--graph)' });
+  tx(red, REDUCE.x + REDUCE.w / 2, REDUCE.y + 47, '질문 + 점수 높은 요약', { 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600 });
+  const redRes = tx(red, REDUCE.x + REDUCE.w / 2, REDUCE.y + 93, '', { 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 700 });
+  const dots = []; for (let i = 0; i < 26; i++) dots.push(el('circle', { r: 4.5, opacity: 0 }, gRed));
+  /* query packets */
+  const kgTagG = el('g', { opacity: 0 }, svg);
+  const kgTagBg = el('rect', { y: 410, height: 26, rx: 13 }, kgTagG);
+  const kgTagTx = tx(kgTagG, 360, 428, '', { 'text-anchor': 'middle', 'font-size': 13.5, 'font-weight': 700, fill: '#fff' });
+  const QB = { x: 140, y: 330, w: 440, h: 54 };
+  const qLines = COMM.map(() => el('line', { stroke: 'var(--q)', 'stroke-width': 2.2, 'stroke-dasharray': '6 4', opacity: 0 }, gQ));
+  const qBox = el('g', { opacity: 0 }, gQ);
+  el('rect', { x: QB.x, y: QB.y, width: QB.w, height: QB.h, rx: 12, fill: 'var(--surface)', stroke: 'var(--q)', 'stroke-width': 2 }, qBox);
+  el('rect', { x: QB.x, y: QB.y, width: QB.w, height: QB.h, rx: 12, fill: 'var(--q-soft)' }, qBox);
+  el('rect', { x: QB.x + 12, y: QB.y + 16, width: 46, height: 22, rx: 11, fill: 'var(--q)' }, qBox);
+  tx(qBox, QB.x + 35, QB.y + 31.5, '질문', { 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 700, fill: '#fff' });
+  const gqFo = el('foreignObject', { x: QB.x + 66, y: QB.y + 4, width: QB.w - 76, height: QB.h - 8 }, qBox);
+  const gqDiv = document.createElement('div'); gqDiv.className = 'fo-slot fo-q'; gqFo.appendChild(gqDiv);
+  const judge = el('g', { opacity: 0 }, gQ);
+  el('rect', { x: -26, y: -12, width: 52, height: 24, rx: 12, fill: 'var(--q)' }, judge);
+  tx(judge, 0, 4.5, '질문', { 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 700, fill: '#fff' });
+
+  /* extraction view */
+  const ex = el('g', { opacity: 0 }, gEx);
+  const exCard = el('rect', { x: 12, y: 70, width: 368, height: 290, rx: 12, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1.4 }, ex);
+  const exHead = el('g', null, ex);
+  el('circle', { cx: 34, cy: 94, r: 12, fill: 'var(--ink)' }, exHead);
+  const exNo = tx(exHead, 34, 98.5, '', { 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 700, fill: 'var(--surface)', class: 'mono' });
+  const exTitle = tx(exHead, 54, 99, '', { 'font-size': 14, 'font-weight': 700 });
+  const fo = el('foreignObject', { x: 24, y: 114, width: 344, height: 200 }, ex);
+  const foDiv = document.createElement('div'); foDiv.className = 'fo'; fo.appendChild(foDiv);
+  const exTag = el('g', { opacity: 0 }, ex);
+  const exTagBg = el('rect', { x: 24, y: 362, width: 344, height: 26, rx: 7, fill: 'var(--bad)' }, exTag);
+  const exTagTx = tx(exTag, 196, 380, '', { 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 700, fill: '#fff' });
+  const exCount = tx(ex, 196, 344, '', { 'text-anchor': 'middle', 'font-size': 13.5, 'font-weight': 700, fill: 'var(--graph)' });
+  const mini = el('g', null, gEx);
+  let exState = null;
+
+  function prepEx(sc) {
+    const X = sc.extract; foDiv.innerHTML = X.html;
+    exNo.textContent = X.chunk; exTitle.textContent = CHUNKS[X.chunk - 1].short + ' · ' + DOCS[CHUNKS[X.chunk - 1].doc];
+    while (mini.firstChild) mini.removeChild(mini.firstChild);
+    const eG = el('g', null, mini), nG = el('g', null, mini);
+    const nodes = X.nodes.map(([name, x, y, tgt]) => {
+      const g = el('g', { opacity: 0 }, nG);
+      const c = el('circle', { cx: 0, cy: 0, r: 7, fill: 'var(--graph)' }, g);
+      const l = tx(g, 0, 22, name, { 'text-anchor': 'middle', 'font-size': 11.5, 'font-weight': 700, class: 'halo' });
+      return { g, c, l, x, y, tgt };
+    });
+    const edges = X.edges.map(([a, b]) => ({ a, b, l: el('line', { stroke: 'var(--graph)', 'stroke-width': 2, opacity: 0 }, eG) }));
+    COMM.forEach(cm => { cm.cardEl.lostTx.textContent = sc.lostText || ''; });
+    kgTagTx.textContent = sc.kgTag || ''; { const w = (sc.kgTag || '').length * 13 + 30; sa(kgTagBg, { x: 360 - w / 2, width: w, fill: sc.kgOk ? 'var(--ok)' : 'var(--bad)' }); }
+    exTagTx.textContent = X.lostTag || ''; exCount.textContent = `이 Chunk에서 Entity ${X.ents}개 · Relation ${X.rels}개`;
+    exState = { sc, nodes, edges, spans: [...foDiv.querySelectorAll('.e')], lost: [...foDiv.querySelectorAll('.lost')] };
+  }
+
+  function update(t, sc) {
+    if (!exState || exState.sc !== sc) prepEx(sc);
+    const G = T.g, X = sc.extract;
+    gDocs.setAttribute('opacity', 1 - P(t, 8.3, 8.9));
+
+    /* chunk cards */
+    cards.forEach((cd, i) => {
+      if (t < T.chunk[0]) { cd.g.setAttribute('opacity', 0); return; }
+      const e = cardEnter(t, i);
+      if (cd.c.no === X.chunk) {
+        const u = E(t, G.extract[0], G.extract[0] + 0.9);
+        const tgt = { x: 12, y: 70 }, s = lerp(e.s, 2.2, u);
+        cd.g.setAttribute('transform', `translate(${lerp(e.x, tgt.x, u)},${lerp(e.y, tgt.y, u)}) scale(${s})`);
+        cd.g.setAttribute('opacity', e.o * (1 - P(t, G.extract[0] + 0.7, G.extract[0] + 1.0)));
+      } else {
+        cd.g.setAttribute('transform', `translate(${e.x},${e.y}) scale(${e.s})`);
+        cd.g.setAttribute('opacity', e.o * (1 - P(t, G.extract[0], G.extract[0] + 0.6)));
+      }
+    });
+
+    /* extraction */
+    const exIn = P(t, G.extract[0] + 0.7, G.extract[0] + 1.1), exOut = P(t, G.extract[1] - 0.6, G.extract[1]);
+    ex.setAttribute('opacity', exIn * (1 - exOut));
+    const S = exState, nE = S.spans.length, hl0 = G.extract[0] + 1.6, hlStep = 2.6 / Math.max(nE, 1);
+    S.spans.forEach((sp, j) => {
+      const on = t >= hl0 + j * hlStep;
+      sp.style.background = on ? 'var(--graph-soft)' : 'transparent';
+      sp.style.color = on ? 'var(--graph)' : '';
+      sp.style.fontWeight = on ? '700' : '';
+    });
+    const lostOn = t >= G.extract[0] + 4.5;
+    S.lost.forEach(l => l.classList.toggle('x', lostOn));
+    exTag.setAttribute('opacity', X.lostTag ? P(t, G.extract[0] + 4.7, G.extract[0] + 5.1) : 0);
+    exCount.setAttribute('opacity', P(t, G.extract[0] + 4.3, G.extract[0] + 4.7));
+
+    // mini graph nodes: appear with highlights, then move to KG positions
+    const kgMove = E(t, G.kg[0], G.kg[0] + 1.3);
+    S.nodes.forEach((nd, j) => {
+      const span = S.spans.find(s => +s.dataset.n === j); const sj = span ? S.spans.indexOf(span) : j;
+      const tOn = hl0 + sj * hlStep;
+      const pop = E(t, tOn, tOn + 0.35);
+      let x = nd.x, y = nd.y, op = pop;
+      if (nd.tgt) { const cm = COMM[CIDX[nd.tgt[0]]], p = cm.pos[nd.tgt[1]]; x = lerp(nd.x, p.x, kgMove); y = lerp(nd.y, p.y, kgMove); op = pop * (1 - P(t, G.kg[0] + 1.2, G.kg[0] + 1.6)); }
+      else op = pop * (1 - P(t, G.kg[0], G.kg[0] + 0.5));
+      nd.g.setAttribute('transform', `translate(${x},${y}) scale(${lerp(0.4, 1, pop)})`);
+      nd.g.setAttribute('opacity', op);
+      nd.l.setAttribute('opacity', 1 - kgMove);
+      nd.pos = { x, y }; nd.vis = op;
+    });
+    S.edges.forEach(ed => {
+      const A = S.nodes[ed.a], B = S.nodes[ed.b];
+      sa(ed.l, { x1: A.pos.x, y1: A.pos.y, x2: B.pos.x, y2: B.pos.y, opacity: Math.min(A.vis, B.vis) * P(t, G.extract[0] + 4.0, G.extract[0] + 4.4) });
+    });
+
+    /* KG */
+    const commU = E(t, G.comm[0], G.comm[0] + 1.2);
+    const collapse = E(t, G.summ[0], G.summ[0] + 1.2);
+    COMM.forEach((cm, ci) => {
+      cm.nodeEls.forEach((ne, ni) => {
+        const t0 = G.kg[0] + 0.5 + ci * 0.22 + ni * 0.05;
+        const u = E(t, t0, t0 + 0.4);
+        const p = cm.pos[ni];
+        const x = lerp(p.x, cm.center.x, collapse), y = lerp(p.y, cm.center.y, collapse);
+        sa(ne.c, { cx: x, cy: y, opacity: u * (1 - collapse), fill: commU > 0.5 ? `var(${cm.col})` : 'var(--node)' });
+        const marked = (sc.kgMark || []).some(([k, i]) => k === cm.k && i === ni);
+        const markU = marked ? P(t, G.kg[0] + 1.4, G.kg[0] + 1.9) * (1 - P(t, G.summ[0], G.summ[0] + 0.5)) : 0;
+        const lblOn = ni === 0 ? 1 : markU;
+        sa(ne.l, { x: lerp(ne.lx, cm.center.x, collapse), y: lerp(ne.ly, cm.center.y, collapse), opacity: u * lblOn * (1 - P(t, G.summ[0], G.summ[0] + 0.5)), fill: marked && ni > 0 ? (sc.kgOk ? 'var(--ok)' : 'var(--bad)') : 'var(--ink)' });
+        sa(ne.ring, { cx: x, cy: y, opacity: markU, stroke: sc.kgOk ? 'var(--ok)' : 'var(--bad)' });
+      });
+      cm.edgeEls.forEach((ln, j) => {
+        const [a, b] = cm.edges[j];
+        const t0 = G.kg[0] + 1.2 + ci * 0.22 + j * 0.06;
+        const u = E(t, t0, t0 + 0.5);
+        const A = cm.pos[a], B = cm.pos[b];
+        sa(ln, { x1: lerp(A.x, cm.center.x, collapse), y1: lerp(A.y, cm.center.y, collapse), x2: lerp(A.x, B.x, u) * (1 - collapse) + cm.center.x * collapse, y2: lerp(A.y, B.y, u) * (1 - collapse) + cm.center.y * collapse, opacity: (u > 0 ? 1 : 0) * (1 - collapse), stroke: commU > 0.5 ? `var(${cm.col})` : 'var(--wire)' });
+      });
+      // hull circle -> card
+      const hullU = E(t, G.comm[0] + 0.4, G.comm[0] + 1.6);
+      const R = 52 * hullU;
+      const morph = E(t, G.summ[0] + 0.4, G.summ[0] + 1.8);
+      if (morph <= 0) {
+        sa(cm.hull, { cx: cm.center.x, cy: cm.center.y, r: R, opacity: hullU > 0 ? 1 : 0 });
+        cm.cardEl.g.setAttribute('opacity', 0);
+      } else {
+        cm.hull.setAttribute('opacity', 0);
+        const w = lerp(2 * 52, CW, morph), h = lerp(2 * 52, CH, morph);
+        const cx = lerp(cm.center.x, cm.card.x + CW / 2, morph), cy = lerp(cm.center.y, cm.card.y + CH / 2, morph);
+        sa(cm.cardEl.rect, { x: cx - w / 2, y: cy - h / 2, width: w, height: h, rx: lerp(52, 10, morph), 'fill-opacity': 1 });
+        cm.cardEl.g.setAttribute('opacity', 1);
+      }
+      cm.cardEl.body.setAttribute('opacity', P(t, G.summ[0] + 1.7, G.summ[0] + 2.3));
+      cm.titleEl.setAttribute('opacity', P(t, G.comm[0] + 1.3, G.comm[0] + 1.9) * (1 - P(t, G.summ[0], G.summ[0] + 0.5)));
+    });
+    crossEls.forEach(l => l.setAttribute('opacity', P(t, G.kg[0] + 2.6, G.kg[0] + 3.0) * (1 - collapse)));
+    kgTagG.setAttribute('opacity', sc.kgTag ? P(t, G.kg[0] + 1.6, G.kg[0] + 2.1) * (1 - P(t, G.summ[0], G.summ[0] + 0.4)) : 0);
+
+
+    /* MAP: 질문이 질문 상자로 들어오고, 질문과 각 Community 요약을 하나씩 비교해 점수 */
+    const M0 = G.map[0];
+    qBox.setAttribute('opacity', P(t, M0, M0 + 0.4) * (1 - P(t, G.reduce[0], G.reduce[0] + 0.4)));
+    if (gqDiv.dataset.k !== sc.q) { gqDiv.dataset.k = sc.q; gqDiv.textContent = sc.q; }
+    gqDiv.style.opacity = P(t, M0 + 1.25, M0 + 1.5);
+    const slot = ci => { const st = M0 + 1.7 + (ci < 2 ? ci * 1.2 : 2.4 + (ci - 2) * 0.55); return [st, ci < 2 ? 1.2 : 0.55]; };
+    const lastEnd = slot(COMM.length - 1).reduce((a, b) => a + b);
+    let jx = 0, jy = 0, jo = 0;
+    COMM.forEach((cm, ci) => {
+      const [st, du] = slot(ci), mid = st + du * 0.45;
+      const cx = cm.card.x + CW / 2, cyB = cm.card.y + CH;
+      const ln = qLines[ci], active = t >= st && t < st + du + 0.15;
+      sa(ln, { x1: 360, y1: QB.y, x2: cx, y2: cyB, opacity: active ? 1 : 0 });
+      if (t >= st && t < st + du) { const u = E(t, st, mid), ex = cm.card.x + CW - 32, ey = cm.card.y + 2; jx = lerp(360, ex, u); jy = lerp(QB.y, ey, u); jo = 1 - P(t, st + du - 0.12, st + du); }
+      const sc0 = sc.map[cm.k] || 0, su = E(t, mid, st + du);
+      const ce = cm.cardEl;
+      ce.barBg.setAttribute('opacity', P(t, st, st + 0.2));
+      ce.bar.setAttribute('width', ((CW - 64) * sc0 / 100 * su).toFixed(1));
+      ce.score.textContent = t >= mid ? Math.round(sc0 * su) : '';
+      const dimU = P(t, lastEnd + 0.1, lastEnd + 0.6);
+      const dim = sc0 === 0 ? dimU : 0;
+      ce.g.setAttribute('opacity', (+ce.g.getAttribute('opacity')) * (1 - 0.6 * dim));
+      ce.rect.setAttribute('stroke', active ? 'var(--q)' : `var(${cm.col})`);
+      ce.rect.setAttribute('stroke-width', active ? 3.2 : (sc0 >= 50 ? 1.8 + 1.4 * dimU : 1.8));
+      ce.lost.setAttribute('opacity', sc.lostCard === cm.k ? P(t, lastEnd + 0.6, lastEnd + 1.0) : 0);
+    });
+    judge.setAttribute('transform', `translate(${jx},${jy})`); judge.setAttribute('opacity', jo);
+
+    /* REDUCE */
+    red.setAttribute('opacity', P(t, G.reduce[0], G.reduce[0] + 0.4));
+    let di = 0;
+    COMM.forEach((cm, ci) => {
+      const s = sc.map[cm.k] || 0; if (!s) return;
+      const n = Math.max(1, Math.round(s / 18));
+      for (let j = 0; j < n && di < dots.length; j++, di++) {
+        const t0 = G.reduce[0] + 0.4 + (di * 0.09), u = E(t, t0, t0 + 0.9);
+        const x0 = cm.card.x + CW / 2 + (j - n / 2) * 9, y0 = cm.card.y + CH / 2;
+        const x1 = REDUCE.x + REDUCE.w / 2 + (di % 9 - 4) * 12, y1 = REDUCE.y + 66;
+        sa(dots[di], { cx: lerp(x0, x1, u), cy: lerp(y0, y1, u), fill: `var(${cm.col})`, opacity: t < t0 ? 0 : 1 - P(t, G.reduce[1] - 0.6, G.reduce[1] - 0.2) });
+      }
+    });
+    for (; di < dots.length; di++) dots[di].setAttribute('opacity', 0);
+    redRes.textContent = sc.reduceText; redRes.setAttribute('fill', sc.reduceOk ? 'var(--ok)' : 'var(--bad)');
+    redRes.setAttribute('opacity', P(t, G.reduce[1] - 0.6, G.reduce[1] - 0.2));
+    redBox.setAttribute('stroke', t >= G.reduce[1] - 0.4 ? (sc.reduceOk ? 'var(--ok)' : 'var(--bad)') : 'var(--graph)');
+  }
+  function qTarget() { return { svg, x: QB.x + 70, y: QB.y + QB.h / 2 }; }
+  return { update, qTarget };
+}
+
+/* ═════════════ shell: steps, captions, answers, controls ═════════════ */
+const $ = id => document.getElementById(id);
+function makeSteps(ol, steps) { return steps.map(([name]) => { const li = document.createElement('li'); li.textContent = name; ol.appendChild(li); return li; }); }
+const stepV = makeSteps($('stepsV'), STEPS_V), stepG = makeSteps($('stepsG'), STEPS_G);
+function setSteps(lis, steps, t, doneAt) {
+  lis.forEach((li, i) => { const a = steps[i][1], b = i + 1 < steps.length ? steps[i + 1][1] : doneAt;
+    li.classList.toggle('on', t >= a && t < b); li.classList.toggle('done', t >= b); });
+}
+function setStat(e, s) { if (e.textContent !== s) e.textContent = s; e.hidden = !s; }
+function capAt(list, t) { let s = ''; for (const [a, c] of list) if (t >= a) s = c; return s; }
+function fillAnswer(box, spec) {
+  const body = box.querySelector('.abody'); body.innerHTML = '';
+  const items = [];
+  if (spec.rows) {
+    spec.rows.forEach(([k, f, m]) => { const p = document.createElement('p'); p.className = 'ln row'; p.innerHTML = `<i style="background:var(${COMM[CIDX[k]].col})"></i><span><b>${f}</b> → ${m}</span>`; body.appendChild(p); items.push(p); });
+  } else spec.lines.forEach(h => { const p = document.createElement('p'); p.className = 'ln'; p.innerHTML = h; body.appendChild(p); items.push(p); });
+  const badge = box.querySelector('.badge'), reason = box.querySelector('.reason');
+  badge.className = 'badge ' + (spec.ok ? 'ok' : 'bad'); badge.textContent = spec.ok ? '✓ 성공' : '✗ 실패';
+  reason.className = 'reason ' + (spec.ok ? 'ok' : 'bad'); reason.textContent = spec.reason;
+  return { items, badge, reason };
+}
+function showAnswer(a, t, t0, t1, done, reasonOn) {
+  const n = a.items.length;
+  a.items.forEach((p, i) => p.classList.toggle('on', t >= t0 + (t1 - t0) * i / Math.max(n, 1)));
+  a.badge.classList.toggle('on', t >= done);
+  a.reason.classList.toggle('on', reasonOn);
+}
+const panelV = document.querySelector('.panel.vec'), panelG = document.querySelector('.panel.graph'), qSec = document.querySelector('.query');
+const fly = document.createElement('div'); fly.className = 'fly'; document.body.appendChild(fly);
+function flyQuestion(sc, panel, tl, t0, t1) { // question chip from the question bar into a panel slot
+  if (tl < t0 - 0.05 || tl > t1 + 0.05) return false;
+  const u = E(tl, t0, t1), r = qtext.getBoundingClientRect(), tg = panel.qTarget(), m = tg.svg.getScreenCTM();
+  if (!m) return false;
+  const ex = m.a * tg.x + m.c * tg.y + m.e, ey = m.b * tg.x + m.d * tg.y + m.f;
+  const sx = r.left, sy = r.top + r.height / 2;
+  if (fly.dataset.k !== sc.q) { fly.dataset.k = sc.q; fly.textContent = sc.q; }
+  fly.style.left = lerp(sx, ex, u).toFixed(1) + 'px'; fly.style.top = lerp(sy, ey, u).toFixed(1) + 'px';
+  fly.style.transform = `translateY(-50%) scale(${lerp(1, 0.82, u).toFixed(3)})`;
+  fly.style.opacity = (1 - P(tl, t1 - 0.12, t1 + 0.05)).toFixed(3);
+  return true;
+}
+
+const vp = VectorPanel($('svgV')), gp = GraphPanel($('svgG'));
+let sIdx = 0, t = 0, playing = true, last = null, ansV = null, ansG = null, curS = -1;
+const qtext = $('qtext'), qtag = $('qtag'), banner = $('banner');
+function enterScenario() {
+  const sc = SCN[sIdx];
+  ansV = fillAnswer($('ansV'), sc.v); ansG = fillAnswer($('ansG'), sc.g);
+  qtag.textContent = sc.tag;
+  banner.textContent = sc.banner; banner.className = 'banner ' + sc.win;
+  ['tab0', 'tab1'].forEach((id, i) => $(id).setAttribute('aria-selected', i === sIdx ? 'true' : 'false'));
+  curS = sIdx;
+}
+function render() {
+  if (curS !== sIdx) enterScenario();
+  const sc = SCN[sIdx];
+  const n = Math.floor(sc.q.length * P(t, T.type[0], T.type[1]));
+  const qkey = sIdx + ':' + n;
+  if (qtext.dataset.k !== qkey) {
+    qtext.dataset.k = qkey; qtext.textContent = sc.q.slice(0, n);
+    if (n < sc.q.length) { const c = document.createElement('span'); c.className = 'caret'; qtext.append(c); }
+  }
+  const tv = t, tg = t - T.G0; // each panel runs on its own clock: Vector RAG first, then GraphRAG
+  setSteps(stepV, STEPS_V, tv, T.v.done); setSteps(stepG, STEPS_G, tg, T.g.done);
+  $('capV').textContent = capAt(CAP_V, tv); $('capG').textContent = capAt(CAP_G, Math.max(0, tg));
+  setStat($('statV'), capAt(STAT_V, tv)); setStat($('statG'), capAt(STAT_G, tg));
+  vp.update(tv, sc); gp.update(tg, sc);
+  const verdictOn = t >= T.verdict;
+  showAnswer(ansV, tv, T.v.ans[0], T.v.ans[1], T.v.done, verdictOn);
+  showAnswer(ansG, tg, T.g.ans[0], T.g.ans[1], T.g.done, verdictOn);
+  const gStart = T.G0 + T.chunk[0] - 0.6;
+  panelV.classList.toggle('dim', t >= gStart && !verdictOn);
+  panelG.classList.toggle('dim', t >= T.chunk[0] - 0.4 && t < gStart);
+  const flying = flyQuestion(sc, vp, tv, T.v.prompt[0] + 0.5, T.v.prompt[0] + 1.7) || flyQuestion(sc, gp, tg, T.g.map[0] + 0.25, T.g.map[0] + 1.35);
+  fly.style.display = flying ? 'block' : 'none';
+  qSec.classList.toggle('send', flying);
+  banner.classList.toggle('on', t >= T.verdict + 0.8);
+  $('progFill').style.width = (100 * t / T.end).toFixed(2) + '%';
+}
+function setPlaying(p) {
+  playing = p;
+  $('btnPlay').setAttribute('aria-label', p ? '일시정지' : '재생');
+  $('icoPlay').innerHTML = p ? '<rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/>' : '<path d="M4 2.2v11.6a.8.8 0 0 0 1.2.7l9.3-5.8a.8.8 0 0 0 0-1.4L5.2 1.5A.8.8 0 0 0 4 2.2z"/>';
+}
+function frame(now) {
+  if (last == null) last = now;
+  const dt = Math.min((now - last) / 1000, 0.1); last = now;
+  if (playing) { t += dt; if (t >= T.end) { sIdx = (sIdx + 1) % SCN.length; t = 0; } }
+  render();
+  requestAnimationFrame(frame);
+}
+$('btnPlay').addEventListener('click', () => setPlaying(!playing));
+$('btnRestart').addEventListener('click', () => { t = 0; setPlaying(true); });
+$('tab0').addEventListener('click', () => { sIdx = 0; t = 0; setPlaying(true); });
+$('tab1').addEventListener('click', () => { sIdx = 1; t = 0; setPlaying(true); });
+$('prog').addEventListener('click', e => { const r = e.currentTarget.getBoundingClientRect(); t = clamp((e.clientX - r.left) / r.width) * T.end; });
+document.addEventListener('keydown', e => { if (e.code === 'Space' && !/^(BUTTON|INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) { e.preventDefault(); setPlaying(!playing); } });
+window.__demo = { seek(s, tt) { sIdx = s; t = tt; render(); }, pause() { setPlaying(false); }, T };
+if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { t = T.end - 0.5; setPlaying(false); }
+render();
+requestAnimationFrame(frame);
+})();
+
+</script>
+
+</body></html>
