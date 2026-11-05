@@ -263,3 +263,5 @@ body[data-unified=inside] .graphbox>.timeline .tlhead strong::before{background:
 body[data-unified=inside] .stage-spotlight .phase-chip.current{color:var(--u-purple)!important;background:var(--u-knowledge-bg)!important;border-color:#d9cbea!important}
 body[data-unified=inside] .ghostline{stroke:var(--graph-evidence)}
 body[data-unified=inside] .details .stack{background:#f8f9fc;border-color:var(--u-line)}
+body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.current{color:var(--u-purple)!important;background:var(--u-knowledge-bg)!important;border-color:#d9cbea!important;transition:none}
+body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.current::before{background:var(--u-purple);box-shadow:0 0 0 3px #7054a218}

@@ -110,6 +110,8 @@ def check():
             assert page.locator('#detailedMode').get_attribute('aria-pressed') == 'true'
             page.locator('#presentationMode').click()
             page.evaluate('window.__v5test.setMode("leiden"); window.__v5test.advance(window.__v5test.state().max)')
+            assert page.locator('.phase-chip.current').evaluate('e=>getComputedStyle(e).color') == 'rgb(112, 84, 162)'
+            assert page.locator('.phase-chip.current').evaluate('e=>getComputedStyle(e,"::before").backgroundColor') == 'rgb(112, 84, 162)'
             assert page.locator('[data-graph-legend=node] span').inner_text() == 'Community membership'
             assert not page.locator('[data-graph-legend=evidence]').is_visible()
             assert page.evaluate('''() => {
