@@ -5,20 +5,17 @@
   if (!header) return;
   const toggle = header.querySelector('.unified-menu-toggle');
   const nav = header.querySelector('#primary-nav');
-  const demos = header.querySelector('.unified-demos');
   const mobile = matchMedia('(max-width: 980px)');
   const close = () => {
     nav.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', 'Open navigation');
-    demos.open = false;
   };
   toggle.addEventListener('click', () => {
     const open = !nav.classList.contains('is-open');
     nav.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-    if (!open) demos.open = false;
   });
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
   document.addEventListener('click', event => {
@@ -26,10 +23,7 @@
   });
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
-    if (demos.open) {
-      demos.open = false;
-      demos.querySelector('summary').focus();
-    } else if (nav.classList.contains('is-open')) {
+    if (nav.classList.contains('is-open')) {
       close();
       toggle.focus();
     }

@@ -55,9 +55,10 @@ def check():
                 page.goto(origin + path, wait_until='domcontentloaded')
                 page.wait_for_selector(ready)
                 assert page.locator('.unified-header').count() == 1, path
-                assert page.locator('.unified-nav>a').count() == 6, path
-                assert page.locator('.unified-demo-links a').count() == 2, path
-                assert page.locator('.unified-nav a[aria-current="page"]').count() == 1, path
+                assert page.locator('.unified-nav>a').count() == 5, path
+                assert page.locator('.unified-demos, .unified-nav a[href$="cv.html"]').count() == 0, path
+                assert page.locator('.unified-nav>a').first.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 15, path
+                assert page.locator('.unified-nav a[aria-current="page"]').count() == (0 if path == 'cv.html' or path.startswith('demos/') else 1), path
                 for width in (1440, 1024, 980, 740, 390, 320):
                     page.set_viewport_size({'width': width, 'height': 1000})
                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), (path, width)
@@ -65,16 +66,22 @@ def check():
                 toggle = page.locator('.unified-menu-toggle')
                 toggle.click()
                 assert toggle.get_attribute('aria-expanded') == 'true', path
-                page.locator('.unified-demos summary').click()
-                assert page.locator('.unified-demo-links').is_visible(), path
-                page.keyboard.press('Escape')
-                assert page.locator('.unified-demos').get_attribute('open') is None, path
                 page.keyboard.press('Escape')
                 assert toggle.get_attribute('aria-expanded') == 'false', path
                 toggle.click()
-                page.locator('.unified-demos summary').click()
                 page.set_viewport_size({'width': 1440, 'height': 1000})
-                page.wait_for_function('!document.querySelector(".unified-demos").open')
+                page.wait_for_function('document.querySelector(".unified-menu-toggle").getAttribute("aria-expanded")==="false"')
+                if path in ('about.html', 'news.html'):
+                    selector = '.education-list' if path == 'about.html' else '.news-list'
+                    assert page.locator(selector).evaluate('''element => {
+                        const container = element.closest('.container');
+                        const right = container.getBoundingClientRect().right - parseFloat(getComputedStyle(container).paddingRight);
+                        return Math.abs(element.getBoundingClientRect().right - right) < 1;
+                    }'''), path
+                if path == 'research.html':
+                    image = page.locator('.work-card img')
+                    assert image.get_attribute('src') == 'assets/images/graphrag-header-light.svg'
+                    assert image.evaluate('e=>e.complete && e.naturalWidth > 0')
                 if path == 'cv.html':
                     page.evaluate('window.__printed=false; window.print=()=>window.__printed=true')
                     page.locator('#print-cv').click()
@@ -130,11 +137,9 @@ def check():
             page.goto(origin + 'demos/rag-comparison/index.html', wait_until='domcontentloaded')
             page.wait_for_function('!!window.__demo')
             assert page.locator('.panel').first.evaluate('e=>getComputedStyle(e).backgroundColor') == 'rgb(255, 255, 255)'
-            page.locator('.unified-demos summary').focus()
+            page.locator('.unified-nav a').first.focus()
             page.keyboard.press('Space')
-            assert page.locator('.unified-demos').get_attribute('open') is not None
             assert page.locator('#btnPlay').get_attribute('aria-label') == '일시정지'
-            page.keyboard.press('Escape')
             page.locator('#tab1').click()
             assert page.locator('#tab1').get_attribute('aria-selected') == 'true'
             page.locator('#btnPlay').click()
@@ -142,7 +147,7 @@ def check():
             page.close()
             assert not errors, errors
             browser.close()
-            print('PASS: comparison playback and scenarios work; keyboard menu does not intercept playback; light theme is consistent')
+            print('PASS: comparison playback and scenarios work; header keyboard navigation does not intercept playback; light theme is consistent')
     finally:
         server.shutdown()
         server.server_close()
