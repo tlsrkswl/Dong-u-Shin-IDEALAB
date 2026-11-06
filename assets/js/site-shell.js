@@ -3,12 +3,6 @@
   'use strict';
   const header = document.querySelector('.unified-header');
   if (!header) return;
-  // The comparison canvas fills the viewport below the shared header.
-  if (document.body.dataset.unified === 'compare') {
-    const updateHeight = () => document.body.style.setProperty('--shell-height', `${header.offsetHeight}px`);
-    updateHeight();
-    new ResizeObserver(updateHeight).observe(header);
-  }
   const toggle = header.querySelector('.unified-menu-toggle');
   const nav = header.querySelector('#primary-nav');
   if (!toggle || !nav) return;

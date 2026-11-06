@@ -232,10 +232,18 @@ body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.cur
 body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.current::before{background:var(--u-purple);box-shadow:0 0 0 3px #7054a218}
 
 /* Original demo widths, typography and graph sizing are defined in each demo HTML.
-   Only reserve the actual header height in the comparison's viewport layout. */
-body[data-unified=compare] .app{height:calc(100dvh - var(--shell-height,77px))}
+   The comparison canvas uses the full viewport now that its separate bar is removed. */
+body[data-unified=compare] .app{height:100dvh}
 @media(max-width:900px){body[data-unified=compare] .app{height:auto}}
 body.site-v2[data-page=about] .education-list,body.site-v2[data-page=news] .news-list{width:100%;max-width:none}
-/* Standalone demos keep only the brand, aligned to their own canvas inset. */
-body[data-unified=inside] .unified-header-inner{max-width:1620px;padding-inline:clamp(12px,2vw,33px)}
-body[data-unified=compare] .unified-header-inner{max-width:none;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* University and lab marks sit beside the demo title, without a separate masthead. */
+.demo-title-group{display:flex;align-items:center;gap:16px;min-width:0}
+.demo-logo{display:inline-flex;align-items:center;flex-shrink:0;gap:0;line-height:0}
+.demo-logo img{display:block;height:44px;width:auto;object-fit:contain}
+.demo-title-copy{min-width:0}
+body[data-unified=compare] .demo-title-group .brand{white-space:normal}
+body[data-unified=compare] .demo-title-group .brand .v,body[data-unified=compare] .demo-title-group .brand .g{white-space:nowrap}
+@media(max-width:700px){.demo-title-group{gap:12px}.demo-logo img{height:32px}body[data-unified=inside] .intro>.demo-title-group{flex-basis:100%}}
+@media(max-width:380px){.demo-title-group{gap:10px}.demo-logo img{height:26px}}
+body[data-unified=compare] .demo-title-group .brand{display:flex;flex-wrap:wrap;align-items:baseline;min-width:0}

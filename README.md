@@ -50,7 +50,7 @@ scripts/check_content.py 검사
 
 ## 공통 디자인과 메뉴
 
-홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·News만 표시하고, 두 데모의 상단에는 본문 폭에 맞춘 로고와 이름만 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
+홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·News만 표시하고, 두 데모에는 별도 상단 바를 두지 않고, 데모 제목 왼쪽에 한양대학교 문장과 IDEA 심벌을 나란히 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
 
 Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--graph-evidence`, `--graph-relation`을 사용합니다. 노드 SVG와 설명 패널의 축소 그림은 같은 색상 값을 읽고, Community 단계의 범례는 현재 표시된 노드 색상에 맞춰집니다. Community 소속·계층·계산 데이터는 변경하지 않습니다.
 

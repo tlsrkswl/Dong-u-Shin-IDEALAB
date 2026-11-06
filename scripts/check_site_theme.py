@@ -54,8 +54,8 @@ def check():
                 page.on('pageerror', lambda error, path=path: errors.append((path, str(error))))
                 page.goto(origin + path, wait_until='domcontentloaded')
                 page.wait_for_selector(ready)
-                assert page.locator('.unified-header').count() == 1, path
                 demo = path.startswith('demos/')
+                assert page.locator('.unified-header').count() == (0 if demo else 1), path
                 assert page.locator('.unified-nav>a').count() == (0 if demo else 5), path
                 assert page.locator('.unified-demos, .unified-nav a[href$="cv.html"]').count() == 0, path
                 if not demo:
@@ -68,10 +68,13 @@ def check():
                         selector = 'main' if 'graphrag/' in path else '.app'
                         assert page.locator(selector).evaluate('''element => {
                             const left = element.getBoundingClientRect().left + parseFloat(getComputedStyle(element).paddingLeft);
-                            return Math.abs(document.querySelector('.unified-brand').getBoundingClientRect().left - left) < 1;
+                            return Math.abs(document.querySelector('.demo-logo').getBoundingClientRect().left - left) < 1;
                         }'''), (path, width)
                 if demo:
                     assert page.locator('.unified-menu-toggle, .unified-nav').count() == 0, path
+                    assert page.locator('.demo-logo img').count() == 2, path
+                    assert page.locator('.demo-logo img').evaluate_all('imgs=>imgs.every(i=>i.complete && i.naturalWidth>0)'), path
+                    assert page.locator('.demo-title-group').evaluate('e=>{const logo=e.querySelector(".demo-logo").getBoundingClientRect();const text=e.querySelector(".demo-title-copy,.brand").getBoundingClientRect();return logo.right<=text.left}'), path
                 else:
                     page.set_viewport_size({'width': 390, 'height': 844})
                     toggle = page.locator('.unified-menu-toggle')
@@ -150,9 +153,6 @@ def check():
             page.goto(origin + 'demos/rag-comparison/index.html', wait_until='domcontentloaded')
             page.wait_for_function('!!window.__demo')
             assert page.locator('.panel').first.evaluate('e=>getComputedStyle(e).backgroundColor') == 'rgb(255, 255, 255)'
-            page.locator('.unified-brand').focus()
-            page.keyboard.press('Space')
-            assert page.locator('#btnPlay').get_attribute('aria-label') == '일시정지'
             page.locator('#tab1').click()
             assert page.locator('#tab1').get_attribute('aria-selected') == 'true'
             page.locator('#btnPlay').click()
@@ -160,7 +160,7 @@ def check():
             page.close()
             assert not errors, errors
             browser.close()
-            print('PASS: comparison playback and scenarios work; header keyboard navigation does not intercept playback; light theme is consistent')
+            print('PASS: comparison playback and scenarios work; light theme is consistent')
     finally:
         server.shutdown()
         server.server_close()
