@@ -79,7 +79,7 @@
     const data=await get('content/news.json');
     const ordered=data.filter(n=>String(n.label||'').toLowerCase()==='award').sort((a,b)=>b.date.localeCompare(a.date));
     $('#news-list').innerHTML=ordered.length?ordered.map(n=>{
-      const details=`<div class="news-date">${esc(n.dateDisplay||n.date)}</div><div><div class="news-tag">AWARD</div><h3 class="news-title">${esc(n.title)}</h3><p>${esc(n.summary)}</p></div><span class="news-arrow" aria-hidden="true">↗</span>`;
+      const details=`<div class="news-date">${esc(n.dateDisplay||n.date)}</div><div><div class="news-tag">AWARD</div><h3 class="news-title">${esc(n.title)}</h3><p>${esc(n.summary)}</p></div>`;
       return n.id && n.certificateImage ? `<a class="news-item news-clickable" href="award.html?id=${encodeURIComponent(n.id)}" aria-label="View ${esc(n.title)} certificate">${details}</a>`:`<article class="news-item">${details}</article>`;
     }).join(''):'<div class="empty-subgroup">No awards listed yet.</div>';
   }
@@ -94,6 +94,7 @@
     text('award-summary',n.summary);
     const img=safeUrl(n.certificateImage)?n.certificateImage:'';
     el.innerHTML=`<figure class="award-certificate">${img?`<img src="${esc(img)}" alt="Award certificate for ${esc(n.title)}" loading="eager"/>`:''}<figcaption>Certificate · ${esc(n.dateDisplay||n.date)}</figcaption></figure>`;
+    window.IDEALabComments?.mount($('#comments'), n.id);
   }
   async function cv(){const [data,pubs,site]=await Promise.all([get('content/cv.json'),get('content/publications.json'),get('content/site.json')]);
     const edu=data.education.map(e=>cvRow(e.school,`${e.degree}${e.planned?' (Planned)':''}`,[e.detail,e.location].filter(Boolean).join(' · '),e.period)).join('');

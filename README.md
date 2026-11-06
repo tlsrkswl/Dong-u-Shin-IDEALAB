@@ -56,6 +56,12 @@ Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--gr
 
 `python3 scripts/check_site_theme.py`는 모든 페이지의 반응형 배치, 공통 메뉴·키보드 동작, CV 인쇄, 그래프와 설명 색상 일치를 검사합니다. Playwright Python과 Chromium이 필요하며 배포 사이트에는 별도 설치가 필요 없습니다. PDF.js 문서 전용 뷰어와 기존 페이지 리디렉션은 그대로 유지합니다.
 
+## News 댓글
+
+News의 각 게시글 상세 화면은 Giscus 댓글을 본문 아래에 표시합니다. 설정은 `assets/js/news-comments.js`, 모양은 `assets/css/news-comments.css`, 댓글 컨테이너는 `award.html`에 있습니다. GitHub의 `tlsrkswl/Dong-u-Shin-IDEALAB` 저장소와 `Announcements` 카테고리를 사용하며, 한국어·밝은 테마·반응 기능을 적용했습니다. 댓글 작성에는 GitHub 로그인이 필요합니다.
+
+Giscus의 `specific` 매핑에 `award.html?id=게시글ID` 형식의 고정 URL을 전달합니다. 기본 URL 매핑과 같은 게시글 주소를 사용하면서도 `v`, 추적용 쿼리, 해시가 달라졌을 때 댓글이 나뉘는 일을 방지합니다. 게시글을 찾은 뒤에만 댓글을 불러오며, News 목록과 존재하지 않는 게시글에는 댓글을 표시하지 않습니다. 앞으로 다른 상세 페이지를 추가할 때도 유효한 게시글을 렌더링한 뒤 `window.IDEALabComments.mount(container, id)`를 호출하세요. 실제 댓글과 반응은 GitHub Discussions에서 관리됩니다.
+
 ## 글 수정
 
 ### GraphRAG 인터랙티브 데모

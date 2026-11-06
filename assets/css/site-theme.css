@@ -135,7 +135,7 @@ body.site-v2[data-page=publications] .pub-category,body.site-v2[data-page=public
 body.site-v2 .news-clickable{background:#fff;border:1px solid var(--u-line);border-radius:12px;padding:24px;margin:0}
 body.site-v2 .news-clickable:hover{background:#fbf9ff;transform:none;border-color:#c9b9e1}
 body.site-v2 .news-tag{background:var(--u-knowledge-bg);color:var(--u-purple);border-radius:5px}
-body.site-v2 .news-arrow,body.site-v2 .award-back{color:var(--u-purple)}
+body.site-v2 .award-back{color:var(--u-purple)}
 body.site-v2 .cv-paper{border-radius:12px}
 body.site-v2 .cv-section h3{color:var(--u-purple);border-color:#e2daed}
 
@@ -212,7 +212,7 @@ body[data-unified=compare] .panel{min-width:0}
   body.site-v2 .cv-paper{border:0;border-radius:0;box-shadow:none}
 }
 /* Explicit sans-serif fallbacks also keep labels consistent if web fonts cannot load. */
-body.site-v2 :is(h1,h2,h3,h4,.eyebrow,.section-index,.education-year,.about-facts span,.about-portrait p,.pub-year,.pub-category,.publication-count,.news-date,.news-tag,.news-arrow,.cv-date,.planned-chip,.study-kicker,.column-heading){font-family:'Manrope','DM Sans','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif}
+body.site-v2 :is(h1,h2,h3,h4,.eyebrow,.section-index,.education-year,.about-facts span,.about-portrait p,.pub-year,.pub-category,.publication-count,.news-date,.news-tag,.cv-date,.planned-chip,.study-kicker,.column-heading){font-family:'Manrope','DM Sans','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif}
 @media(max-width:480px){
   body.site-v2[data-page=about] .about-facts>div{grid-template-columns:minmax(0,1fr);gap:5px}
   body.site-v2[data-page=about] .about-facts strong{min-width:0;overflow-wrap:anywhere}
