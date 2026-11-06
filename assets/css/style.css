@@ -427,7 +427,7 @@
 .demo-process > strong{background:#e8f6f1;border:1px solid #d8eee5;color:#006e64}
 .demo-process-arrow { font-size: 25px; color: #7392ae; }
 .demo-process small { grid-column:1 / -1;justify-self:center;padding:4px 11px;border:1px solid #dcecf7;border-radius:20px;background:#eaf4fb;font-size:10px;font-weight:700;letter-spacing:.6px;color:#17638d; }
-.home-demo-video video { display: block; width: 100%; height: auto; aspect-ratio: auto 16 / 9; object-fit: contain; background: #111d30; }
+.home-demo-video video { display: block; width: 100%; height: auto; aspect-ratio: var(--demo-video-ratio, 16 / 9); object-fit: cover; object-position: center; background: #111d30; }
 .home-demo-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 12px 18px; border: 1px solid #644697; border-radius: 8px; background: #644697; color: var(--white); font: 700 12px/1.4 'Manrope', sans-serif; }
 .home-demo-button:hover { background: #52357f; border-color:#52357f; }
 @media(max-width:360px){.demo-process{gap:8px 6px}.demo-process > span:not(.demo-process-arrow),.demo-process > strong{font-size:13px;padding:12px 6px}.demo-process-arrow{font-size:22px}}
