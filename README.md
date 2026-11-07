@@ -70,7 +70,7 @@ Home에서는 `assets/videos/graphrag-demo.mp4` 데모 영상이 음소거 상�
 
 Home 페이지의 **Inside GraphRAG** 카드에서 **Open Demo**를 누르면 새 탭에서 데모가 열립니다. 데모 파일은 `demos/graphrag/index.html`이며, 데이터와 스타일, JavaScript가 포함되어 별도 설치나 API 키 없이 실행됩니다. GitHub Pages에는 이 폴더도 함께 올리세요.
 
-홈의 두 영상은 1920×1080(16:9) 원본에 맞춰 16:9 틀로 표시합니다. 영상 틀의 배경은 주변 카드와 같은 흰색입니다. `object-fit: contain`으로 화면 전체를 보여 주며 이전의 검은 여백 제거용 비율·잘라내기 설정은 사용하지 않습니다. 영상 교체 시 포스터와 `index.html`의 영상·포스터 버전도 함께 갱신하세요.
+홈의 두 영상은 1920×1080(16:9) 원본에 맞춰 16:9 틀로 표시합니다. 영상 틀의 배경은 주변 카드와 같은 흰색입니다. `object-fit: contain`으로 화면 전체를 보여 주며 이전의 검은 여백 제거용 비율·잘라내기 설정은 사용하지 않습니다. 영상 교체 시 포스터와 `index.html`의 영상·포스터 버전도 함께 갱신하세요. Inside GraphRAG의 현재 녹화본에는 상단 2px 캡처 선이 있어 `has-recorded-top-line` 클래스가 해당 부분만 영상 배경색으로 가립니다. 이 클래스는 새 원본에서 선이 없어지면 제거할 수 있습니다.
 
 데모를 갱신할 때는 해당 HTML을 교체하고 `assets/images/graphrag-demo.png` 썸네일도 새 화면으로 갱신하세요. Home 데모 소개 문구와 링크는 `index.html`에 있습니다.
 
