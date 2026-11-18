@@ -63,9 +63,11 @@
       return `<article class="home-focus-card" data-tone="${tone}"><div class="home-focus-title"><span class="home-focus-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false">${icons[tone]}</svg></span><h3>${esc(r.title)}</h3></div>${keywordHtml(r.keywords)}${connector}</article>`;
     }).join('');
   }
-  async function about(){const [s,cv]=await Promise.all([get('content/site.json'),get('content/cv.json')]);
+  async function about(){const [s,cv,awards]=await Promise.all([get('content/site.json'),get('content/cv.json'),get('content/news.json')]);
     text('motto',s.motto);text('about-text',s.about);text('about-detail',s.aboutDetail);text('about-lab',s.lab);text('about-location',s.aboutAddressDisplay||'Hanyang University ERICA');text('about-email',`${s.email} ↗`);$('#about-email').href='mailto:'+s.email;
     $('#education-list').innerHTML=cv.education.map(educationCard).join('');
+    $('#about-awards-list').innerHTML=awardCards(awards);
+    if(location.hash==='#awards')$('#awards').scrollIntoView();
   }
   async function research(){
     const studies=await get('content/projects.json');
@@ -75,10 +77,9 @@
     }).join('');
   }
   async function publications(){const [pubs,site]=await Promise.all([get('content/publications.json'),get('content/site.json')]);groupedPublications(pubs,$('#publication-groups'),site.publicationAuthorNames||[]);}
-  async function news(){
-    const data=await get('content/news.json');
+  function awardCards(data){
     const ordered=data.filter(n=>String(n.label||'').toLowerCase()==='award').sort((a,b)=>b.date.localeCompare(a.date));
-    $('#news-list').innerHTML=ordered.length?ordered.map(n=>{
+    return ordered.length?ordered.map(n=>{
       const details=`<div class="news-date">${esc(n.dateDisplay||n.date)}</div><div><div class="news-tag">AWARD</div><h3 class="news-title">${esc(n.title)}</h3><p>${esc(n.summary)}</p></div>`;
       return n.id && n.certificateImage ? `<a class="news-item news-clickable" href="award.html?id=${encodeURIComponent(n.id)}" aria-label="View ${esc(n.title)} certificate">${details}</a>`:`<article class="news-item">${details}</article>`;
     }).join(''):'<div class="empty-subgroup">No awards listed yet.</div>';
@@ -88,7 +89,7 @@
     const id=new URLSearchParams(location.search).get('id');
     const n=data.find(item=>item.id===id && String(item.label).toLowerCase()==='award');
     const el=$('#award-details');
-    if(!n){el.innerHTML='<h2>Award not found</h2><p>Please return to the News page.</p>';return;}
+    if(!n){el.innerHTML='<h2>Award not found</h2><p>Please return to About & Awards.</p>';return;}
     text('award-title',n.title);
     text('award-date',n.dateDisplay||n.date);
     text('award-summary',n.summary);
@@ -120,5 +121,5 @@
     dialog.addEventListener('close',()=>frame.removeAttribute('src'));
   }
   async function post(){const el=$('#post-head');if(el)el.innerHTML='<h2>Research notes are not published yet.</h2>';}
-  document.addEventListener('DOMContentLoaded',async()=>{nav();const page=document.body.dataset.page;try {if({home,about,research,publications,news,award,cv,study,post}[page])await {home,about,research,publications,news,award,cv,study,post}[page]();}catch(e){console.error(e);const status=$('#status-toast');if(status){status.textContent='Data failed to load. Start a local web server (see README.md).';status.classList.add('visible');}}});
+  document.addEventListener('DOMContentLoaded',async()=>{nav();const page=document.body.dataset.page;try {if({home,about,research,publications,award,cv,study,post}[page])await {home,about,research,publications,award,cv,study,post}[page]();}catch(e){console.error(e);const status=$('#status-toast');if(status){status.textContent='Data failed to load. Start a local web server (see README.md).';status.classList.add('visible');}}});
 })();

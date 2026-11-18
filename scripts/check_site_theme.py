@@ -58,7 +58,7 @@ def check():
                 page.wait_for_selector(ready)
                 demo = path.startswith('demos/')
                 assert page.locator('.unified-header').count() == (0 if demo else 1), path
-                assert page.locator('.unified-nav>a').count() == (0 if demo else 6), path
+                assert page.locator('.unified-nav>a').count() == (0 if demo else 5), path
                 assert page.locator('.unified-demos, .unified-nav a[href$="cv.html"]').count() == 0, path
                 if not demo:
                     assert page.locator('.unified-nav>a').first.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 15, path
@@ -87,6 +87,11 @@ def check():
                     toggle.click()
                     page.set_viewport_size({'width': 1440, 'height': 1000})
                     page.wait_for_function('document.querySelector(".unified-menu-toggle").getAttribute("aria-expanded")==="false"')
+                if path == 'news.html':
+                    assert page.url.endswith('about.html#awards')
+                if path == 'about.html':
+                    assert page.locator('#about-awards-list .news-clickable').count() == 1
+                    assert page.locator('#education-list').evaluate('e=>Boolean(e.compareDocumentPosition(document.querySelector("#awards")) & Node.DOCUMENT_POSITION_FOLLOWING)')
                 if path == 'index.html':
                     assert page.locator('.home-demo-button').all_text_contents() == ['Open Demo', 'Open Demo']
                 if path in ('about.html', 'news.html'):

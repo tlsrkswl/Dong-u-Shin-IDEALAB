@@ -19,7 +19,7 @@ about.html                About / 증명사진 / 연구실 위치 / Education
 research.html             Research
 publications.html         Publications > Journal & Conference > International & Domestic
 projects.html             산학 프로젝트 목록 (EcoRemix)
-news.html                 News (수상 기록만 표시)
+news.html                 기존 News 주소 → about.html#awards
 award.html                수상 상세 페이지 (상장 이미지만 표시, PDF 링크 없음)
 cv.html                   Curriculum Vitae (금지 항목 제외)
 project.html              프로젝트 상세 (기존 GraphRAG ID는 study.html로 연결)
@@ -50,7 +50,7 @@ scripts/check_content.py 검사
 
 ## 공통 디자인과 메뉴
 
-홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·Projects·News를 표시하고, 두 데모에는 별도 상단 바를 두지 않고, 데모 제목 왼쪽에 한양대학교 문장과 IDEA 심벌을 나란히 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
+홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·Projects를 표시하고, 두 데모에는 별도 상단 바를 두지 않고, 데모 제목 왼쪽에 한양대학교 문장과 IDEA 심벌을 나란히 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
 
 Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--graph-evidence`, `--graph-relation`을 사용합니다. 노드 SVG와 설명 패널의 축소 그림은 같은 색상 값을 읽고, Community 단계의 범례는 현재 표시된 노드 색상에 맞춰집니다. Community 소속·계층·계산 데이터는 변경하지 않습니다.
 
@@ -58,15 +58,15 @@ Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--gr
 
 ## Projects
 
-상단의 Projects는 Publications와 News 사이에 있습니다. `projects.html`은 가로형 산학 프로젝트 목록이며, 카드를 누르면 `project.html?id=프로젝트ID`에서 문서형 상세를 엽니다. 데이터는 `content/project-portfolio.json`, 스타일과 렌더링은 `assets/css/project-portfolio.css`, `assets/js/project-portfolio.js`에 있습니다. Research의 `content/projects.json`과 구분합니다.
+상단의 Projects는 Publications 다음에 있습니다. `projects.html`은 가로형 산학 프로젝트 목록이며, 카드를 누르면 `project.html?id=프로젝트ID`에서 문서형 상세를 엽니다. 데이터는 `content/project-portfolio.json`, 스타일과 렌더링은 `assets/css/project-portfolio.css`, `assets/js/project-portfolio.js`에 있습니다. Research의 `content/projects.json`과 구분합니다.
 
 현재 EcoRemix 프로젝트 한 건을 공개하며 태그·연구비는 표시하지 않습니다. 상세는 한글 제목·영문 부제, 기간·상태, 안내 박스, Overview, My Role, Methodology, Results 순서입니다. `methodology`와 `results`는 현재 빈 문자열이며 작성 시 이 값을 변경하세요. 기간·역할·진행 상태도 같은 JSON에서 관리합니다. 실적이 없는 Completed Projects 영역은 숨깁니다.
 
-## News 댓글
+## About의 Awards와 댓글
 
-News의 각 게시글 상세 화면은 Giscus 댓글을 본문 아래에 표시합니다. 설정은 `assets/js/news-comments.js`, 모양은 `assets/css/news-comments.css`, 댓글 컨테이너는 `award.html`에 있습니다. GitHub의 `tlsrkswl/Dong-u-Shin-IDEALAB` 저장소와 `Announcements` 카테고리를 사용하며, 한국어·밝은 테마·반응 기능을 적용했습니다. 댓글 작성에는 GitHub 로그인이 필요합니다.
+About의 Education 아래 Awards에서 기존과 같은 수상 카드를 표시합니다. 카드 선택 시 기존 `award.html?id=...` 상장 상세 화면과 Giscus 댓글을 그대로 엽니다. News 메뉴는 제거했으며 이전 `news.html` 링크는 `about.html#awards`로 연결됩니다. 상장 화면의 돌아가기 링크도 Awards로 연결됩니다. 설정은 `assets/js/news-comments.js`, 모양은 `assets/css/news-comments.css`, 댓글 컨테이너는 `award.html`에 있습니다. GitHub의 `tlsrkswl/Dong-u-Shin-IDEALAB` 저장소와 `Announcements` 카테고리를 사용하며, 한국어·밝은 테마·반응 기능을 적용했습니다. 댓글 작성에는 GitHub 로그인이 필요합니다.
 
-Giscus의 `specific` 매핑에 `award.html?id=게시글ID` 형식의 고정 URL을 전달합니다. 기본 URL 매핑과 같은 게시글 주소를 사용하면서도 `v`, 추적용 쿼리, 해시가 달라졌을 때 댓글이 나뉘는 일을 방지합니다. 게시글을 찾은 뒤에만 댓글을 불러오며, News 목록과 존재하지 않는 게시글에는 댓글을 표시하지 않습니다. 앞으로 다른 상세 페이지를 추가할 때도 유효한 게시글을 렌더링한 뒤 `window.IDEALabComments.mount(container, id)`를 호출하세요. 실제 댓글과 반응은 GitHub Discussions에서 관리됩니다.
+Giscus의 `specific` 매핑에 `award.html?id=게시글ID` 형식의 고정 URL을 전달합니다. 기본 URL 매핑과 같은 게시글 주소를 사용하면서도 `v`, 추적용 쿼리, 해시가 달라졌을 때 댓글이 나뉘는 일을 방지합니다. 게시글을 찾은 뒤에만 댓글을 불러오며, About 목록과 존재하지 않는 게시글에는 댓글을 표시하지 않습니다. 앞으로 다른 상세 페이지를 추가할 때도 유효한 게시글을 렌더링한 뒤 `window.IDEALabComments.mount(container, id)`를 호출하세요. 실제 댓글과 반응은 GitHub Discussions에서 관리됩니다.
 
 ## 글 수정
 
@@ -103,7 +103,7 @@ Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-compariso
 - Journal: **International** (1편, *Accepted 2026*) / Domestic (0편)
 - Conference: International (0편) / **Domestic** (2편)
 - Research: **GraphRAG for Drone Design** 연구 한 개와 승인된 발표 PDF 세 개만 공개
-- News: **수상만 표시**
+- About의 Awards: **수상만 표시**
 - About: 공식 로고, 증명사진, 사용자 모토, 연구실 위치 `Hanyang University ERICA`와 아래 영문 `Engineering Building 5, Room 224`를 표시
 - Education: Sunmoon University (2020.03–2026.02); Hanyang University integrated M.S.–Ph.D. **2027.03 입학 예정** (Google Sites Education 기준)
 - CV 공개본: **Research Interest, Project, Scholarship 포함하지 않음**
@@ -134,12 +134,12 @@ Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-compariso
 - (V3 이력) 주소 문구를 단순화했던 과거 버전의 설정입니다. **현재 V5 화면은 `Hanyang University ERICA`와 영문 호실 안내를 표시합니다.**
 - 대제목 끝의 장식용 점(`.`)은 제거했습니다.
 - Publications 저자 목록과 웹 CV에서 본인 이름을 굵게 표시합니다. 본인 이름의 표기 변형은 `content/site.json` > `publicationAuthorNames` 배열에서 수정하세요.
-- News에 남아 있는 **2025 KSEE 우수발표논문상** 항목을 클릭하면 `award.html?id=ksee-2025-best-presentation` 페이지로 이동하고 상장이 표시됩니다. 상장 이미지가 표시됩니다.
+- About의 Awards에 있는 **2025 KSEE 우수발표논문상** 항목을 클릭하면 `award.html?id=ksee-2025-best-presentation` 페이지로 이동하고 상장이 표시됩니다. 상장 이미지가 표시됩니다.
 - 모든 페이지 하단을 사용자가 제공한 레퍼런스 이미지 형태의 밝은 푸터와 한양대 사자 심볼로 변경했습니다.
 
 ### 수상 항목 추가 및 변경 방법
 
-`content/news.json`의 `label`이 `Award`인 항목만 News에 표시됩니다. 상세 페이지가 필요한 경우 항목에 아래 필드를 추가하세요.
+`content/news.json`의 `label`이 `Award`인 항목만 About의 Awards에 표시됩니다. 상세 페이지가 필요한 경우 항목에 아래 필드를 추가하세요.
 
 ```json
 {

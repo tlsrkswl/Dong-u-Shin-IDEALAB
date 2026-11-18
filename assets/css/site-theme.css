@@ -235,7 +235,7 @@ body[data-unified=inside] .phase-nav .stage-spotlight[data-mode] .phase-chip.cur
    The comparison canvas uses the full viewport now that its separate bar is removed. */
 body[data-unified=compare] .app{height:100dvh}
 @media(max-width:900px){body[data-unified=compare] .app{height:auto}}
-body.site-v2[data-page=about] .education-list,body.site-v2[data-page=news] .news-list{width:100%;max-width:none}
+body.site-v2[data-page=about] .education-list,body.site-v2[data-page=about] .news-list{width:100%;max-width:none}
 
 /* University and lab marks sit beside the demo title, without a separate masthead. */
 .demo-title-group{display:flex;align-items:center;gap:16px;min-width:0}
@@ -247,3 +247,9 @@ body[data-unified=compare] .demo-title-group .brand .v,body[data-unified=compare
 @media(max-width:700px){.demo-title-group{gap:12px}.demo-logo img{height:32px}body[data-unified=inside] .intro>.demo-title-group{flex-basis:100%}}
 @media(max-width:380px){.demo-title-group{gap:10px}.demo-logo img{height:26px}}
 body[data-unified=compare] .demo-title-group .brand{display:flex;flex-wrap:wrap;align-items:baseline;min-width:0}
+
+/* Awards retain the former News card design beneath About's Education section. */
+.site-v2.inner-page[data-page=about] .about-education{padding-bottom:32px}
+.site-v2.inner-page[data-page=about] .about-awards{padding-top:0;padding-bottom:72px}
+.about-awards .news-list{margin-top:22px}
+@media(max-width:740px){.site-v2.inner-page[data-page=about] .about-education{padding-bottom:28px}.site-v2.inner-page[data-page=about] .about-awards{padding-bottom:48px}.about-awards .news-list{margin-top:18px}}
