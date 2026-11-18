@@ -18,11 +18,11 @@ index.html                홈 (사진과 모토)
 about.html                About / 증명사진 / 연구실 위치 / Education
 research.html             Research
 publications.html         Publications > Journal & Conference > International & Domestic
-projects.html             기존 Projects 주소 → Research로 연결
+projects.html             산학 프로젝트 목록 (EcoRemix)
 news.html                 News (수상 기록만 표시)
 award.html                수상 상세 페이지 (상장 이미지만 표시, PDF 링크 없음)
 cv.html                   Curriculum Vitae (금지 항목 제외)
-project.html              기존 상세 주소 → study.html로 연결
+project.html              프로젝트 상세 (기존 GraphRAG ID는 study.html로 연결)
 study.html                연구 개요, 기간, 승인된 공개 PDF
 pdf-viewer.html           도구 모음 없는 문서 미리보기
 post.html                 추후 연구 기록 템플릿
@@ -50,11 +50,17 @@ scripts/check_content.py 검사
 
 ## 공통 디자인과 메뉴
 
-홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·News만 표시하고, 두 데모에는 별도 상단 바를 두지 않고, 데모 제목 왼쪽에 한양대학교 문장과 IDEA 심벌을 나란히 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
+홈·About·Research·Publications·News·CV·상세 페이지 및 두 데모는 `assets/css/site-theme.css`의 색상·서체·카드·버튼을 공유합니다. 데모 본문의 너비·글자 크기·그래프 영역은 각 데모 HTML의 원래 레이아웃을 유지합니다. `--u-navy`, `--u-purple`, `--u-blue`, `--u-mint`가 기본 색상입니다. 공통 상단 메뉴와 모바일 메뉴 동작은 `assets/js/site-shell.js`에서 관리하며, 홈페이지 상단에는 Home·About·Research·Publications·Projects·News를 표시하고, 두 데모에는 별도 상단 바를 두지 않고, 데모 제목 왼쪽에 한양대학교 문장과 IDEA 심벌을 나란히 표시합니다. 두 데모는 홈의 실행 버튼으로 엽니다. CV 페이지는 직접 주소로 유지하고 상단 메뉴에서는 제외합니다. 메뉴 마크업은 각 HTML에 정적으로 포함되어 있습니다.
 
 Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--graph-evidence`, `--graph-relation`을 사용합니다. 노드 SVG와 설명 패널의 축소 그림은 같은 색상 값을 읽고, Community 단계의 범례는 현재 표시된 노드 색상에 맞춰집니다. Community 소속·계층·계산 데이터는 변경하지 않습니다.
 
 `python3 scripts/check_site_theme.py`는 모든 페이지의 반응형 배치, 공통 메뉴·키보드 동작, CV 인쇄, 그래프와 설명 색상 일치를 검사합니다. Playwright Python과 Chromium이 필요하며 배포 사이트에는 별도 설치가 필요 없습니다. PDF.js 문서 전용 뷰어와 기존 페이지 리디렉션은 그대로 유지합니다.
+
+## Projects
+
+상단의 Projects는 Publications와 News 사이에 있습니다. `projects.html`은 가로형 산학 프로젝트 목록이며, 카드를 누르면 `project.html?id=프로젝트ID`에서 문서형 상세를 엽니다. 데이터는 `content/project-portfolio.json`, 스타일과 렌더링은 `assets/css/project-portfolio.css`, `assets/js/project-portfolio.js`에 있습니다. Research의 `content/projects.json`과 구분합니다.
+
+현재 EcoRemix 프로젝트 한 건을 공개하며 태그·연구비는 표시하지 않습니다. 상세는 한글 제목·영문 부제, 기간·상태, 안내 박스, Overview, My Role, Methodology, Results 순서입니다. `methodology`와 `results`는 현재 빈 문자열이며 작성 시 이 값을 변경하세요. 기간·역할·진행 상태도 같은 JSON에서 관리합니다. 실적이 없는 Completed Projects 영역은 숨깁니다.
 
 ## News 댓글
 
@@ -80,7 +86,7 @@ Home의 **Vector RAG vs GraphRAG** 비교 데모는 `assets/videos/rag-compariso
 - **모토/연구실 위치:** About의 모토는 `content/site.json`의 `motto`이며, 위치는 `labLocation`, `labLocationEnglish`를 변경하세요. **기본 데이터의 연구실 위치: 제5공학관 224호 (웹 About 상단 표시: Hanyang University ERICA, 하단 영문 안내: Engineering Building 5, Room 224)**.
 - **학교 추가:** `content/cv.json`의 `education` 배열에 새 항목을 넣습니다. 미래 예정 학적은 `planned: true`로 두면 계획 상태가 표시됩니다.
 - **논문 추가:** `content/publications.json`에 `type: "Journal"` 또는 `"Conference"`, `scope: "International"` 또는 `"Domestic"`을 설정합니다. 분류별 자동 표시되며 CV에도 반영됩니다.
-- **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Research 하단의 진행 중인 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 Projects 주소는 새 Research 화면으로 연결됩니다.
+- **연구 관리:** `content/projects.json`의 연구 항목은 Research 하단의 3열 목록에 표시됩니다. 현재는 **GraphRAG for Drone Design** 한 개만 있고, 기간은 **2026.09–Present**, 상태는 **Ongoing**입니다. Research 하단의 진행 중인 연구 카드에서 `study.html?id=drone-graphrag`로 이동합니다. 기존 `project.html?id=drone-graphrag` 상세 주소는 Research의 `study.html`로 계속 연결됩니다.
 - **자료 공개 범위:** 기존 번호 **3~5번**인 **GraphRAG & KG-RAG with Contextual Chunking**, **Adaptive Table-Aware KG-RAG & LLM Wiki**, **RAG Fundamentals & Knowledge Graph Integration** 세 개를 공개합니다. 1·2번 PDF는 공개 파일과 메타데이터에서 계속 제외합니다. 링크를 숨기거나 `private` 플래그만 추가하는 방식은 사용하지 않습니다. 비공개 원본은 이 공개 저장소나 배포 경로에 다시 넣지 마세요. 과거 공개된 GitHub 이력과 사본은 현재 파일 삭제만으로 지워지지 않습니다.
 - **자료 표시:** 상세 화면은 연구 개요와 제목·페이지 수·`View PDF` 버튼만 표시합니다. PDF는 버튼을 누를 때 모달 뷰어로 열립니다. 내부 미리보기는 PDF.js로 문서만 표시하고 페이지를 스크롤해 읽습니다. 텍스트 선택도 지원하며, 인쇄·다운로드는 상단의 새 탭 링크로 원본 PDF를 열어 사용합니다. `documents`에는 공개 승인된 자료만 넣으세요. 뷰어 배포 파일과 라이선스는 `assets/vendor/pdfjs/`에 있으며, 별도 서버나 CDN은 사용하지 않습니다.
 - **새 연구 추가:** `content/projects.json` 배열에 `id`, `title`, `category`, `summary`, `overview`, `date`, `startDate`, `status`, `tags`, `documents`, `image`, `theme`, `themeLabel`을 가진 항목을 추가하면 빈 칸부터 카드가 채워집니다. `theme`은 `knowledge`, `physics`, `optimization` 중 하나입니다. `image`는 공개 도식의 `assets/` 경로입니다. Home과 Research 상단의 세 연구 분야 소개는 링크 없는 설명용 요소입니다.

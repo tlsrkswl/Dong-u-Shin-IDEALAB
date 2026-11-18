@@ -17,6 +17,8 @@ PAGES = [
     ('about.html', '.education-card'),
     ('research.html', '.work-card'),
     ('publications.html', '.pub-item'),
+    ('projects.html', '.portfolio-card'),
+    ('project.html?id=ecoremix-carbonation-curing', '.project-document'),
     ('news.html', '.news-clickable'),
     ('cv.html', '.cv-section'),
     ('study.html?id=drone-graphrag', '.study-pdf-row'),
@@ -56,7 +58,7 @@ def check():
                 page.wait_for_selector(ready)
                 demo = path.startswith('demos/')
                 assert page.locator('.unified-header').count() == (0 if demo else 1), path
-                assert page.locator('.unified-nav>a').count() == (0 if demo else 5), path
+                assert page.locator('.unified-nav>a').count() == (0 if demo else 6), path
                 assert page.locator('.unified-demos, .unified-nav a[href$="cv.html"]').count() == 0, path
                 if not demo:
                     assert page.locator('.unified-nav>a').first.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 15, path
@@ -94,6 +96,12 @@ def check():
                         const right = container.getBoundingClientRect().right - parseFloat(getComputedStyle(container).paddingRight);
                         return Math.abs(element.getBoundingClientRect().right - right) < 1;
                     }'''), path
+                if path == 'projects.html':
+                    assert page.locator('.portfolio-card').count() == 1
+                    assert page.locator('.portfolio-keywords').count() == 0
+                if path.startswith('project.html'):
+                    assert page.locator('#project-methodology-body').inner_text() == ''
+                    assert page.locator('#project-results-body').inner_text() == ''
                 if path == 'research.html':
                     image = page.locator('.work-card img')
                     assert image.get_attribute('src') == 'assets/images/graphrag-header-light.svg'

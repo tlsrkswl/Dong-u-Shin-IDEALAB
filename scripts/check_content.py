@@ -1,10 +1,11 @@
 """Validate independent-page research website data and referenced static files."""
 from pathlib import Path
+from datetime import date
 import json,sys,re
 from html.parser import HTMLParser
 BASE=Path(__file__).resolve().parents[1]
 content=BASE/'content'
-names=['site','research','publications','achievements','projects','news','cv']
+names=['site','research','publications','achievements','projects','news','cv','project-portfolio']
 data={}; errors=[]
 for name in names:
     file=content/f'{name}.json'
@@ -30,6 +31,17 @@ for name in pages:
         if url and not (p.parent/url).is_file():errors.append(f'{name}: broken static link {url}')
 
 if len(data)==len(names):
+    portfolio_ids=[p.get('id') for p in data['project-portfolio']]
+    if len(portfolio_ids)!=len(set(portfolio_ids)):errors.append('Duplicate Projects IDs')
+    for project in data['project-portfolio']:
+        if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',str(project.get('id'))):errors.append('Invalid Projects ID')
+        for field in ('title','titleKo','sponsor','collaborator','role','startDate','endDate'):
+            if not project.get(field):errors.append('Project portfolio entry missing '+field)
+        if project.get('status') not in ('Ongoing','Completed'):errors.append('Invalid project portfolio status')
+        try:
+            if date.fromisoformat(project['startDate'])>date.fromisoformat(project['endDate']):errors.append('Invalid project portfolio period')
+        except (KeyError,TypeError,ValueError):errors.append('Invalid project portfolio date')
+        if set(project)&{'funding','budget','amount','fundingKRW'}:errors.append('Project portfolio funding must be omitted')
     ids=[p.get('id') for p in data['projects']]
     if len(ids)!=len(set(ids)):errors.append('Duplicate project IDs')
     for i in ids:
@@ -77,4 +89,4 @@ for p in [BASE/'assets/css/site-theme.css',BASE/'assets/js/site-shell.js',BASE/'
 if errors:
     for error in errors:print('ERROR:',error)
     sys.exit(1)
-print(f'PASS: {len(pages)} pages, 7 JSON files, linked resources, PDF viewer assets, research links, approved public PDFs only, publication categories, awards only, lab room, CV exclusions')
+print(f'PASS: {len(pages)} pages, {len(names)} JSON files, linked resources, PDF viewer assets, research links, approved public PDFs only, publication categories, awards only, lab room, CV exclusions')
