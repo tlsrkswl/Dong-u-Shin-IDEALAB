@@ -62,6 +62,10 @@ Inside GraphRAG의 노드·현재 근거·관계 색상은 `--graph-node`, `--gr
 
 현재 EcoRemix 프로젝트 한 건을 공개하며 태그·연구비는 표시하지 않습니다. 상세는 한글 제목·영문 부제, 기간·상태, 안내 박스, Overview, My Role, Methodology, Results 순서입니다. `methodology`와 `results`는 현재 빈 문자열이며 작성 시 이 값을 변경하세요. 기간·역할·진행 상태도 같은 JSON에서 관리합니다. 실적이 없는 Completed Projects 영역은 숨깁니다.
 
+### EcoRemix 3D 데모
+
+EcoRemix 상세 화면의 **Open Demo**에서 `demos/ecoremix/index.html`을 새 탭으로 엽니다. 업로드한 HTML은 내용 변경 없이 배치했습니다. 추가 CFD·AI 예측 프레임은 사용자가 `demos/ecoremix/flow_blocks/`에 원본 파일명 그대로 업로드합니다. 이 폴더는 `index.html`과 같은 위치에 있어야 하며, 폴더를 한 단계 더 중첩하지 마세요. 현재 `.gitkeep`은 폴더 위치를 보관하기 위한 빈 파일이며 프레임 데이터가 아닙니다. 센서 배치와 HTML에 내장된 기본 유동 프레임 외의 전체 시각·학습 모델은 폴더 업로드 후 확인할 수 있습니다.
+
 ## About의 Awards와 댓글
 
 About의 Education 아래 Awards에서 기존과 같은 수상 카드를 표시합니다. 카드 선택 시 기존 `award.html?id=...` 상장 상세 화면과 Giscus 댓글을 그대로 엽니다. News 메뉴는 제거했으며 이전 `news.html` 링크는 `about.html#awards`로 연결됩니다. 상장 화면의 돌아가기 링크도 Awards로 연결됩니다. 설정은 `assets/js/news-comments.js`, 모양은 `assets/css/news-comments.css`, 댓글 컨테이너는 `award.html`에 있습니다. GitHub의 `tlsrkswl/Dong-u-Shin-IDEALAB` 저장소와 `Announcements` 카테고리를 사용하며, 한국어·밝은 테마·반응 기능을 적용했습니다. 댓글 작성에는 GitHub 로그인이 필요합니다.

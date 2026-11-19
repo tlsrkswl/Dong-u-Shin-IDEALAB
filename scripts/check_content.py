@@ -42,6 +42,8 @@ if len(data)==len(names):
             if date.fromisoformat(project['startDate'])>date.fromisoformat(project['endDate']):errors.append('Invalid project portfolio period')
         except (KeyError,TypeError,ValueError):errors.append('Invalid project portfolio date')
         if set(project)&{'funding','budget','amount','fundingKRW'}:errors.append('Project portfolio funding must be omitted')
+        demo=project.get('demoUrl')
+        if demo and (not re.fullmatch(r'demos/[a-z0-9-]+/index\.html',demo) or not (BASE/demo).is_file()):errors.append('Invalid project portfolio demo: '+str(demo))
     ids=[p.get('id') for p in data['projects']]
     if len(ids)!=len(set(ids)):errors.append('Duplicate project IDs')
     for i in ids:
