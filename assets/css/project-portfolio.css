@@ -57,3 +57,7 @@
 .project-demo-link:focus-visible{outline:3px solid #a58bc9;outline-offset:4px}
 .project-document-actions>span{color:#7a8394;font-size:12px;line-height:1.6}
 @media(max-width:600px){.project-document-actions{gap:10px 14px}.project-document-actions>span{font-size:11px}}
+
+.project-overview-figure{margin:24px 0 0;border:1px solid #e0d9ed;border-radius:12px;overflow:hidden;background:#fff}
+.project-overview-figure img{display:block;width:100%;height:auto}
+@media(max-width:600px){.project-overview-figure{margin-top:18px;border-radius:9px}}
