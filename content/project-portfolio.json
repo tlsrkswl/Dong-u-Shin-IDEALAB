@@ -14,6 +14,10 @@
     "roleKo": "공동연구자",
     "methodology": "",
     "results": "",
-    "demoUrl": "demos/ecoremix/index.html"
+    "demoUrl": "demos/ecoremix/index.html",
+    "overviewFigure": {
+      "src": "assets/img/ecoremix-flow-overview.jpg",
+      "alt": "EcoRemix 챔버의 3D 온도 단면과 CFD·AI 예측 비교, 오차 분포 및 온도·속도 RMSE 그래프"
+    }
   }
 ]
