@@ -15,9 +15,22 @@
     "methodology": "",
     "results": "",
     "demoUrl": "demos/ecoremix/index.html",
-    "overviewFigure": {
-      "src": "assets/img/ecoremix-flow-overview.jpg",
-      "alt": "EcoRemix 챔버의 3D 온도 단면과 CFD·AI 예측 비교, 오차 분포 및 온도·속도 RMSE 그래프"
-    }
+    "overviewFigures": [
+      {
+        "title": "센서 위치 최적화",
+        "label": "SENSOR PLACEMENT",
+        "page": "sensor",
+        "src": "assets/img/ecoremix-sensor-overview.jpg",
+        "alt": "챔버 내부 센서 배치와 공간 평균·센서 추정값의 온도 및 오차 비교"
+      },
+      {
+        "title": "AI 기반 유동장 예측",
+        "label": "AI FLOW PREDICTION",
+        "page": "flow",
+        "src": "assets/img/ecoremix-flow-overview.jpg",
+        "alt": "챔버 내부 AI 예측 온도 단면, CFD 비교와 예측 오차 그래프"
+      }
+    ],
+    "roleSummary": "공간 평균 기반 센서 위치 최적화와 AI 기반 유동장 예측을 수행합니다."
   }
 ]
