@@ -58,6 +58,13 @@
 .project-document-actions>span{color:#7a8394;font-size:12px;line-height:1.6}
 @media(max-width:600px){.project-document-actions{gap:10px 14px}.project-document-actions>span{font-size:11px}}
 
-.project-overview-figure{margin:24px 0 0;border:1px solid #e0d9ed;border-radius:12px;overflow:hidden;background:#fff}
-.project-overview-figure img{display:block;width:100%;height:auto}
-@media(max-width:600px){.project-overview-figure{margin-top:18px;border-radius:9px}}
+.project-overview-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin-top:24px}
+.overview-panel{display:block;overflow:hidden;border:1px solid #e0d9ed;border-radius:12px;background:#fff;min-width:0;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.overview-panel header{padding:18px 20px 15px;background:#f4f0fa;border-bottom:1px solid #e8e0f1}
+.overview-label{font:700 9px/1.4 'DM Sans',sans-serif;letter-spacing:1.5px;color:#8367b0}
+.overview-panel h3{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 0;color:#24344b;font-size:18px;letter-spacing:-.3px}
+.overview-panel h3 svg{flex-shrink:0;color:#8367b0}
+.overview-panel img{display:block;width:100%;height:auto}
+.overview-panel:hover{border-color:#a58bc9;box-shadow:0 5px 18px rgba(112,84,162,.1)}
+.overview-panel:focus-visible{outline:3px solid #a58bc9;outline-offset:4px}
+@media(max-width:760px){.project-overview-grid{grid-template-columns:1fr;gap:18px}.overview-panel header{padding:15px 17px 12px}.overview-panel h3{font-size:17px}}
