@@ -9,7 +9,7 @@
   if(!/^demos\/[a-z0-9-]+\/index\.html$/.test(p.demoUrl||''))return '';
   const figures=(p.overviewFigures||[]).filter(f=>/^assets\/img\/[a-z0-9-]+\.(jpg|png|webp)$/.test(f.src||'') && ['sensor','flow'].includes(f.page));
   if(!figures.length)return '';
-  return `<div class="project-overview-grid">${figures.map(f=>`<a class="overview-panel" href="${esc(p.demoUrl)}?v=20261120#${f.page}" target="_blank" rel="noopener noreferrer" aria-label="${esc(f.title)} 데모 열기 (새 탭)"><header><span class="overview-label">${esc(f.label)}</span><h3>${esc(f.title)}<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3h6v6M17 3l-8 8M8 4H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4"/></svg></h3></header><img src="${esc(f.src)}?v=20261120" alt="${esc(f.alt)}" width="2400" height="1260" loading="lazy"></a>`).join('')}</div>`;
+  return `<div class="project-overview-grid">${figures.map(f=>`<a class="overview-panel" href="${esc(p.demoUrl)}?v=20261120-direct#${f.page}" target="_blank" rel="noopener noreferrer" aria-label="${esc(f.title)} 데모 열기 (새 탭)"><header><span class="overview-label">${esc(f.label)}</span><h3>${esc(f.title)}<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3h6v6M17 3l-8 8M8 4H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4"/></svg></h3></header><img src="${esc(f.src)}?v=20261120" alt="${esc(f.alt)}" width="2400" height="1260" loading="lazy"></a>`).join('')}</div>`;
  }
  async function init(){
   const id=new URLSearchParams(location.search).get('id');
